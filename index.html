@@ -3,103 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CREDE</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
-    
+    <title>CREDE DOT VIP</title>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'EB Garamond', serif;
-            background-color: #0C0B80;
-            color: white;
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            min-height: 100vh;
+        }
+
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
         }
 
         h1 {
+            font-size: 3.5rem; 
+            font-weight: 500; 
+            letter-spacing: 0.05em; 
+            padding-left: 0.2em; 
             margin: 0;
-            margin-bottom: 5px;
-            font-size: 3rem;
         }
 
-        h5 {
-            margin: 0;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+        .phonetic {
+            font-size: 1rem;
+            color: #333333; 
+            margin-top: 0.75rem;
+            margin-bottom: 2rem;
         }
 
-        .divider {
-            width: 50%;
-            border: 0;
-            border-top: 2px solid white;
-            margin: 20px 0;
+        .separator {
+            width: 180px;
+            height: 1px;
+            background-color: #000000;
         }
 
-        .links {
-            font-size: 1.2rem;
-        }
-
-        .links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-
-        .links a:hover {
-            text-decoration: underline;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: white;
-            color: black;
-            text-align: center;
-            padding: 10px 0;
+        .email-link {
             font-size: 0.9rem;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer a {
-            color: #0C0B80;
+            color: #000000;
             text-decoration: none;
-            font-weight: bold;
+            padding-left: 0.25em;
+            margin-top: 2rem;
+            transition: opacity 0.3s ease; 
         }
 
-        .footer a:hover {
-            text-decoration: underline;
+        .email-link:hover {
+            opacity: 0.6; 
+        }
+
+        footer {
+            width: 100%;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: #a0aec0; 
+            margin: 0;
         }
     </style>
-    
-    <script>
-        function closeCookieNotice() {
-            document.querySelector('.footer').style.display = 'none';
-        }
-    </script>
 </head>
 <body>
-    <h1>CREDE</h1>
-    <h5>'Man With Computer'</h5>
-    <hr class="divider">
-    <div class="links">
-        <a href="https://www.youtube.com/@AIBollocks">YouTube</a> |
-        <a href="https://bsky.app/profile/crede.vip">Bluesky</a> |
-        <a href="https://www.albumoftheyear.org/user/crede/">AOTY</a> |
-        <a href="mailto:crede@crede.vip">Email</a>
-    </div>
 
-    <div class="footer">
-        This website doesn't collect cookies. I already gather enough useless information.
-        <a href="https://youtu.be/tq37mWFacUM">Learn More</a> | 
-        <a href="#" onclick="closeCookieNotice()">Accept</a>
-    </div>
+    <main>
+        
+        <h1>CREDE</h1>
+        <p class="phonetic">(kriːd)</p>
+        <div class="separator"></div>
+        <a href="mailto:crede@crede.vip" class="email-link">EMAIL</a>
+
+    </main>
+
+    <footer>
+        <p>'It was probably nothing, but it felt like the world'</p>
+        <p><b>Morrissey</b></p>
+    </footer>
+
 </body>
 </html>
