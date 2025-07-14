@@ -34,7 +34,7 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen py-8">
 
     <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 fade-in">
 
@@ -98,6 +98,17 @@
             </div>
         </main>
 
+        <!-- Word of the Day Section -->
+        <footer class="text-center mt-8 p-4">
+            <div id="word-of-the-day-container" class="bg-white p-4 rounded-xl shadow-md text-gray-600 text-sm max-w-md mx-auto">
+                <h3 class="font-bold text-gray-700 mb-2 text-base">Word of the Day</h3>
+                <div id="word-content" class="min-h-[60px] flex items-center justify-center">
+                    <!-- Content will be loaded by JavaScript -->
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </footer>
+
     </div>
 
     <script>
@@ -118,10 +129,49 @@
             dateEl.textContent = now.toLocaleDateString('en-GB', options);
         }
 
-        // Update the clock every second
-        setInterval(updateClock, 1000);
-        // Initial call to display immediately
-        updateClock();
+        // --- Word of the Day Functionality ---
+        async function fetchWordOfTheDay() {
+            // NOTE: This is a public demo API key. For production use, it's recommended to get your own key from Wordnik.
+            const apiKey = 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
+            const apiUrl = `https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=${apiKey}`;
+
+            const wordContentEl = document.getElementById('word-content');
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok (status: ${response.status})`);
+                }
+                const data = await response.json();
+
+                // Check if the necessary data exists
+                if (data && data.word && data.definitions && data.definitions.length > 0) {
+                    const word = data.word;
+                    const partOfSpeech = data.definitions[0].partOfSpeech;
+                    const definition = data.definitions[0].text;
+                    
+                    wordContentEl.innerHTML = `
+                        <p>
+                            <strong class="text-[#E72178] text-lg">${word}</strong> 
+                            (<em class="text-gray-500">${partOfSpeech}</em>) &ndash; 
+                            <span>${definition}</span>
+                        </p>
+                    `;
+                } else {
+                    wordContentEl.innerHTML = '<p>Could not retrieve the word of the day.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching word of the day:', error);
+                wordContentEl.innerHTML = '<p>Could not retrieve the word of the day. Please check the console for details.</p>';
+            }
+        }
+
+        // --- Initial Function Calls on Page Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000); // Update clock every second
+            fetchWordOfTheDay();
+        });
     </script>
 
 </body>
