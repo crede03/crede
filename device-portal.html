@@ -16,19 +16,6 @@
             font-family: 'Lato', sans-serif;
             background-color: #f0f2f5; /* A light grey background */
         }
-        /* Style for the dropdown menu */
-        .dropdown .dropdown-menu {
-            display: none;
-            transform: translateY(10px);
-            opacity: 0;
-            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
-        }
-        .dropdown:hover .dropdown-menu,
-        .dropdown.open .dropdown-menu {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
         /* A subtle animation for page load */
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
@@ -37,6 +24,14 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Style for the grid icons */
+        .icon-link {
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+        .icon-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -44,7 +39,7 @@
     <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 fade-in">
 
         <header class="text-center mb-8">
-            <!-- Logo Placeholder (PNG) with new color -->
+            <!-- Logo Placeholder (PNG) -->
             <div class="flex justify-center items-center mb-4">
                 <img src="https://www.saicarehomes.com/client/sai/content/sai-icon.png" alt="Sai Care Homes Portal Logo" class="w-24 h-24 rounded-full shadow-md">
             </div>
@@ -56,30 +51,49 @@
         </header>
 
         <main>
-
             <!-- Bookmarks Section -->
             <div class="bg-white p-6 rounded-2xl shadow-md">
-                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-4">Quick Links</h2>
+                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 text-center">eConsult Quick Links</h2>
                 <nav>
-                    <ul class="space-y-4">
-                        <!-- eConsult Dropdown -->
-                        <li class="dropdown relative">
-                            <button class="flex items-center justify-between w-full text-left text-lg font-medium text-gray-800 hover:text-[#E72178] transition-colors duration-200 focus:outline-none" onclick="toggleDropdown(this)">
-                                <span>eConsult</span>
-                                <svg class="w-5 h-5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <ul class="dropdown-menu absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-2 space-y-1">
-                                <li><a href="https://manorclinic.webgp.com/" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">Manor Clinic</a></li>
-                                <li><a href="https://anima.thirdparty.nhs.uk/green/o/ct202hnsan" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">Sandgate Road Surgery</a></li>
-                                <li><a href="https://whitehousefolkestone.webgp.com/" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">White House Surgery</a></li>
-                                <li><a href="https://guildhallstreetsurgery.webgp.com/" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">Guildhall Surgery</a></li>
-                                <li><a href="https://centralsurgerykent.webgp.com/" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">Harbour Medical Centre</a></li>
-                                <li><a href="https://elhamsurgery.webgp.com/" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">Hawkinge and Elham Practice</a></li>
-                                <li><a href="https://thenewsurgery-folkestone.webgp.com/" target="_blank" class="block px-4 py-2 text-gray-700 rounded-md hover:bg-[#E72178]/10 hover:text-[#E72178] transition-colors">The New Surgery</a></li>
-                            </ul>
-                        </li>
-                        <!-- Add other top-level links here if needed -->
-                    </ul>
+                    <!-- Responsive Grid for eConsult Links -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
+                        
+                        <a href="https://manorclinic.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">Manor Clinic</span>
+                        </a>
+
+                        <a href="https://anima.thirdparty.nhs.uk/green/o/ct202hnsan" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">Sandgate Road</span>
+                        </a>
+
+                        <a href="https://whitehousefolkestone.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">White House</span>
+                        </a>
+
+                        <a href="https://guildhallstreetsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">Guildhall</span>
+                        </a>
+                        
+                        <a href="https://centralsurgerykent.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">Harbour Medical</span>
+                        </a>
+
+                        <a href="https://elhamsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">Hawkinge & Elham</span>
+                        </a>
+
+                        <a href="https://thenewsurgery-folkestone.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <span class="text-sm font-medium text-gray-700">The New Surgery</span>
+                        </a>
+
+                    </div>
                 </nav>
             </div>
         </main>
@@ -108,32 +122,6 @@
         setInterval(updateClock, 1000);
         // Initial call to display immediately
         updateClock();
-
-        // --- Dropdown Functionality for Touch Devices ---
-        function toggleDropdown(button) {
-            const dropdown = button.closest('.dropdown');
-            const icon = button.querySelector('svg');
-            
-            // Toggle 'open' class on the main dropdown container
-            dropdown.classList.toggle('open');
-            
-            // Rotate the arrow icon
-            if (dropdown.classList.contains('open')) {
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        // Close dropdown if clicking outside of it
-        window.addEventListener('click', function(e) {
-            document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-                if (!dropdown.contains(e.target)) {
-                    dropdown.classList.remove('open');
-                    dropdown.querySelector('svg').style.transform = 'rotate(0deg)';
-                }
-            });
-        });
     </script>
 
 </body>
