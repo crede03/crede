@@ -32,6 +32,13 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        /* Blinking animation for status checker */
+        .blinking-dot {
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen py-8">
@@ -43,56 +50,89 @@
             <div class="flex justify-center items-center mb-4">
                 <img src="https://www.saicarehomes.com/client/sai/content/sai-icon.png" alt="Sai Care Homes Portal Logo" class="w-24 h-24 rounded-full shadow-md">
             </div>
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Sai Care Homes Portal</h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Sai Care Homes - Portal</h1>
             <!-- Live Clock and Date -->
             <div id="clock-date" class="text-lg text-gray-500 mt-2">
                 <span id="time"></span> - <span id="date"></span>
             </div>
+            <!-- Status Checker -->
+            <div id="status-checker" class="text-base text-gray-500 mt-3 flex items-center justify-center">
+                <span class="flex items-center">
+                    <span class="h-3 w-3 rounded-full bg-gray-400 mr-2 blinking-dot"></span>
+                    <span>Checking PCS status...</span>
+                </span>
+            </div>
+            <!-- Weather Display -->
+            <div id="weather-display" class="text-base text-gray-600 mt-3 flex items-center justify-center space-x-6">
+                <!-- Weather will be loaded here -->
+                <p>Loading weather...</p>
+            </div>
         </header>
 
         <main>
-            <!-- Bookmarks Section -->
-            <div class="bg-white p-6 rounded-2xl shadow-md">
-                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 text-center">eConsult Quick Links</h2>
+            <!-- NHS Services Section -->
+            <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
+                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 text-center">Quick Links</h2>
                 <nav>
-                    <!-- Responsive Grid for eConsult Links -->
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
-                        
-                        <a href="https://manorclinic.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">Manor Clinic</span>
-                        </a>
-
-                        <a href="https://anima.thirdparty.nhs.uk/green/o/ct202hnsan" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">Sandgate Road</span>
-                        </a>
-
-                        <a href="https://whitehousefolkestone.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">White House</span>
-                        </a>
-
-                        <a href="https://guildhallstreetsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">Guildhall</span>
+                         
+                        <a href="https://111.nhs.uk/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <!-- NHS Logo SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 370.61 150" class="w-20 h-auto mb-2">
+                                <rect width="370.61" height="150" fill="#005eb8" stroke-width="3.75"/>
+                                <g transform="scale(3.75)" fill="#fff">
+                                    <path d="m9.66 3.86h10.75l6.59 22.33h0.1l4.52-22.33h8.12l-6.83 32.2h-10.7l-6.74-22.28h-0.09l-4.47 22.28h-8.12z"/>
+                                    <path d="m42.91 3.86h8.63l-2.54 12.32h10.2l2.54-12.32h8.63l-6.69 32.2h-8.68l2.86-13.79h-10.15l-2.86 13.79h-8.62z"/>
+                                    <path d="m93.06 11.15a16.18 16.18 0 0 0-7.06-1.48c-3.41 0-6.18 0.51-6.18 3.09 0 4.57 12.5 2.86 12.5 12.64 0 8.9-8.26 11.21-15.73 11.21a36 36 0 0 1-10-1.66l2-6.55c1.71 1.11 5.12 1.85 7.93 1.85s6.87-0.51 6.87-3.83c0-5.17-12.5-3.23-12.5-12.32 0-8.3 7.29-10.8 14.35-10.8 4 0 7.7 0.42 9.87 1.43z"/>
+                                </g>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700 mt-1">NHS 111</span>
                         </a>
                         
-                        <a href="https://centralsurgerykent.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">Harbour Medical</span>
-                        </a>
+                        <a href="https://refer.nhs.uk/login" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
+                            <!-- NHS Logo SVG -->
+                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 370.61 150" class="w-20 h-auto mb-2">
+                                <rect width="370.61" height="150" fill="#005eb8" stroke-width="3.75"/>
+                                <g transform="scale(3.75)" fill="#fff">
+                                    <path d="m9.66 3.86h10.75l6.59 22.33h0.1l4.52-22.33h8.12l-6.83 32.2h-10.7l-6.74-22.28h-0.09l-4.47 22.28h-8.12z"/>
+                                    <path d="m42.91 3.86h8.63l-2.54 12.32h10.2l2.54-12.32h8.63l-6.69 32.2h-8.68l2.86-13.79h-10.15l-2.86 13.79h-8.62z"/>
+                                    <path d="m93.06 11.15a16.18 16.18 0 0 0-7.06-1.48c-3.41 0-6.18 0.51-6.18 3.09 0 4.57 12.5 2.86 12.5 12.64 0 8.9-8.26 11.21-15.73 11.21a36 36 0 0 1-10-1.66l2-6.55c1.71 1.11 5.12 1.85 7.93 1.85s6.87-0.51 6.87-3.83c0-5.17-12.5-3.23-12.5-12.32 0-8.3 7.29-10.8 14.35-10.8 4 0 7.7 0.42 9.87 1.43z"/>
+                                </g>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700 mt-1">NHS eReferral</span>
+                        </a>                        
+                                        
+                        
+                    </div>
+                </nav>
+            </div>
+            
+            <!-- Folkestone eConsult Quick Links Section -->
+            <div class="bg-white p-6 rounded-2xl shadow-md">
+                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 text-center">Folkestone eConsult</h2>
+                <nav>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
+                        <a href="https://manorclinic.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Manor Clinic</span></a>
+                        <a href="https://anima.thirdparty.nhs.uk/green/o/ct202hnsan" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Sandgate Road Surgery</span></a>
+                        <a href="https://whitehousefolkestone.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">White House Surgery</span></a>
+                        <a href="https://guildhallstreetsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Guildhall Surgery</span></a>
+                        <a href="https://centralsurgerykent.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Harbour Medical Practice</span></a>
+                        <a href="https://elhamsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Hawkinge & Elham</span></a>
+                        <a href="https://thenewsurgery-folkestone.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">The New Surgery</span></a>
+                    </div>
+                </nav>
+            </div>
 
-                        <a href="https://elhamsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">Hawkinge & Elham</span>
-                        </a>
-
-                        <a href="https://thenewsurgery-folkestone.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm">
-                            <svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            <span class="text-sm font-medium text-gray-700">The New Surgery</span>
-                        </a>
-
+            <!-- Whitfield eConsult Section -->
+            <div class="bg-white p-6 rounded-2xl shadow-md mt-8">
+                <h2 class="text-2xl font-semibold text-gray-700 border-b pb-3 mb-6 text-center">Whitfield eConsult</h2>
+                <nav>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
+                        <a href="https://thehighstreetsurgery.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Whitfield Surgery and High Street Surgery</span></a>
+                        <a href="https://bucklandmedicalpractice.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Buckland Medical Centre</span></a>
+                        <a href="https://accurx.nhs.uk/patient-initiated/g82227" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Lydden Surgery</span></a>
+                        <a href="https://manorclinic.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">Manor Clinic</span></a>
+                        <a href="https://whitecliffsmedicalcentre.webgp.com/" target="_blank" class="icon-link flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl shadow-sm"><svg class="w-10 h-10 mb-2 text-[#E72178]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg><span class="text-sm font-medium text-gray-700">White Cliffs Medical Centre</span></a>                             
                     </div>
                 </nav>
             </div>
@@ -103,7 +143,6 @@
             <div id="word-of-the-day-container" class="bg-white p-4 rounded-xl shadow-md text-gray-600 text-sm max-w-md mx-auto">
                 <h3 class="font-bold text-gray-700 mb-2 text-base">Word of the Day</h3>
                 <div id="word-content" class="min-h-[60px] flex items-center justify-center">
-                    <!-- Content will be loaded by JavaScript -->
                     <p>Loading...</p>
                 </div>
             </div>
@@ -117,59 +156,99 @@
             const now = new Date();
             const timeEl = document.getElementById('time');
             const dateEl = document.getElementById('date');
-
-            // Time: HH:MM:SS
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             timeEl.textContent = `${hours}:${minutes}:${seconds}`;
-
-            // Date: Day, DD Month YYYY
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             dateEl.textContent = now.toLocaleDateString('en-GB', options);
         }
 
+        // --- Website Status Checker ---
+        async function checkWebsiteStatus() {
+            const statusEl = document.getElementById('status-checker');
+            const url = 'https://personcentredsoftware.com'; 
+
+            try {
+                await fetch(url, { mode: 'no-cors' });
+                statusEl.innerHTML = `
+                    <span class="flex items-center">
+                        <span class="h-3 w-3 rounded-full bg-green-500 mr-2"></span>
+                        <span>PCS: <strong class="text-green-600">Online</strong></span>
+                    </span>
+                `;
+            } catch (error) {
+                console.error('Status check failed:', error);
+                statusEl.innerHTML = `
+                    <span class="flex items-center">
+                        <span class="h-3 w-3 rounded-full bg-red-500 mr-2"></span>
+                        <span>PCS: <strong class="text-red-600">Offline</strong></span>
+                    </span>
+                `;
+            }
+        }
+
+        // --- Weather Functionality ---
+        async function fetchWeather() {
+            const weatherEl = document.getElementById('weather-display');
+            // Lat/Lon for Folkestone, Dover
+            const apiUrl = 'https://api.open-meteo.com/v1/forecast?latitude=51.08,51.13&longitude=1.17,1.31&current=temperature_2m,weather_code';
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Weather data not available');
+                const data = await response.json();
+                
+                const folkestone = { temp: Math.round(data[0].current.temperature_2m) };
+                const dover = { temp: Math.round(data[1].current.temperature_2m) };
+
+                weatherEl.innerHTML = `
+                    <span class="flex items-center">
+                        <strong>Folkestone:</strong>&nbsp;${folkestone.temp}°C
+                    </span>
+                    <span class="flex items-center">
+                        <strong>Dover:</strong>&nbsp;${dover.temp}°C
+                    </span>
+                `;
+            } catch (error) {
+                console.error("Error fetching weather:", error);
+                weatherEl.textContent = 'Could not load weather.';
+            }
+        }
+
+
         // --- Word of the Day Functionality ---
         async function fetchWordOfTheDay() {
-            // NOTE: This is a public demo API key. For production use, it's recommended to get your own key from Wordnik.
             const apiKey = 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
             const apiUrl = `https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=${apiKey}`;
-
             const wordContentEl = document.getElementById('word-content');
 
             try {
                 const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok (status: ${response.status})`);
-                }
+                if (!response.ok) throw new Error(`Network response was not ok`);
                 const data = await response.json();
-
-                // Check if the necessary data exists
                 if (data && data.word && data.definitions && data.definitions.length > 0) {
-                    const word = data.word;
-                    const partOfSpeech = data.definitions[0].partOfSpeech;
-                    const definition = data.definitions[0].text;
-                    
-                    wordContentEl.innerHTML = `
-                        <p>
-                            <strong class="text-[#E72178] text-lg">${word}</strong> 
-                            (<em class="text-gray-500">${partOfSpeech}</em>) &ndash; 
-                            <span>${definition}</span>
-                        </p>
-                    `;
+                    wordContentEl.innerHTML = `<p><strong class="text-[#E72178] text-lg">${data.word}</strong> (<em class="text-gray-500">${data.definitions[0].partOfSpeech}</em>) &ndash; <span>${data.definitions[0].text}</span></p>`;
                 } else {
                     wordContentEl.innerHTML = '<p>Could not retrieve the word of the day.</p>';
                 }
             } catch (error) {
                 console.error('Error fetching word of the day:', error);
-                wordContentEl.innerHTML = '<p>Could not retrieve the word of the day. Please check the console for details.</p>';
+                wordContentEl.innerHTML = '<p>Could not retrieve the word of the day.</p>';
             }
         }
 
         // --- Initial Function Calls on Page Load ---
         document.addEventListener('DOMContentLoaded', () => {
             updateClock();
-            setInterval(updateClock, 1000); // Update clock every second
+            setInterval(updateClock, 1000);
+            
+            checkWebsiteStatus();
+            setInterval(checkWebsiteStatus, 60000); 
+            
+            fetchWeather();
+            setInterval(fetchWeather, 1800000); // Re-check weather every 30 minutes
+
             fetchWordOfTheDay();
         });
     </script>
