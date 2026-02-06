@@ -3,97 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CREDE DOT VIP</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #ffffff;
-            color: #000000;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-
-        main {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        h1 {
-            font-size: 3.5rem; 
-            font-weight: 500; 
-            letter-spacing: 0.05em; 
-            padding-left: 0.2em; 
-            margin: 0;
-        }
-
-        .phonetic {
-            font-size: 1rem;
-            color: #333333; 
-            margin-top: 0.75rem;
-            margin-bottom: 2rem;
-        }
-
-        .separator {
-            width: 180px;
-            height: 1px;
-            background-color: #000000;
-        }
-
-        .email-link {
-            font-size: 0.9rem;
-            color: #000000;
-            text-decoration: none;
-            padding-left: 0.25em;
-            margin-top: 2rem;
-            transition: opacity 0.3s ease; 
-        }
-
-        .email-link:hover {
-            opacity: 0.6; 
-        }
-
-        footer {
-            width: 100%;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        footer p {
-            font-size: 0.75rem;
-            color: #a0aec0; 
-            margin: 0;
-        }
-    </style>
+    <title>CREDE.VIP</title>
+    <link rel="stylesheet" href="https://unpkg.com/xp.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <main>
+    <div class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icon" id="welcome-icon">
+            <div class="icon-image"><img src="img/welcome.png" alt="Welcome"></div>
+            <div class="icon-label">Welcome</div>
+        </div>
+        <div class="desktop-icon" id="portfolio-icon">
+            <div class="icon-image"><img src="img/portfolio.png" alt="Portfolio"></div>
+            <div class="icon-label">Portfolio</div>
+        </div>
         
-        <h1>CREDE</h1>
-        <p class="phonetic">(kriːd)</p>
-        <p>EMPLOYMENT STATUS: TRUE</p>
-        <div class="separator"></div>
-        <a href="mailto:crede@crede.vip" class="email-link">EMAIL</a>
+        <div class="desktop-icon" id="email-icon">
+            <div class="icon-image"><img src="img/email.png" alt="Email"></div>
+            <div class="icon-label">Email</div>
+        </div>
+        
+        <div class="desktop-icon" id="pinball-icon">
+            <div class="icon-image"><img src="img/pinball.png" alt="3D Pinball"></div>
+            <div class="icon-label">3D Pinball</div>
+        </div>
+        
+        <div class="desktop-icon" id="paint-icon">
+            <div class="icon-image"><img src="img/paint.png" alt="Paint"></div>
+            <div class="icon-label">Paint</div>
+        </div>
+        
 
-    </main>
+        <!-- Main Window -->
+        <div class="window active" id="main-window" style="width: 500px">
+            <div class="title-bar">
+                <div class="title-bar-text">CREDE.VIP</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="content-header">
+                    <div class="photo-frame">
+                        <img src="img/pfp.png" alt="Crede Photo" id="profile-photo">
+                    </div>
+                    <h1>Hello, I'm <span class="highlight">Crede Dalton</span></h1>
+                    <p class="subtitle">I’m a results-driven marketer and content-creator with over five years of experience in developing and promoting brands in hospitality, healthcare and the non-profit sector.</p>
+                </div>
+                
+                <div class="content-body">
+                    <div class="section">
+                        <h2>About Me</h2>
+                        <p>I'm a creative professional based in Folkestone. UK.</p>
+                    </div>
 
-    <footer>
-        <p>'It was probably nothing, but it felt like the world'</p>
-        <p><b>Morrissey</b></p>
-    </footer>
+                    <div class="section">
+                        <h2>Connect With Me</h2>
+                        <div class="button-group">
+                            <button onclick="window.open('https://instagram.com/crededalton', '_blank')">
+                                <span class="button-icon"><img src="img/camera.png" alt="Instagram"></span>
+                                Instagram
+                            </button>
+                            <button onclick="window.open('https://www.linkedin.com/in/crede-dalton-818334202', '_blank')">
+                                <span class="button-icon"><img src="img/briefcase.png" alt="LinkedIn"></span>
+                                LinkedIn
+                            </button>
+                            <button onclick="window.location.href='mailto:crede@crede.vip'">
+                                <span class="button-icon"><img src="img/email.png" alt="Email"></span>
+                                Email
+                            </button>
+                            <button id="portfolio-btn">
+                                <span class="button-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
+                                View Portfolio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Portfolio Window -->
+        <div class="window" id="portfolio-window" style="width: 600px">
+            <div class="title-bar">
+                <div class="title-bar-text">My Portfolio</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="portfolio-grid">
+                    <div class="portfolio-item" data-project="1">
+                        <div class="portfolio-image">🖼️</div>
+                        <h3>Project 1</h3>
+                        <p>Description of your first project</p>
+                    </div>
+                    <div class="portfolio-item" data-project="2">
+                        <div class="portfolio-image">🖼️</div>
+                        <h3>Project 2</h3>
+                        <p>Description of your second project</p>
+                    </div>
+                    <div class="portfolio-item" data-project="3">
+                        <div class="portfolio-image">🖼️</div>
+                        <h3>Project 3</h3>
+                        <p>Description of your third project</p>
+                    </div>
+                    <div class="portfolio-item" data-project="4">
+                        <div class="portfolio-image">🖼️</div>
+                        <h3>Project 4</h3>
+                        <p>Description of your fourth project</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Detail Windows -->
+        <div class="window project-window" id="project-1-window" style="width: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Project 1</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="project-detail">
+                    <div class="project-images">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 1 Image" class="project-main-image">
+                        <div class="project-thumbnails">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h2>Project 1</h2>
+                        <p class="project-description">Add a detailed description of your first project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
+                        <div class="project-details">
+                            <h3>Details</h3>
+                            <ul>
+                                <li>Technology: Add technologies used</li>
+                                <li>Role: Your role in this project</li>
+                                <li>Duration: Project timeline</li>
+                                <li>Status: Completed / In Progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window project-window" id="project-2-window" style="width: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Project 2</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="project-detail">
+                    <div class="project-images">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 2 Image" class="project-main-image">
+                        <div class="project-thumbnails">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h2>Project 2</h2>
+                        <p class="project-description">Add a detailed description of your second project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
+                        <div class="project-details">
+                            <h3>Details</h3>
+                            <ul>
+                                <li>Technology: Add technologies used</li>
+                                <li>Role: Your role in this project</li>
+                                <li>Duration: Project timeline</li>
+                                <li>Status: Completed / In Progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window project-window" id="project-3-window" style="width: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Project 3</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="project-detail">
+                    <div class="project-images">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 3 Image" class="project-main-image">
+                        <div class="project-thumbnails">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h2>Project 3</h2>
+                        <p class="project-description">Add a detailed description of your third project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
+                        <div class="project-details">
+                            <h3>Details</h3>
+                            <ul>
+                                <li>Technology: Add technologies used</li>
+                                <li>Role: Your role in this project</li>
+                                <li>Duration: Project timeline</li>
+                                <li>Status: Completed / In Progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window project-window" id="project-4-window" style="width: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Project 4</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="project-detail">
+                    <div class="project-images">
+                        <img src="https://via.placeholder.com/600x400" alt="Project 4 Image" class="project-main-image">
+                        <div class="project-thumbnails">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
+                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h2>Project 4</h2>
+                        <p class="project-description">Add a detailed description of your fourth project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
+                        <div class="project-details">
+                            <h3>Details</h3>
+                            <ul>
+                                <li>Technology: Add technologies used</li>
+                                <li>Role: Your role in this project</li>
+                                <li>Duration: Project timeline</li>
+                                <li>Status: Completed / In Progress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Taskbar -->
+        <div class="taskbar">
+            <button class="start-button" id="start-btn">
+                <span class="start-text">fart</span>
+            </button>
+            <div class="taskbar-tasks">
+                <button class="taskbar-task active" data-window="main-window">
+                    <span class="task-icon"><img src="img/welcome.png" alt="Welcome"></span>
+                    <span class="task-text">Welcome</span>
+                </button>
+                <button class="taskbar-task" data-window="portfolio-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
+                    <span class="task-text">Portfolio</span>
+                </button>
+                <button class="taskbar-task" data-window="project-1-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 1"></span>
+                    <span class="task-text">Project 1</span>
+                </button>
+                <button class="taskbar-task" data-window="project-2-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 2"></span>
+                    <span class="task-text">Project 2</span>
+                </button>
+                <button class="taskbar-task" data-window="project-3-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 3"></span>
+                    <span class="task-text">Project 3</span>
+                </button>
+                <button class="taskbar-task" data-window="project-4-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 4"></span>
+                    <span class="task-text">Project 4</span>
+                </button>
+                <button class="taskbar-task" data-window="pinball-window" style="display: none;">
+                    <span class="task-icon"><img src="img/pinball.png" alt="3D Pinball"></span>
+                    <span class="task-text">3D Pinball</span>
+                </button>
+                <button class="taskbar-task" data-window="paint-window" style="display: none;">
+                    <span class="task-icon"><img src="img/paint.png" alt="Paint"></span>
+                    <span class="task-text">Paint</span>
+                </button>
+            </div>
+            <div class="system-tray">
+                <div class="tray-time" id="clock"></div>
+            </div>
+        </div>
+
+        <!-- Start Menu -->
+        <div class="start-menu" id="start-menu">
+            <div class="start-menu-header">
+                <div class="start-menu-user">CREDE.VIP</div>
+            </div>
+            <div class="start-menu-items">
+                <a href="#" class="start-menu-item" data-action="welcome">
+                    <span class="menu-icon"><img src="img/welcome.png" alt="Welcome"></span>
+                    <span class="menu-text">Welcome</span>
+                </a>
+                <a href="#portfolio" class="start-menu-item" data-action="portfolio">
+                    <span class="menu-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
+                    <span class="menu-text">My Portfolio</span>
+                </a>
+                <a href="mailto:crede@crede.vip" class="start-menu-item">
+                    <span class="menu-icon"><img src="img/email.png" alt="Email"></span>
+                    <span class="menu-text">Email</span>
+                </a>
+                <a href="https://instagram.com/crededalton" target="_blank" class="start-menu-item">
+                    <span class="menu-icon"><img src="img/camera.png" alt="Instagram"></span>
+                    <span class="menu-text">Instagram</span>
+                </a>
+                <a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank" class="start-menu-item">
+                    <span class="menu-icon"><img src="img/briefcase.png" alt="LinkedIn"></span>
+                    <span class="menu-text">LinkedIn</span>
+                </a>
+                <a href="#" class="start-menu-item" data-action="pinball">
+                    <span class="menu-icon"><img src="img/pinball.png" alt="3D Pinball"></span>
+                    <span class="menu-text">3D Pinball</span>
+                </a>
+                <a href="#" class="start-menu-item" data-action="paint">
+                    <span class="menu-icon"><img src="img/paint.png" alt="Paint"></span>
+                    <span class="menu-text">Paint</span>
+                </a>
+            </div>
+            <div class="start-menu-footer">
+                <button class="start-menu-logoff">Log Off</button>
+                <button class="start-menu-shutdown">Turn Off Computer</button>
+            </div>
+        </div>
+
+        <!-- 3D Pinball Window -->
+        <div class="window" id="pinball-window" style="width: 800px; height: 600px">
+            <div class="title-bar">
+                <div class="title-bar-text">3D Pinball - Space Cadet</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
+                <iframe src="3DPinballSpaceCadet.htm" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Paint Window -->
+        <div class="window" id="paint-window" style="width: 900px; height: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Paint</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
+                <iframe src="https://jspaint.app" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Minesweeper Window -->
+        <div class="window" id="minesweeper-window" style="width: 500px; height: 600px">
+            <div class="title-bar">
+                <div class="title-bar-text">Minesweeper</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
+                <iframe src="https://mines.vercel.app" style="width: 100%; height: 100%; border: none;" allow="scripts"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
