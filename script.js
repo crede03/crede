@@ -5,6 +5,21 @@ let dragOffset = { x: 0, y: 0 };
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    // Fade-in effect
+    document.body.classList.add('page-loaded');
+
+    // Apply saved theme (default to 7.css)
+    let savedTheme = '7';
+    try {
+        const stored = localStorage.getItem('crede_theme');
+        if (stored === 'xp' || stored === '98' || stored === '7') {
+            savedTheme = stored;
+        }
+    } catch (e) {
+        // ignore
+    }
+    setTheme(savedTheme);
+
     // Ensure only the welcome window is open on load
     document.querySelectorAll('.window').forEach(win => {
         win.classList.remove('active');
@@ -21,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeStartMenu();
     initializeDesktopIcons();
     initializePortfolioItems();
+    layoutDesktopIcons();
     updateTaskbar();
 
     // Portfolio button
@@ -36,6 +52,55 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateClock, 1000);
 });
 
+// Helpers
+function isMobileViewport() {
+    return window.innerWidth <= 768;
+}
+
+function setTheme(theme) {
+    const themes = ['7', 'xp', '98'];
+    themes.forEach(name => {
+        const link = document.getElementById(`theme-${name}`);
+        if (link) {
+            link.disabled = name !== theme;
+        }
+    });
+    try {
+        localStorage.setItem('crede_theme', theme);
+    } catch (e) {
+        // ignore persistence errors
+    }
+}
+
+function layoutDesktopIcons() {
+    const desktop = document.querySelector('.desktop');
+    const icons = Array.from(document.querySelectorAll('.desktop-icon'));
+    if (!desktop || icons.length === 0) return;
+
+    const paddingTop = 20;
+    const paddingLeft = 20;
+    const columnWidth = 100;   // space reserved per column
+    const rowHeight = 100;     // space reserved per row
+    const maxHeight = window.innerHeight - 100; // keep above taskbar
+
+    let col = 0;
+    let row = 0;
+
+    icons.forEach(icon => {
+        const top = paddingTop + row * rowHeight;
+        const left = paddingLeft + col * columnWidth;
+
+        icon.style.top = `${top}px`;
+        icon.style.left = `${left}px`;
+
+        row += 1;
+        if (top + rowHeight > maxHeight) {
+            row = 0;
+            col += 1;
+        }
+    });
+}
+
 // Window Functions
 function initializeWindows() {
     const windows = document.querySelectorAll('.window');
@@ -47,7 +112,7 @@ function initializeWindows() {
         const maximizeBtn = Array.from(controls).find(btn => btn.getAttribute('aria-label') === 'Maximize');
 
         // Make window draggable
-        if (titlebar) {
+        if (titlebar && !isMobileViewport()) {
             titlebar.addEventListener('mousedown', (e) => {
                 if (e.target.tagName === 'BUTTON') return;
                 startDrag(window, e);
@@ -60,20 +125,27 @@ function initializeWindows() {
         if (maximizeBtn) maximizeBtn.addEventListener('click', () => maximizeWindow(window));
     });
 
-    // Center main window on load
-    centerWindow(document.getElementById('main-window'));
+    // Center or maximize main window on load depending on viewport
+    const main = document.getElementById('main-window');
+    if (main) {
+        if (isMobileViewport()) {
+            maximizeWindow(main);
+        } else {
+            centerWindow(main);
+        }
+    }
 }
 
-function centerWindow(window) {
-    const windowRect = window.getBoundingClientRect();
+function centerWindow(win) {
+    const windowRect = win.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
     const left = (viewportWidth - windowRect.width) / 2;
     const top = (viewportHeight - windowRect.height) / 2 - 20; // Account for taskbar
     
-    window.style.left = `${left}px`;
-    window.style.top = `${top}px`;
+    win.style.left = `${left}px`;
+    win.style.top = `${top}px`;
 }
 
 function startDrag(window, e) {
@@ -147,24 +219,33 @@ function maximizeWindow(window) {
     } else {
         // Maximize
         window.classList.add('maximized');
-        window.style.width = 'calc(100% - 20px)';
-        window.style.height = 'calc(100vh - 60px)';
-        window.style.left = '10px';
-        window.style.top = '10px';
+        const margin = 10;
+        const taskbarHeight = 40;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        window.style.left = `${margin}px`;
+        window.style.top = `${margin}px`;
+        window.style.width = `${viewportWidth - margin * 2}px`;
+        window.style.height = `${viewportHeight - taskbarHeight - margin * 2}px`;
     }
 }
 
 function openWindow(windowId) {
-    const window = document.getElementById(windowId);
-    if (!window) return;
+    const win = document.getElementById(windowId);
+    if (!win) return;
     
-    window.classList.add('active');
-    window.style.display = 'block';
-    bringToFront(window);
+    win.classList.add('active');
+    win.style.display = 'block';
+    bringToFront(win);
     
-    // Center if not maximized
-    if (!window.classList.contains('maximized')) {
-        centerWindow(window);
+    // On mobile, always maximize; on desktop, center if not maximized
+    if (isMobileViewport()) {
+        if (!win.classList.contains('maximized')) {
+            maximizeWindow(win);
+        }
+    } else if (!win.classList.contains('maximized')) {
+        centerWindow(win);
     }
     
     updateTaskbar();
@@ -235,7 +316,16 @@ function initializeStartMenu() {
     const menuItems = document.querySelectorAll('.start-menu-item');
     menuItems.forEach(item => {
         item.addEventListener('click', (e) => {
+            const theme = item.getAttribute('data-theme');
             const action = item.getAttribute('data-action');
+
+            if (theme) {
+                e.preventDefault();
+                setTheme(theme);
+                startMenu.classList.remove('active');
+                return;
+            }
+
             if (action === 'welcome') {
                 e.preventDefault();
                 openWindow('main-window');
@@ -260,14 +350,29 @@ function initializeStartMenu() {
         });
     });
     
-    // Logoff and shutdown buttons (just close menu)
-    document.querySelector('.start-menu-logoff').addEventListener('click', () => {
-        startMenu.classList.remove('active');
-    });
+    // Logoff and shutdown buttons (just close menu, ignore link default)
+    const logoffBtn = document.querySelector('.start-menu-logoff');
+    const shutdownBtn = document.querySelector('.start-menu-shutdown');
+
+    if (logoffBtn) {
+        logoffBtn.addEventListener('click', () => {
+            startMenu.classList.remove('active');
+            const url = logoffBtn.dataset.url;
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    }
     
-    document.querySelector('.start-menu-shutdown').addEventListener('click', () => {
-        startMenu.classList.remove('active');
-    });
+    if (shutdownBtn) {
+        shutdownBtn.addEventListener('click', () => {
+            startMenu.classList.remove('active');
+            const url = shutdownBtn.dataset.url;
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    }
 }
 
 // Desktop Icons
@@ -276,6 +381,9 @@ function initializeDesktopIcons() {
     const portfolioIcon = document.getElementById('portfolio-icon');
     const emailIcon = document.getElementById('email-icon');
     const pinballIcon = document.getElementById('pinball-icon');
+    const linkedinIcon = document.getElementById('linkedin-icon');
+    const substackIcon = document.getElementById('substack-icon');
+    const instagramIcon = document.getElementById('instagram-icon');
     
     if (welcomeIcon) {
         welcomeIcon.addEventListener('dblclick', () => {
@@ -292,6 +400,24 @@ function initializeDesktopIcons() {
     if (emailIcon) {
         emailIcon.addEventListener('dblclick', () => {
             window.location.href = 'mailto:crede@crede.vip';
+        });
+    }
+
+    if (linkedinIcon) {
+        linkedinIcon.addEventListener('dblclick', () => {
+            window.open('https://www.linkedin.com/in/crede-dalton-818334202', '_blank');
+        });
+    }
+
+    if (substackIcon) {
+        substackIcon.addEventListener('dblclick', () => {
+            window.open('https://substack.com/@credevip', '_blank');
+        });
+    }
+
+    if (instagramIcon) {
+        instagramIcon.addEventListener('dblclick', () => {
+            window.open('https://instagram.com/crede.vip', '_blank');
         });
     }
     
@@ -370,6 +496,7 @@ let touchStartX = 0;
 let touchStartY = 0;
 
 document.addEventListener('touchstart', (e) => {
+    if (isMobileViewport()) return; // avoid dragging on small touch screens
     if (e.target.closest('.title-bar')) {
         const window = e.target.closest('.window');
         const touch = e.touches[0];
@@ -384,6 +511,7 @@ document.addEventListener('touchstart', (e) => {
 });
 
 document.addEventListener('touchmove', (e) => {
+    if (isMobileViewport()) return;
     if (draggedWindow) {
         e.preventDefault();
         const touch = e.touches[0];
@@ -403,4 +531,9 @@ document.addEventListener('touchmove', (e) => {
 
 document.addEventListener('touchend', () => {
     draggedWindow = null;
+});
+
+// Re-layout icons on resize so they stay visible
+window.addEventListener('resize', () => {
+    layoutDesktopIcons();
 });

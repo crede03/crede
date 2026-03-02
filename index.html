@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CREDE.VIP</title>
-    <link rel="stylesheet" href="https://unpkg.com/xp.css">
+    <link rel="stylesheet" href="https://unpkg.com/7.css" id="theme-7">
+    <link rel="stylesheet" href="https://unpkg.com/xp.css" id="theme-xp">
+    <link rel="stylesheet" href="https://unpkg.com/98.css" id="theme-98">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,12 +23,22 @@
         
         <div class="desktop-icon" id="email-icon">
             <div class="icon-image"><img src="img/email.png" alt="Email"></div>
-            <div class="icon-label">Email</div>
+            <div class="icon-label">Email Me</div>
         </div>
-        
-        <div class="desktop-icon" id="pinball-icon">
-            <div class="icon-image"><img src="img/pinball.png" alt="3D Pinball"></div>
-            <div class="icon-label">3D Pinball</div>
+
+        <div class="desktop-icon" id="linkedin-icon">
+            <div class="icon-image"><img src="img/folder-publicshare.png" alt="LinkedIn"></div>
+            <div class="icon-label">LinkedIn</div>
+        </div>
+
+        <div class="desktop-icon" id="substack-icon">
+            <div class="icon-image"><img src="img/substack.png" alt="Substack"></div>
+            <div class="icon-label">Substack</div>
+        </div>
+
+        <div class="desktop-icon" id="instagram-icon">
+            <div class="icon-image"><img src="img/folder-images.png" alt="Instagram"></div>
+            <div class="icon-label">Instagram</div>
         </div>
         
         <div class="desktop-icon" id="paint-icon">
@@ -36,49 +48,80 @@
         
 
         <!-- Main Window -->
-        <div class="window active" id="main-window" style="width: 500px">
+        <div class="window active" id="main-window" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">CREDE.VIP</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body">
+
+            <ul role="menubar" class="can-hover">
+                <li role="menuitem" tabindex="0" aria-haspopup="true">
+                  Socials
+                  <ul role="menu">
+                    <li role="menuitem">
+                      <a href="https://www.instagram.com/crede.vip">
+                        Instagram
+                      </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="https://www.youtube.com/@crede.">
+                          YouTube
+                        </a>
+                      </li>
+                    <li role="menuitem">
+                      <a href="https://substack.com/@credevip">
+                        Substack
+                      </a>
+                    </li>
+                    <li role="menuitem" class="has-divider">
+                      <a href="https://www.linkedin.com/in/crede-dalton-818334202">
+                        LinkedIn
+                      </a>
+                    </li>
+                    <li role="menuitem"><a href="mailto:crede@crede.vip">Email Me</a></li>
+                  </ul>
+                </li>
+                <li role="menuitem" tabindex="0" aria-haspopup="true">
+                  Fun Stuff
+                  <ul role="menu">
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="paint"">Paint</a></li>
+                  </ul>
+                </li>
+              </ul>
+
+            <div class="window-body has-space has-scrollbar">    
                 <div class="content-header">
-                    <div class="photo-frame">
-                        <img src="img/pfp.png" alt="Crede Photo" id="profile-photo">
+                    <div class="intro-layout">
+                        <div class="intro-photo">
+                            <div class="photo-frame">
+                                <img src="img/pfp.png" alt="Crede Photo" id="profile-photo">
+                            </div>
+                        </div>
+                        <div class="intro-copy">
+                            <h1>Hello, I'm <span class="highlight">Crede</span></h1>
+                            <p class="subtitle">
+                                I’m a results-driven marketer and content-creator with over five years of experience in developing and promoting brands in hospitality, healthcare and the non-profit sector.
+                            </p>
+                        </div>
                     </div>
-                    <h1>Hello, I'm <span class="highlight">Crede Dalton</span></h1>
-                    <p class="subtitle">I’m a results-driven marketer and content-creator with over five years of experience in developing and promoting brands in hospitality, healthcare and the non-profit sector.</p>
                 </div>
                 
                 <div class="content-body">
                     <div class="section">
                         <h2>About Me</h2>
-                        <p>I'm a creative professional based in Folkestone. UK.</p>
+                        <h3>Ironically, I struggle to brand and market myself. Autism's fun.</h3>
+                        <p><b>Officially, I’m a Head of Marketing.</b> It’s the title that sits on the LinkedIn profile. But it’s a bit sanitized, isn't it? It doesn’t quite capture the eons of time I spend on Affinity figuring out what font to use, or the three hours I just spent having a marde with WordPress because a plugin’s developed a bout of dementia and forgotten where the CSS file is.</p>
+                        <p>So, maybe <b>Creative Lead?</b> It sounds sexier. It radiates the ‘performative MacBook user’ vibe I want to give off. It acknowledges my <b>UAL accreditation</b> and the fact that I’m a <b>hybrid shooter</b> who knows how to cure camera-shyness. It covers the <b>print and layout design</b> – because unlike most "leads," I actually know what the hell FOGRA39 is.</p>
+                        <p>But then I’m also the <b>ad man.</b> The <b>social media manager.</b> The guy reaching customers you never knew you had. Like people who've recently had kids (who might poo on your lovely carpet). That’s over 80,000 unlocked views for your hard-wood floor promo. </p>
+                        <p>If I call myself a <b>Full-Stack Creative</b>, I sound like a tech startup's fever dream. Ew.</p>
+                        <p>The truth? I’m a <b>man with a computer & camera</b> who is dangerously competent in too many disciplines. I can build the site, shoot the campaign, design the brochure, code the tracking, and fix the computer if the whole thing crashes (which it will if it runs Windows 11).</p>
+                        <h3>I am a silverware set in a world of plastic forks.</h3>
                     </div>
 
                     <div class="section">
-                        <h2>Connect With Me</h2>
-                        <div class="button-group">
-                            <button onclick="window.open('https://instagram.com/crededalton', '_blank')">
-                                <span class="button-icon"><img src="img/camera.png" alt="Instagram"></span>
-                                Instagram
-                            </button>
-                            <button onclick="window.open('https://www.linkedin.com/in/crede-dalton-818334202', '_blank')">
-                                <span class="button-icon"><img src="img/briefcase.png" alt="LinkedIn"></span>
-                                LinkedIn
-                            </button>
-                            <button onclick="window.location.href='mailto:crede@crede.vip'">
-                                <span class="button-icon"><img src="img/email.png" alt="Email"></span>
-                                Email
-                            </button>
-                            <button id="portfolio-btn">
-                                <span class="button-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
-                                View Portfolio
-                            </button>
+                        <h1>Have a click around my portfolio!</h1>
                         </div>
                     </div>
                 </div>
@@ -86,37 +129,36 @@
         </div>
 
         <!-- Portfolio Window -->
-        <div class="window" id="portfolio-window" style="width: 600px">
+        <div class="window" id="portfolio-window" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">My Portfolio</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body">
+            <div class="window-body has-scrollbar">
+                <h1>Please select an item:</h1>
                 <div class="portfolio-grid">
-                    <div class="portfolio-item" data-project="1">
-                        <div class="portfolio-image">🖼️</div>
-                        <h3>Project 1</h3>
-                        <p>Description of your first project</p>
-                    </div>
-                    <div class="portfolio-item" data-project="2">
-                        <div class="portfolio-image">🖼️</div>
-                        <h3>Project 2</h3>
-                        <p>Description of your second project</p>
-                    </div>
-                    <div class="portfolio-item" data-project="3">
-                        <div class="portfolio-image">🖼️</div>
-                        <h3>Project 3</h3>
-                        <p>Description of your third project</p>
-                    </div>
-                    <div class="portfolio-item" data-project="4">
+                    <button type="button" class="portfolio-item" data-project="1">
+                        <div class="portfolio-image">🏨</div>
+                        <h3>Dover Marina Hotel & Spa</h3>
+                        <p>A four-star coastal getaway & Hilton Tapestry Collection member</p>
+                    </button>
+                    <button type="button" class="portfolio-item" data-project="2">
+                        <div class="portfolio-image">🩷</div>
+                        <h3>Sai Care Homes</h3>
+                        <p>First-class dementia care across East Kent</p>
+                    </button>
+                    <button type="button" class="portfolio-item" data-project="3">
+                        <div class="portfolio-image">💡</div>
+                        <h3>Lighthouse on the Marsh</h3>
+                        <p>Making a difference to isolated communities on the Romney Marsh</p>
+                    </button>
+                    <button type="button" class="portfolio-item" data-project="4">
                         <div class="portfolio-image">🖼️</div>
                         <h3>Project 4</h3>
                         <p>Description of your fourth project</p>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -126,12 +168,10 @@
             <div class="title-bar">
                 <div class="title-bar-text">Project 1</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body">
+            <div class="window-body has-scrollbar">
                 <div class="project-detail">
                     <div class="project-images">
                         <img src="https://via.placeholder.com/600x400" alt="Project 1 Image" class="project-main-image">
@@ -142,15 +182,15 @@
                         </div>
                     </div>
                     <div class="project-info">
-                        <h2>Project 1</h2>
+                        <h2>Dover Marina Hotel & Spa</h2>
                         <p class="project-description">Add a detailed description of your first project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
                         <div class="project-details">
                             <h3>Details</h3>
                             <ul>
                                 <li>Technology: Add technologies used</li>
-                                <li>Role: Your role in this project</li>
-                                <li>Duration: Project timeline</li>
-                                <li>Status: Completed / In Progress</li>
+                                <li>Role: Shooting and editing professional promotional content, </li>
+                                <li>Duration: Ongoing</li>
+                                <li>Status: In Progress</li>
                             </ul>
                         </div>
                     </div>
@@ -162,12 +202,10 @@
             <div class="title-bar">
                 <div class="title-bar-text">Project 2</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body">
+            <div class="window-body has-scrollbar">
                 <div class="project-detail">
                     <div class="project-images">
                         <img src="https://via.placeholder.com/600x400" alt="Project 2 Image" class="project-main-image">
@@ -198,12 +236,10 @@
             <div class="title-bar">
                 <div class="title-bar-text">Project 3</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body">
+            <div class="window-body has-scrollbar">
                 <div class="project-detail">
                     <div class="project-images">
                         <img src="https://via.placeholder.com/600x400" alt="Project 3 Image" class="project-main-image">
@@ -234,12 +270,10 @@
             <div class="title-bar">
                 <div class="title-bar-text">Project 4</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body">
+            <div class="window-body has-scrollbar">
                 <div class="project-detail">
                     <div class="project-images">
                         <img src="https://via.placeholder.com/600x400" alt="Project 4 Image" class="project-main-image">
@@ -315,54 +349,53 @@
             <div class="start-menu-header">
                 <div class="start-menu-user">CREDE.VIP</div>
             </div>
-            <div class="start-menu-items">
-                <a href="#" class="start-menu-item" data-action="welcome">
-                    <span class="menu-icon"><img src="img/welcome.png" alt="Welcome"></span>
-                    <span class="menu-text">Welcome</span>
-                </a>
-                <a href="#portfolio" class="start-menu-item" data-action="portfolio">
-                    <span class="menu-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
-                    <span class="menu-text">My Portfolio</span>
-                </a>
-                <a href="mailto:crede@crede.vip" class="start-menu-item">
-                    <span class="menu-icon"><img src="img/email.png" alt="Email"></span>
-                    <span class="menu-text">Email</span>
-                </a>
-                <a href="https://instagram.com/crededalton" target="_blank" class="start-menu-item">
-                    <span class="menu-icon"><img src="img/camera.png" alt="Instagram"></span>
-                    <span class="menu-text">Instagram</span>
-                </a>
-                <a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank" class="start-menu-item">
-                    <span class="menu-icon"><img src="img/briefcase.png" alt="LinkedIn"></span>
-                    <span class="menu-text">LinkedIn</span>
-                </a>
-                <a href="#" class="start-menu-item" data-action="pinball">
-                    <span class="menu-icon"><img src="img/pinball.png" alt="3D Pinball"></span>
-                    <span class="menu-text">3D Pinball</span>
-                </a>
-                <a href="#" class="start-menu-item" data-action="paint">
-                    <span class="menu-icon"><img src="img/paint.png" alt="Paint"></span>
-                    <span class="menu-text">Paint</span>
-                </a>
-            </div>
+            <ul class="start-menu-items" role="menu">
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="welcome">
+                        <span class="menu-icon"><img src="img/welcome.png" alt="Welcome"></span>
+                        <span class="menu-text">Welcome</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="#portfolio" class="start-menu-item" data-action="portfolio">
+                        <span class="menu-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
+                        <span class="menu-text">My Portfolio</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="https://substack.com/@credevip" target="_blank" class="start-menu-item">
+                        <span class="menu-icon"><img src="img/substack.png" alt="Substack"></span>
+                        <span class="menu-text">Substack</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank" class="start-menu-item">
+                        <span class="menu-icon"><img src="img/folder-publicshare.png" alt="LinkedIn"></span>
+                        <span class="menu-text">LinkedIn</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="https://instagram.com/crede.vip" target="_blank" class="start-menu-item">
+                        <span class="menu-icon"><img src="img/folder-images.png" alt="Instagram"></span>
+                        <span class="menu-text">Instagram</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="mailto:crede@crede.vip" class="start-menu-item">
+                        <span class="menu-icon"><img src="img/email.png" alt="Email"></span>
+                        <span class="menu-text">Email Me</span>
+                    </a>
+                </li>
+                <li role="menuitem" class="has-divider">
+                    <a href="#" class="start-menu-item" data-action="paint">
+                        <span class="menu-icon"><img src="img/paint.png" alt="Paint"></span>
+                        <span class="menu-text">Paint</span>
+                    </a>
+                </li>
+            </ul>
             <div class="start-menu-footer">
-                <button class="start-menu-logoff">Log Off</button>
-                <button class="start-menu-shutdown">Turn Off Computer</button>
-            </div>
-        </div>
-
-        <!-- 3D Pinball Window -->
-        <div class="window" id="pinball-window" style="width: 800px; height: 600px">
-            <div class="title-bar">
-                <div class="title-bar-text">3D Pinball - Space Cadet</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
-                    <button aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
-                <iframe src="3DPinballSpaceCadet.htm" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
+                <button class="start-menu-logoff" data-url="https://youtu.be/gdlDLm2icYU">Log Off</button>
+                <button class="start-menu-shutdown" data-url="https://youtu.be/fueRUi5AWWQ">Turn Off</button>
             </div>
         </div>
 
@@ -371,8 +404,6 @@
             <div class="title-bar">
                 <div class="title-bar-text">Paint</div>
                 <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
@@ -381,20 +412,6 @@
             </div>
         </div>
 
-        <!-- Minesweeper Window -->
-        <div class="window" id="minesweeper-window" style="width: 500px; height: 600px">
-            <div class="title-bar">
-                <div class="title-bar-text">Minesweeper</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
-                    <button aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
-                <iframe src="https://mines.vercel.app" style="width: 100%; height: 100%; border: none;" allow="scripts"></iframe>
-            </div>
-        </div>
 
     </div>
 
