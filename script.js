@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const mainWindow = document.getElementById('main-window');
     if (mainWindow) {
         mainWindow.classList.add('active');
-        mainWindow.style.display = 'block';
+        mainWindow.style.display = 'flex';
     }
 
     initializeWindows();
@@ -262,7 +262,7 @@ function openWindow(windowId) {
     if (!win) return;
     
     win.classList.add('active');
-    win.style.display = 'block';
+    win.style.display = 'flex';
     bringToFront(win);
     
     // On mobile, always maximize; on desktop, center if not maximized

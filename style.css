@@ -153,7 +153,7 @@ iframe {
 /* Allow the welcome window to resize like other windows */
 
 .window.active {
-    display: flex;
+    display: flex !important;
 }
 
 .title-bar {
@@ -537,6 +537,7 @@ iframe {
     .window .window-body {
         padding: 8px 10px;
         min-height: 0;
+        flex: 1 1 auto;
         overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
