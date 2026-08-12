@@ -535,9 +535,11 @@ iframe {
     }
 
     .window .window-body {
+        /* Safari needs a definite zero basis for a flex child to become scrollable. */
+        height: 0;
         padding: 8px 10px;
         min-height: 0;
-        flex: 1 1 auto;
+        flex: 1 1 0;
         overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
