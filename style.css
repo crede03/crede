@@ -513,6 +513,9 @@ iframe {
     }
 
     body {
+        background-image: url("img/pape-mobile.jpg");
+        background-position: center center;
+        background-size: cover;
         background-attachment: scroll;
     }
 
