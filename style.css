@@ -1,4 +1,8 @@
 /* Custom styles to complement XP.css */
+html {
+    min-height: 100%;
+}
+
 body {
     background: url("img/pape.jpg") center center / cover no-repeat fixed;
     min-height: 100vh;
@@ -130,6 +134,7 @@ iframe {
     padding: 12px 16px;
     box-sizing: border-box;
     flex: 1;
+    min-height: 0;
 }
 
 .window .window-body.has-scrollbar {
@@ -148,7 +153,7 @@ iframe {
 /* Allow the welcome window to resize like other windows */
 
 .window.active {
-    display: block;
+    display: flex;
 }
 
 .title-bar {
@@ -499,6 +504,14 @@ iframe {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+    html,
+    body,
+    .desktop {
+        height: 100%;
+        min-height: 100%;
+        overflow: hidden;
+    }
+
     body {
         background-attachment: scroll;
     }
@@ -516,15 +529,19 @@ iframe {
         /* Override inline widths like style="width: 500px" */
         width: calc(100% - 16px) !important;
         max-width: 100% !important;
-        max-height: calc(100dvh - 56px);
-        height: calc(100dvh - 56px);
+        bottom: calc(46px + env(safe-area-inset-bottom));
+        height: auto;
+        max-height: none;
     }
 
-    .window-body {
+    .window .window-body {
         padding: 8px 10px;
-        max-height: none;
+        min-height: 0;
+        overflow-x: hidden;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
     }
 
     .title-bar {
@@ -570,7 +587,23 @@ iframe {
     }
 
     .intro-copy {
+        flex: 0 0 auto;
+        width: 100%;
         max-width: none;
+    }
+
+    .content-header,
+    .content-body {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .content-header {
+        flex: 0 0 auto;
+    }
+
+    .content-body {
+        margin: 0;
     }
 
     .photo-frame {
@@ -617,7 +650,8 @@ iframe {
 
     .start-menu {
         width: min(390px, calc(100vw - 20px));
-        max-height: calc(100dvh - 52px);
+        bottom: calc(46px + env(safe-area-inset-bottom));
+        max-height: calc(100dvh - 58px);
         overflow-y: auto;
     }
 
@@ -641,8 +675,9 @@ iframe {
         right: 6px;
         width: calc(100% - 12px) !important;
         max-width: 100% !important;
-        max-height: calc(100dvh - 52px);
-        height: calc(100dvh - 52px);
+        bottom: calc(46px + env(safe-area-inset-bottom));
+        height: auto;
+        max-height: none;
     }
     .photo-frame {
         width: 100px;
