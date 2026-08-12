@@ -46,9 +46,13 @@
             <div class="icon-label">Paint</div>
         </div>
         
+        <div class="desktop-icon" id="limewire-icon">
+            <div class="icon-image"><img src="img/limewire.png" alt="LimeWire"></div>
+            <div class="icon-label">CrimeWire</div>
+        </div>
 
         <!-- Main Window -->
-        <div class="window active" id="main-window" style="width: 700px">
+        <div class="window active" id="main-window" data-page="pages/about.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">CREDE.VIP</div>
                 <div class="title-bar-controls">
@@ -86,50 +90,18 @@
                 <li role="menuitem" tabindex="0" aria-haspopup="true">
                   Fun Stuff
                   <ul role="menu">
-                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="paint"">Paint</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="paint">Paint</a></li>
                   </ul>
                 </li>
               </ul>
 
-            <div class="window-body has-space has-scrollbar">    
-                <div class="content-header">
-                    <div class="intro-layout">
-                        <div class="intro-photo">
-                            <div class="photo-frame">
-                                <img src="img/pfp.png" alt="Crede Photo" id="profile-photo">
-                            </div>
-                        </div>
-                        <div class="intro-copy">
-                            <h1>Hello, I'm <span class="highlight">Crede</span></h1>
-                            <p class="subtitle">
-                                I’m a results-driven marketer and content-creator with over five years of experience in developing and promoting brands in hospitality, healthcare and the non-profit sector.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="content-body">
-                    <div class="section">
-                        <h2>About Me</h2>
-                        <h3>Ironically, I struggle to brand and market myself. Autism's fun.</h3>
-                        <p><b>Officially, I’m a Head of Marketing.</b> It’s the title that sits on the LinkedIn profile. But it’s a bit sanitized, isn't it? It doesn’t quite capture the eons of time I spend on Affinity figuring out what font to use, or the three hours I just spent having a marde with WordPress because a plugin’s developed a bout of dementia and forgotten where the CSS file is.</p>
-                        <p>So, maybe <b>Creative Lead?</b> It sounds sexier. It radiates the ‘performative MacBook user’ vibe I want to give off. It acknowledges my <b>UAL accreditation</b> and the fact that I’m a <b>hybrid shooter</b> who knows how to cure camera-shyness. It covers the <b>print and layout design</b> – because unlike most "leads," I actually know what the hell FOGRA39 is.</p>
-                        <p>But then I’m also the <b>ad man.</b> The <b>social media manager.</b> The guy reaching customers you never knew you had. Like people who've recently had kids (who might poo on your lovely carpet). That’s over 80,000 unlocked views for your hard-wood floor promo. </p>
-                        <p>If I call myself a <b>Full-Stack Creative</b>, I sound like a tech startup's fever dream. Ew.</p>
-                        <p>The truth? I’m a <b>man with a computer & camera</b> who is dangerously competent in too many disciplines. I can build the site, shoot the campaign, design the brochure, code the tracking, and fix the computer if the whole thing crashes (which it will if it runs Windows 11).</p>
-                        <h3>I am a silverware set in a world of plastic forks.</h3>
-                    </div>
-
-                    <div class="section">
-                        <h1>Have a click around my portfolio!</h1>
-                        </div>
-                    </div>
-                </div>
+            <div class="window-body has-space has-scrollbar">
+                <div class="page-mount" data-page-mount></div>
             </div>
         </div>
 
         <!-- Portfolio Window -->
-        <div class="window" id="portfolio-window" style="width: 700px">
+        <div class="window" id="portfolio-window" data-page="pages/portfolio.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">My Portfolio</div>
                 <div class="title-bar-controls">
@@ -137,102 +109,36 @@
                 </div>
             </div>
             <div class="window-body has-scrollbar">
-                <h1>Please select an item:</h1>
-                <div class="portfolio-grid">
-                    <button type="button" class="portfolio-item" data-project="1">
-                        <div class="portfolio-image">🏨</div>
-                        <h3>Dover Marina Hotel & Spa</h3>
-                        <p>A four-star coastal getaway & Hilton Tapestry Collection member</p>
-                    </button>
-                    <button type="button" class="portfolio-item" data-project="2">
-                        <div class="portfolio-image">🩷</div>
-                        <h3>Sai Care Homes</h3>
-                        <p>First-class dementia care across East Kent</p>
-                    </button>
-                    <button type="button" class="portfolio-item" data-project="3">
-                        <div class="portfolio-image">💡</div>
-                        <h3>Lighthouse on the Marsh</h3>
-                        <p>Making a difference to isolated communities on the Romney Marsh</p>
-                    </button>
-                    <button type="button" class="portfolio-item" data-project="4">
-                        <div class="portfolio-image">🖼️</div>
-                        <h3>Project 4</h3>
-                        <p>Description of your fourth project</p>
-                    </button>
-                </div>
+                <div class="page-mount" data-page-mount></div>
             </div>
         </div>
 
         <!-- Project Detail Windows -->
-        <div class="window project-window" id="project-1-window" style="width: 700px">
+        <div class="window project-window" id="project-1-window" data-page="pages/project-1.html" style="width: 700px">
             <div class="title-bar">
-                <div class="title-bar-text">Project 1</div>
+                <div class="title-bar-text">Dover Marina Hotel & Spa</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
             </div>
             <div class="window-body has-scrollbar">
-                <div class="project-detail">
-                    <div class="project-images">
-                        <img src="https://via.placeholder.com/600x400" alt="Project 1 Image" class="project-main-image">
-                        <div class="project-thumbnails">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h2>Dover Marina Hotel & Spa</h2>
-                        <p class="project-description">Add a detailed description of your first project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
-                        <div class="project-details">
-                            <h3>Details</h3>
-                            <ul>
-                                <li>Technology: Add technologies used</li>
-                                <li>Role: Shooting and editing professional promotional content, </li>
-                                <li>Duration: Ongoing</li>
-                                <li>Status: In Progress</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <div class="page-mount" data-page-mount></div>
             </div>
         </div>
 
-        <div class="window project-window" id="project-2-window" style="width: 700px">
+        <div class="window project-window" id="project-2-window" data-page="pages/project-2.html" style="width: 700px">
             <div class="title-bar">
-                <div class="title-bar-text">Project 2</div>
+                <div class="title-bar-text">Sai Care Homes</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
             </div>
             <div class="window-body has-scrollbar">
-                <div class="project-detail">
-                    <div class="project-images">
-                        <img src="https://via.placeholder.com/600x400" alt="Project 2 Image" class="project-main-image">
-                        <div class="project-thumbnails">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h2>Project 2</h2>
-                        <p class="project-description">Add a detailed description of your second project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
-                        <div class="project-details">
-                            <h3>Details</h3>
-                            <ul>
-                                <li>Technology: Add technologies used</li>
-                                <li>Role: Your role in this project</li>
-                                <li>Duration: Project timeline</li>
-                                <li>Status: Completed / In Progress</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <div class="page-mount" data-page-mount></div>
             </div>
         </div>
 
-        <div class="window project-window" id="project-3-window" style="width: 700px">
+        <div class="window project-window" id="project-3-window" data-page="pages/project-3.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Project 3</div>
                 <div class="title-bar-controls">
@@ -240,70 +146,26 @@
                 </div>
             </div>
             <div class="window-body has-scrollbar">
-                <div class="project-detail">
-                    <div class="project-images">
-                        <img src="https://via.placeholder.com/600x400" alt="Project 3 Image" class="project-main-image">
-                        <div class="project-thumbnails">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h2>Project 3</h2>
-                        <p class="project-description">Add a detailed description of your third project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
-                        <div class="project-details">
-                            <h3>Details</h3>
-                            <ul>
-                                <li>Technology: Add technologies used</li>
-                                <li>Role: Your role in this project</li>
-                                <li>Duration: Project timeline</li>
-                                <li>Status: Completed / In Progress</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <div class="page-mount" data-page-mount></div>
             </div>
         </div>
 
-        <div class="window project-window" id="project-4-window" style="width: 700px">
+        <div class="window project-window" id="project-4-window" data-page="pages/project-4.html" style="width: 700px">
             <div class="title-bar">
-                <div class="title-bar-text">Project 4</div>
+                <div class="title-bar-text">Freelance Work & Personal Projects</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
             </div>
             <div class="window-body has-scrollbar">
-                <div class="project-detail">
-                    <div class="project-images">
-                        <img src="https://via.placeholder.com/600x400" alt="Project 4 Image" class="project-main-image">
-                        <div class="project-thumbnails">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 1" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 2" class="project-thumbnail">
-                            <img src="https://via.placeholder.com/150x100" alt="Thumbnail 3" class="project-thumbnail">
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <h2>Project 4</h2>
-                        <p class="project-description">Add a detailed description of your fourth project here. You can include information about the technologies used, challenges faced, and outcomes achieved.</p>
-                        <div class="project-details">
-                            <h3>Details</h3>
-                            <ul>
-                                <li>Technology: Add technologies used</li>
-                                <li>Role: Your role in this project</li>
-                                <li>Duration: Project timeline</li>
-                                <li>Status: Completed / In Progress</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <div class="page-mount" data-page-mount></div>
             </div>
         </div>
 
         <!-- Taskbar -->
         <div class="taskbar">
-            <button class="start-button" id="start-btn">
-                <span class="start-text">fart</span>
+            <button class="start-button" id="start-btn" aria-label="Open Start menu" aria-expanded="false">
+                <img class="start-image" src="img/start.png" alt="Start">
             </button>
             <div class="taskbar-tasks">
                 <button class="taskbar-task active" data-window="main-window">
@@ -337,6 +199,10 @@
                 <button class="taskbar-task" data-window="paint-window" style="display: none;">
                     <span class="task-icon"><img src="img/paint.png" alt="Paint"></span>
                     <span class="task-text">Paint</span>
+                </button>
+                <button class="taskbar-task" data-window="limewire-window" style="display: none;">
+                    <span class="task-icon"><img src="img/limewire.png" alt="LimeWire"></span>
+                    <span class="task-text">CrimeWire</span>
                 </button>
             </div>
             <div class="system-tray">
@@ -381,6 +247,12 @@
                     </a>
                 </li>
                 <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="limewire">
+                        <span class="menu-icon"><img src="img/limewire.png" alt="LimeWire"></span>
+                        <span class="menu-text">CrimeWire</span>
+                    </a>
+                </li>
+                <li role="menuitem">
                     <a href="mailto:crede@crede.vip" class="start-menu-item">
                         <span class="menu-icon"><img src="img/email.png" alt="Email"></span>
                         <span class="menu-text">Email Me</span>
@@ -395,7 +267,7 @@
             </ul>
             <div class="start-menu-footer">
                 <button class="start-menu-logoff" data-url="https://youtu.be/gdlDLm2icYU">Log Off</button>
-                <button class="start-menu-shutdown" data-url="https://youtu.be/fueRUi5AWWQ">Turn Off</button>
+                <button class="start-menu-shutdown" type="button" onclick="const d=document.getElementById('shutdown-dialog'); if(d){d.style.display='block'; d.classList.add('active');}">Turn Off</button>
             </div>
         </div>
 
@@ -412,6 +284,35 @@
             </div>
         </div>
 
+        <!-- LimeWire / Apple Music Window -->
+        <div class="window" id="limewire-window" style="width: 1000px; height: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">CrimeWire - Like torrenting, but with scurvy</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
+                <iframe src="scratchpad.html" style="width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Shutdown Error Dialog -->
+        <div class="window is-bright" id="shutdown-dialog" role="dialog" aria-labelledby="shutdown-dialog-title" style="width: 420px;">
+            <div class="title-bar">
+                <div class="title-bar-text" id="shutdown-dialog-title">Critical Error</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-space">
+                <h2 class="instruction instruction-primary">The progress bar's only here for show.</h2>
+                <div role="progressbar" class="marquee"></div>
+            </div>
+            <footer style="text-align: right">
+                <button type="button" class="shutdown-cancel-btn">Cancel</button>
+            </footer>
+        </div>
 
     </div>
 

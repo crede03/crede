@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CrimeWire</title>
+  <link rel="stylesheet" href="https://unpkg.com/7.css">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      background: #f0f0f0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      font-size: 12px;
+    }
+    .crimewire-root {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      margin: 0;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .crimewire-content {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      box-sizing: border-box;
+    }
+    .crimewire-main {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 8px;
+      flex: 1;
+      min-height: 0;
+    }
+    .crimewire-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .crimewire-sidebar .panel-body {
+      padding: 4px 6px;
+    }
+    .crimewire-sidebar h4 {
+      margin: 0 0 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .crimewire-sidebar ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .crimewire-sidebar li {
+      padding: 1px 0;
+      cursor: default;
+    }
+    .crimewire-sidebar li.selected {
+      background: rgba(255,255,255,0.15);
+    }
+    .crimewire-center {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-height: 0;
+    }
+    .crimewire-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 6px;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+    }
+    .crimewire-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .crimewire-toolbar-search {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .crimewire-toolbar-search input {
+      width: 220px;
+    }
+
+    /* Table logic: keep side columns tight, Name fills the space */
+    .crimewire-results-table {
+      width: 100%;
+      table-layout: auto; 
+      border-collapse: collapse;
+    }
+    .crimewire-results-table tbody tr.selected {
+      background: #2f71ff;
+      color: #fff;
+    }
+    .crimewire-results-table td,
+    .crimewire-results-table th {
+      white-space: nowrap;
+      padding: 2px 4px;
+      text-align: left;
+    }
+
+    .col-shrink {
+      width: 0.1%;
+    }
+
+    .crimewire-downloads {
+      grid-column: 1 / span 2;
+    }
+    .panel {
+      background: #ece9d8;
+      border: 1px solid #7f9db9;
+      border-radius: 2px;
+      box-shadow: none;
+      overflow: hidden;
+    }
+    .panel-body {
+        padding: 4px 6px;
+    }
+    .crimewire-center .panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="crimewire-root">
+
+    <ul role="menubar" class="can-hover">
+      <li role="menuitem" tabindex="0" aria-haspopup="true">
+        File
+        <ul role="menu">
+          <li role="menuitem">
+            <a href="#crimewire-menubar">Open Search<span>Ctrl+O</span></a>
+          </li>
+          <li role="menuitem">
+            <a href="#crimewire-menubar">Save Results<span>Ctrl+S</span></a>
+          </li>
+          <li role="menuitem" class="has-divider">
+            <a href="#crimewire-menubar">Exit CrimeWire<span>Alt+F4</span></a>
+          </li>
+        </ul>
+      </li>
+      <li role="menuitem" tabindex="0" aria-haspopup="true">
+        View
+        <ul role="menu">
+          <li role="menuitem"><a href="#crimewire-menubar">Search</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Monitor</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Library</a></li>
+          <li role="menuitem" class="has-divider"><a href="#crimewire-menubar">Console</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Logging</a></li>
+        </ul>
+      </li>
+      <li role="menuitem" tabindex="0" aria-haspopup="true">
+        Tools
+        <ul role="menu">
+          <li role="menuitem"><a href="#crimewire-menubar">Screwdriver</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Power Drill</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Hammer</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Pliers</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">The Ghost of Saddam Hussein</a></li>
+        </ul>
+      </li>
+      <li role="menuitem" tabindex="0" aria-haspopup="true">
+        Help
+        <ul role="menu">
+          <li role="menuitem"><a href="#crimewire-menubar">View CrimeWire Help</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">Seek Clinical Help</a></li>
+          <li role="menuitem"><a href="#crimewire-menubar">About CrimeWire</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="crimewire-content">
+
+    <div role="tablist" class="tab-group" style="margin-top:4px;">
+      <button role="tab" aria-selected="true">Search</button>
+      <button role="tab">Monitor</button>
+      <button role="tab">Library</button>
+      <button role="tab">Console</button>
+      <button role="tab">Logging</button>
+      <button role="tab">@CrimeWire</button>
+    </div>
+
+    <div class="panel" style="margin-top:4px;">
+      <div class="panel-body" style="padding:4px 8px;background:#ffc000;color:#000;">
+        CrimeWire is not responsible for any digital Ebola you may download. &nbsp;
+        <a href="#">More Info…</a>
+      </div>
+    </div>
+
+    <div class="crimewire-main" style="margin-top:4px;">
+
+      <div class="crimewire-sidebar">
+        <div class="panel">
+          <div class="panel-body">
+            <h4>Filter Results:</h4>
+            <strong>All (33)</strong>
+            <ul>
+              <li class="selected">Audio (19)</li>
+              <li>Programs (7)</li>
+              <li>Video (7)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <h4>Artist</h4>
+            <ul>
+              <li class="selected">Various Artists (All)</li>
+              <li>Linkin Park</li>
+              <li>Rihanna</li>
+              <li>My Chemical Romance</li>
+              <li>Soulja Boy</li>
+              <li>Movie Soundtracks</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-body">
+            <h4>Album</h4>
+            <ul>
+              <li>Leader Of The New School</li>
+              <li>Black Parade</li>
+              <li>Ocean Avenue</li>
+              <li>Random 2007 Bangers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="crimewire-center">
+        <div class="panel">
+          <div class="crimewire-toolbar">
+            <div class="crimewire-toolbar-left">
+              <span>Search for:</span>
+              <div class="crimewire-toolbar-search">
+                <div class="field-row">
+                  <input id="crimewire-search" class="field-row" type="search" placeholder="Search">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-body" style="padding:0;flex:1;min-height:0;overflow:auto;">
+            <table class="crimewire-results-table">
+              <thead>
+                <tr>
+                  <th class="col-shrink">Quality</th>
+                  <th class="col-shrink">★</th>
+                  <th>Name</th>
+                  <th class="col-shrink">Type</th>
+                  <th class="col-shrink">Size</th>
+                  <th class="col-shrink">Speed</th>
+                  <th class="col-shrink">Bitrate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>★★★★★</td>
+                  <td>★</td>
+                  <td>01-wiley-wot-do-u-call-it-radio-rip.mp3</td>
+                  <td>mp3</td>
+                  <td>2.1</td>
+                  <td>T3 or Higher</td>
+                  <td>12</td>
+                </tr>
+                <tr>
+                  <td>★☆☆☆☆</td>
+                  <td></td>
+                  <td>Dizzee_Rascal_I_Luv_U_REMIX_NEW_2007.zip</td>
+                  <td>zip</td>
+                  <td>14.9 KB</td>
+                  <td>T1</td>
+                  <td>n/a</td>
+                </tr>
+                <tr class="selected">
+                  <td>★★★★☆</td>
+                  <td></td>
+                  <td>Lethal_B_Pow_Forward_2_192kbps.mp3</td>
+                  <td>mp3</td>
+                  <td>5,294 KB</td>
+                  <td>T1</td>
+                  <td>128</td>
+                </tr>
+                <tr>
+                  <td>★★★☆☆</td>
+                  <td></td>
+                  <td>kano-ps-and-qs-instrumental.wma</td>
+                  <td>wma</td>
+                  <td>3.2 MB</td>
+                  <td>T3 or Higher</td>
+                  <td>64</td>
+                </tr>
+                <tr>
+                  <td>★★☆☆☆</td>
+                  <td></td>
+                  <td>T2 - Heartbroken (Feat. Jodie Aysha).mp3</td>
+                  <td>mp3</td>
+                  <td>3,191 KB</td>
+                  <td>Broadband</td>
+                  <td>128</td>
+                </tr>
+                <tr>
+                  <td>★☆☆☆☆</td>
+                  <td></td>
+                  <td>skepta-duppy-rimix-ft-wiley-juk-me-new.mp3.exe</td>
+                  <td>exe</td>
+                  <td>38 KB</td>
+                  <td>Broadband</td>
+                  <td>n/a</td>
+                </tr>
+                <tr>
+                  <td>★★★☆☆</td>
+                  <td></td>
+                  <td>MC_Vapour_Move_Your_Body_FEAT_DJ_LUCK_NEAT.mp3</td>
+                  <td>mp3</td>
+                  <td>7,634 KB</td>
+                  <td>T1</td>
+                  <td>192</td>
+                </tr>
+                <tr>
+                  <td>★★★★★</td>
+                  <td>★</td>
+                  <td>XP_crack_keygen_FULL_WORKING_2007.exe</td>
+                  <td>exe</td>
+                  <td>145 KB</td>
+                  <td>T3 or Higher</td>
+                  <td>n/a</td>
+                </tr>
+                <tr>
+                  <td>★★☆☆☆</td>
+                  <td></td>
+                  <td>cupcake-deep-throat-NEW-2007-HOTT.mp3.exe</td>
+                  <td>exe</td>
+                  <td>27 KB</td>
+                  <td>Dial-up</td>
+                  <td>n/a</td>
+                </tr>
+                <tr>
+                  <td>★★☆☆☆</td>
+                  <td></td>
+                  <td>Danny_Weed_Creeper_riddim_grime_classic.mp3</td>
+                  <td>mp3</td>
+                  <td>768 KB</td>
+                  <td>Dial-up</td>
+                  <td>32</td>
+                </tr>     
+                <tr>
+                  <td>★★☆☆☆</td>
+                  <td></td>
+                  <td>put_a_banging_donk_on_it_radio_edit.mp3</td>
+                  <td>mp3</td>
+                  <td>2,162 KB</td>
+                  <td>T1</td>
+                  <td>96</td>
+                </tr>             
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel-body" style="padding:6px 8px;border-top:1px solid rgba(0,0,0,0.1);text-align:center;">
+            <button class="primary">Download</button>
+            <button>Browse Host</button>
+            <button>Stop Search</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel crimewire-downloads">
+        <div class="panel-body" style="padding:4px 6px 2px;">
+          <strong>Downloads</strong>
+        </div>
+        <div class="panel-body" style="padding:0;height:150px;overflow:hidden;">
+          <table style="width:100%;">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Speed</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Movie - The Terminator 1.avi</td>
+                <td>630.2 MB</td>
+                <td>Downloading from 7 hosts</td>
+                <td>
+                  <div role="progressbar" class="marquee" style="width:120px;"></div>
+                </td>
+                <td>79 KB/s</td>
+                <td>2:15:32</td>
+              </tr>
+              <tr>
+                <td>Coldplay - Viva La Vida.mp3</td>
+                <td>7,634 KB</td>
+                <td>Complete</td>
+                <td>
+                  <progress value="100" max="100" style="width:120px;"></progress>
+                </td>
+                <td>—</td>
+                <td>00:00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <p class="status-bar-field">▲ 79 KB/s</p>
+      <p class="status-bar-field">▼ 0 KB/s</p>
+      <p class="status-bar-field">Junk Filter: OFF</p>
+      <p class="status-bar-field">CrimeWire 0.7b | Support stealing from Metallica.</p>
+    </div>
+
+    </div>
+</div>
+
+</body>
+</html>

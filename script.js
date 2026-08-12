@@ -4,7 +4,10 @@ let draggedWindow = null;
 let dragOffset = { x: 0, y: 0 };
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Load modular page content into the desktop windows before wiring interactions.
+    await loadModularPages();
+
     // Fade-in effect
     document.body.classList.add('page-loaded');
 
@@ -51,6 +54,29 @@ document.addEventListener('DOMContentLoaded', function() {
     updateClock();
     setInterval(updateClock, 1000);
 });
+
+// Load page-specific HTML fragments into their windows.
+async function loadModularPages() {
+    const windows = document.querySelectorAll('.window[data-page]');
+    await Promise.all(Array.from(windows).map(async (win) => {
+        const mount = win.querySelector('[data-page-mount]');
+        const page = win.dataset.page;
+        if (!mount || !page) return;
+
+        try {
+            const response = await fetch(page);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const html = await response.text();
+            const parsed = new DOMParser().parseFromString(html, 'text/html');
+            const content = parsed.querySelector('.page-content');
+            if (!content) throw new Error('Missing .page-content');
+            mount.replaceWith(...content.childNodes);
+        } catch (error) {
+            mount.innerHTML = '<p class="page-load-error">This page could not be loaded.</p>';
+            console.error(`Unable to load ${page}`, error);
+        }
+    }));
+}
 
 // Helpers
 function isMobileViewport() {
@@ -302,13 +328,15 @@ function initializeStartMenu() {
     
     startBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        startMenu.classList.toggle('active');
+        const isOpen = startMenu.classList.toggle('active');
+        startBtn.setAttribute('aria-expanded', String(isOpen));
     });
     
     // Close start menu when clicking outside
     document.addEventListener('click', (e) => {
         if (!startMenu.contains(e.target) && !startBtn.contains(e.target)) {
             startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
         }
     });
     
@@ -323,6 +351,7 @@ function initializeStartMenu() {
                 e.preventDefault();
                 setTheme(theme);
                 startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
                 return;
             }
 
@@ -330,22 +359,32 @@ function initializeStartMenu() {
                 e.preventDefault();
                 openWindow('main-window');
                 startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'portfolio') {
                 e.preventDefault();
                 openWindow('portfolio-window');
                 startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'pinball') {
                 e.preventDefault();
                 openWindow('pinball-window');
                 startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'paint') {
                 e.preventDefault();
                 openWindow('paint-window');
                 startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'minesweeper') {
                 e.preventDefault();
                 openWindow('minesweeper-window');
                 startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
+            } else if (action === 'limewire') {
+                e.preventDefault();
+                openWindow('limewire-window');
+                startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             }
         });
     });
@@ -357,6 +396,7 @@ function initializeStartMenu() {
     if (logoffBtn) {
         logoffBtn.addEventListener('click', () => {
             startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             const url = logoffBtn.dataset.url;
             if (url) {
                 window.location.href = url;
@@ -367,10 +407,9 @@ function initializeStartMenu() {
     if (shutdownBtn) {
         shutdownBtn.addEventListener('click', () => {
             startMenu.classList.remove('active');
-            const url = shutdownBtn.dataset.url;
-            if (url) {
-                window.location.href = url;
-            }
+            startBtn.setAttribute('aria-expanded', 'false');
+            // Show shutdown error dialog instead of navigating away
+            openWindow('shutdown-dialog');
         });
     }
 }
@@ -384,17 +423,20 @@ function initializeDesktopIcons() {
     const linkedinIcon = document.getElementById('linkedin-icon');
     const substackIcon = document.getElementById('substack-icon');
     const instagramIcon = document.getElementById('instagram-icon');
+    const limewireIcon = document.getElementById('limewire-icon');
     
+    const openFromIcon = (windowId) => {
+        if (isMobileViewport()) openWindow(windowId);
+    };
+
     if (welcomeIcon) {
-        welcomeIcon.addEventListener('dblclick', () => {
-            openWindow('main-window');
-        });
+        welcomeIcon.addEventListener('dblclick', () => openWindow('main-window'));
+        welcomeIcon.addEventListener('click', () => openFromIcon('main-window'));
     }
     
     if (portfolioIcon) {
-        portfolioIcon.addEventListener('dblclick', () => {
-            openWindow('portfolio-window');
-        });
+        portfolioIcon.addEventListener('dblclick', () => openWindow('portfolio-window'));
+        portfolioIcon.addEventListener('click', () => openFromIcon('portfolio-window'));
     }
     
     if (emailIcon) {
@@ -426,6 +468,12 @@ function initializeDesktopIcons() {
             openWindow('pinball-window');
         });
     }
+
+    if (limewireIcon) {
+        limewireIcon.addEventListener('dblclick', () => {
+            openWindow('limewire-window');
+        });
+    }
     
     const paintIcon = document.getElementById('paint-icon');
     if (paintIcon) {
@@ -450,6 +498,19 @@ function initializeDesktopIcons() {
         });
     });
 }
+
+// Shutdown dialog cancel button
+document.addEventListener('DOMContentLoaded', () => {
+    const shutdownCancelBtn = document.querySelector('.shutdown-cancel-btn');
+    if (shutdownCancelBtn) {
+        shutdownCancelBtn.addEventListener('click', () => {
+            const dialog = document.getElementById('shutdown-dialog');
+            if (dialog) {
+                closeWindow(dialog);
+            }
+        });
+    }
+});
 
 // Portfolio items - make them clickable
 function initializePortfolioItems() {
