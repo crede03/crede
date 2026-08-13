@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     initializeWindows();
+    initializeWebamp();
     initializeTaskbar();
     initializeStartMenu();
     initializeDesktopIcons();
@@ -54,6 +55,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateClock();
     setInterval(updateClock, 1000);
 });
+
+function initializeWebamp() {
+    const root = document.getElementById('webamp-root');
+    if (!root || !window.Webamp) return;
+
+    if (!window.Webamp.browserIsSupported()) {
+        root.textContent = 'Webamp is not supported by this browser.';
+        return;
+    }
+
+    const webamp = new window.Webamp({
+        zIndex: 1,
+        enableHotkeys: false,
+        enableMediaSession: true,
+    });
+
+    webamp.renderInto(root).catch(error => {
+        root.textContent = 'Webamp could not be loaded.';
+        console.error('Unable to initialize Webamp', error);
+    });
+}
 
 // Load page-specific HTML fragments into their windows.
 async function loadModularPages() {
@@ -375,6 +397,11 @@ function initializeStartMenu() {
                 openWindow('paint-window');
                 startMenu.classList.remove('active');
             startBtn.setAttribute('aria-expanded', 'false');
+            } else if (action === 'webamp') {
+                e.preventDefault();
+                openWindow('webamp-window');
+                startMenu.classList.remove('active');
+            startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'minesweeper') {
                 e.preventDefault();
                 openWindow('minesweeper-window');
@@ -424,6 +451,7 @@ function initializeDesktopIcons() {
     const substackIcon = document.getElementById('substack-icon');
     const instagramIcon = document.getElementById('instagram-icon');
     const limewireIcon = document.getElementById('limewire-icon');
+    const webampIcon = document.getElementById('webamp-icon');
     
     const openFromIcon = (windowId) => {
         if (isMobileViewport()) openWindow(windowId);
@@ -472,6 +500,12 @@ function initializeDesktopIcons() {
     if (limewireIcon) {
         limewireIcon.addEventListener('dblclick', () => {
             openWindow('limewire-window');
+        });
+    }
+
+    if (webampIcon) {
+        webampIcon.addEventListener('dblclick', () => {
+            openWindow('webamp-window');
         });
     }
     

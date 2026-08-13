@@ -485,6 +485,28 @@ iframe {
 .task-icon, .task-icon img { display: block; }
 .task-icon img { width: 16px; height: 16px; object-fit: contain; }
 
+.webamp-body {
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #111;
+}
+
+#webamp-root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+}
+
+#webamp-root > #webamp {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    height: 100%;
+    transform: scale(.8);
+    transform-origin: top left;
+}
+
 .system-tray { display: flex; align-items: center; padding: 0 12px; height: 34px; background: linear-gradient(to bottom, rgba(101,163,237,.55), rgba(11,44,94,.5)); border: 1px solid rgba(1,21,53,.55); border-top-color: rgba(179,221,255,.5); border-radius: 3px 0 0 3px; }
 .tray-time { color: white; font-size: 11px; font-weight: 400; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
 

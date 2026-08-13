@@ -45,6 +45,11 @@
             <div class="icon-image"><img src="img/paint.png" alt="Paint"></div>
             <div class="icon-label">Paint</div>
         </div>
+
+        <div class="desktop-icon" id="webamp-icon">
+            <div class="icon-image" aria-hidden="true">🎵</div>
+            <div class="icon-label">Winamp</div>
+        </div>
         
         <div class="desktop-icon" id="limewire-icon">
             <div class="icon-image"><img src="img/limewire.png" alt="LimeWire"></div>
@@ -204,6 +209,10 @@
                     <span class="task-icon"><img src="img/limewire.png" alt="LimeWire"></span>
                     <span class="task-text">CrimeWire</span>
                 </button>
+                <button class="taskbar-task" data-window="webamp-window" style="display: none;">
+                    <span class="task-icon" aria-hidden="true">🎵</span>
+                    <span class="task-text">Winamp</span>
+                </button>
             </div>
             <div class="system-tray">
                 <div class="tray-time" id="clock"></div>
@@ -264,6 +273,12 @@
                         <span class="menu-text">Paint</span>
                     </a>
                 </li>
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="webamp">
+                        <span class="menu-icon" aria-hidden="true">🎵</span>
+                        <span class="menu-text">Winamp</span>
+                    </a>
+                </li>
             </ul>
             <div class="start-menu-footer">
                 <button class="start-menu-logoff" data-url="https://youtu.be/gdlDLm2icYU">Log Off</button>
@@ -297,6 +312,19 @@
             </div>
         </div>
 
+        <!-- Webamp Window -->
+        <div class="window webamp-window" id="webamp-window" style="width: 660px; height: 520px">
+            <div class="title-bar">
+                <div class="title-bar-text">Winamp</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body webamp-body">
+                <div id="webamp-root" aria-label="Personal Webamp instance"></div>
+            </div>
+        </div>
+
         <!-- Shutdown Error Dialog -->
         <div class="window is-bright" id="shutdown-dialog" role="dialog" aria-labelledby="shutdown-dialog-title" style="width: 420px;">
             <div class="title-bar">
@@ -316,6 +344,7 @@
 
     </div>
 
+    <script src="https://unpkg.com/webamp@2.3.1/built/webamp.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
