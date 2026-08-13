@@ -7,29 +7,86 @@
 </head>
 <body>
 <main class="page-content">
-<h1>Please select an item:</h1>
-                <div class="portfolio-grid">
-                    <button type="button" class="portfolio-item" data-project="1">
-                        <div class="portfolio-image">🏨</div>
-                        <h3>Dover Marina Hotel & Spa</h3>
-                        <p>A four-star coastal getaway & Hilton Tapestry Collection member</p>
-                    </button>
-                    <button type="button" class="portfolio-item" data-project="2">
-                        <div class="portfolio-image">🩷</div>
-                        <h3>Sai Care Homes</h3>
-                        <p>Promoting first-class dementia care across East Kent</p>
-                    </button>
-                    <button type="button" class="portfolio-item" data-project="3">
-                        <div class="portfolio-image">💡</div>
-                        <h3>Lighthouse on the Marsh</h3>
-                        <p>Making a difference to isolated communities on the Romney Marsh</p>
-                    </button>
-                    <button type="button" class="portfolio-item" data-project="4">
-                        <div class="portfolio-image">🖼️</div>
-                        <h3>Freelance/Personal Projects</h3>
-                        <p>But wait... there's more!</p>
-                    </button>
-                </div>
+    <div class="explorer-toolbar" aria-label="Portfolio navigation">
+        <button type="button" class="explorer-nav-button" aria-label="Back" disabled>‹</button>
+        <button type="button" class="explorer-nav-button" aria-label="Forward" disabled>›</button>
+        <div class="explorer-address" aria-label="Current location">
+            <span class="explorer-address-icon">📁</span>
+            <span>This PC</span>
+            <span class="explorer-address-chevron">›</span>
+            <strong>CREDE.VIP Portfolio</strong>
+        </div>
+        <button type="button" class="explorer-view-button" aria-label="Current view">▦</button>
+    </div>
+
+    <div class="explorer-heading">
+        <div>
+            <h1>CREDE.VIP Portfolio</h1>
+            <p>Four items · Double-click or tap a document to open it</p>
+        </div>
+        <span class="explorer-status" aria-label="Portfolio status">Ready</span>
+    </div>
+
+    <div class="portfolio-list" role="list" aria-label="Portfolio entries">
+        <div class="portfolio-list-header" aria-hidden="true">
+            <span>Name</span>
+            <span>Type</span>
+            <span>Modified</span>
+        </div>
+
+        <button type="button" class="portfolio-row" data-project="1" role="listitem">
+            <span class="portfolio-row-name">
+                <span class="portfolio-file-icon">🏨</span>
+                <span>
+                    <strong>Dover Marina Hotel &amp; Spa</strong>
+                    <small>Hospitality · Photography · Campaigns</small>
+                </span>
+            </span>
+            <span class="portfolio-row-type">Portfolio document</span>
+            <time datetime="2025-12">December 2025</time>
+        </button>
+
+        <button type="button" class="portfolio-row" data-project="2" role="listitem">
+            <span class="portfolio-row-name">
+                <span class="portfolio-file-icon">🩷</span>
+                <span>
+                    <strong>Sai Care Homes</strong>
+                    <small>Healthcare · Marketing · Content</small>
+                </span>
+            </span>
+            <span class="portfolio-row-type">Portfolio document</span>
+            <time datetime="2025-12">December 2025</time>
+        </button>
+
+        <button type="button" class="portfolio-row" data-project="3" role="listitem">
+            <span class="portfolio-row-name">
+                <span class="portfolio-file-icon">💡</span>
+                <span>
+                    <strong>Lighthouse on the Marsh</strong>
+                    <small>Community · Digital skills · Outreach</small>
+                </span>
+            </span>
+            <span class="portfolio-row-type">Portfolio document</span>
+            <time datetime="2023-01">January 2023</time>
+        </button>
+
+        <button type="button" class="portfolio-row" data-project="4" role="listitem">
+            <span class="portfolio-row-name">
+                <span class="portfolio-file-icon">🖼️</span>
+                <span>
+                    <strong>Freelance &amp; Personal Projects</strong>
+                    <small>Selected work · Experiments · More</small>
+                </span>
+            </span>
+            <span class="portfolio-row-type">Portfolio document</span>
+            <time datetime="2025-12">December 2025</time>
+        </button>
+    </div>
+
+    <div class="explorer-footer">
+        <span><strong>Tip:</strong> select an entry to open its document window.</span>
+        <span>CREDE.VIP</span>
+    </div>
 </main>
 </body>
 </html>

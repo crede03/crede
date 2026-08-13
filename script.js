@@ -555,12 +555,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Portfolio items - make them clickable
 function initializePortfolioItems() {
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
+    const portfolioItems = document.querySelectorAll('.portfolio-row');
     portfolioItems.forEach(item => {
-        item.addEventListener('click', () => {
+        const openProject = () => {
             const projectNumber = item.getAttribute('data-project');
             const windowId = `project-${projectNumber}-window`;
             openWindow(windowId);
+        };
+
+        item.addEventListener('dblclick', openProject);
+        item.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openProject();
+            }
+        });
+
+        // A single tap is the touch-friendly equivalent of opening a document.
+        item.addEventListener('click', (event) => {
+            if (isMobileViewport()) {
+                event.preventDefault();
+                openProject();
+            }
         });
     });
 
