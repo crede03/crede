@@ -487,10 +487,7 @@ iframe {
 
 .webamp-host {
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 1px;
-    height: 1px;
+    inset: 0 0 46px;
     z-index: 900;
     pointer-events: none;
 }
@@ -500,8 +497,8 @@ iframe {
 }
 
 .webamp-host iframe {
-    width: 1px;
-    height: 1px;
+    width: 100%;
+    height: 100%;
     display: block;
     border: 0;
     background: transparent;
