@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     initializeWindows();
+    initializeWebamp();
     initializeTaskbar();
     initializeStartMenu();
     initializeDesktopIcons();
@@ -55,6 +56,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     setInterval(updateClock, 1000);
 });
 
+
+function initializeWebamp() {
+    const host = document.getElementById('webamp-host');
+    const task = document.getElementById('webamp-task');
+    if (!host || !task) return;
+
+    const showWebamp = () => {
+        host.hidden = false;
+        task.style.display = 'flex';
+        task.classList.add('active');
+    };
+
+    const hideWebamp = () => {
+        host.hidden = true;
+        task.classList.remove('active');
+    };
+
+    task.addEventListener('click', () => {
+        if (host.hidden) {
+            showWebamp();
+        } else {
+            hideWebamp();
+        }
+    });
+
+    window.openWebamp = showWebamp;
+}
 
 // Load page-specific HTML fragments into their windows.
 async function loadModularPages() {
@@ -378,7 +406,7 @@ function initializeStartMenu() {
             startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'webamp') {
                 e.preventDefault();
-                openWindow('webamp-window');
+                window.openWebamp?.();
                 startMenu.classList.remove('active');
             startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'minesweeper') {
@@ -484,7 +512,7 @@ function initializeDesktopIcons() {
 
     if (webampIcon) {
         webampIcon.addEventListener('dblclick', () => {
-            openWindow('webamp-window');
+            window.openWebamp?.();
         });
     }
     

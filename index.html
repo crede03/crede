@@ -209,7 +209,7 @@
                     <span class="task-icon"><img src="img/limewire.png" alt="LimeWire"></span>
                     <span class="task-text">CrimeWire</span>
                 </button>
-                <button class="taskbar-task" data-window="webamp-window" style="display: none;">
+                <button class="taskbar-task" id="webamp-task" data-webamp-task style="display: none;">
                     <span class="task-icon" aria-hidden="true">🎵</span>
                     <span class="task-text">Winamp</span>
                 </button>
@@ -312,17 +312,9 @@
             </div>
         </div>
 
-        <!-- Webamp Window -->
-        <div class="window webamp-window" id="webamp-window" style="width: 660px; height: 520px">
-            <div class="title-bar">
-                <div class="title-bar-text">Winamp</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="window-body webamp-body">
-                <iframe src="webamp.html" title="Personal Webamp instance" allow="autoplay" allowfullscreen></iframe>
-            </div>
+        <!-- Webamp runs directly on the desktop, without an outer faux window. -->
+        <div class="webamp-host" id="webamp-host" hidden>
+            <iframe src="webamp.html" title="Personal Webamp instance" allow="autoplay"></iframe>
         </div>
 
         <!-- Shutdown Error Dialog -->
