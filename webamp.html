@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winamp</title>
+    <style>
+        html,
+        body,
+        #webamp-root {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            position: relative;
+            background: #111;
+        }
+
+        #webamp-root {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div id="webamp-root" aria-label="Personal Webamp instance"></div>
+
+    <script src="https://unpkg.com/webamp@2.3.1/built/webamp.bundle.min.js"></script>
+    <script>
+        const root = document.getElementById('webamp-root');
+
+        if (!window.Webamp || !window.Webamp.browserIsSupported()) {
+            root.textContent = 'Webamp is not supported by this browser.';
+        } else {
+            const webamp = new window.Webamp({
+                zIndex: 1,
+                enableHotkeys: false,
+                enableMediaSession: true,
+            });
+
+            webamp.renderInto(root).catch(error => {
+                root.textContent = 'Webamp could not be loaded.';
+                console.error('Unable to initialize Webamp', error);
+            });
+        }
+    </script>
+</body>
+</html>

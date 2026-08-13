@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     initializeWindows();
-    initializeWebamp();
     initializeTaskbar();
     initializeStartMenu();
     initializeDesktopIcons();
@@ -56,26 +55,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     setInterval(updateClock, 1000);
 });
 
-function initializeWebamp() {
-    const root = document.getElementById('webamp-root');
-    if (!root || !window.Webamp) return;
-
-    if (!window.Webamp.browserIsSupported()) {
-        root.textContent = 'Webamp is not supported by this browser.';
-        return;
-    }
-
-    const webamp = new window.Webamp({
-        zIndex: 1,
-        enableHotkeys: false,
-        enableMediaSession: true,
-    });
-
-    webamp.renderInto(root).catch(error => {
-        root.textContent = 'Webamp could not be loaded.';
-        console.error('Unable to initialize Webamp', error);
-    });
-}
 
 // Load page-specific HTML fragments into their windows.
 async function loadModularPages() {

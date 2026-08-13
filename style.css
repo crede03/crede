@@ -491,20 +491,19 @@ iframe {
     background: #111;
 }
 
-#webamp-root {
-    position: relative;
+.webamp-body iframe {
     width: 100%;
     height: 100%;
-    min-height: 420px;
+    display: block;
+    border: 0;
 }
 
-#webamp-root > #webamp {
-    position: relative !important;
-    inset: auto !important;
-    width: 100%;
-    height: 100%;
-    transform: scale(.8);
-    transform-origin: top left;
+.webamp-body {
+    contain: layout paint;
+}
+
+.webamp-body iframe {
+    isolation: isolate;
 }
 
 .system-tray { display: flex; align-items: center; padding: 0 12px; height: 34px; background: linear-gradient(to bottom, rgba(101,163,237,.55), rgba(11,44,94,.5)); border: 1px solid rgba(1,21,53,.55); border-top-color: rgba(179,221,255,.5); border-radius: 3px 0 0 3px; }
