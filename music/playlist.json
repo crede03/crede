@@ -1,0 +1,16 @@
+[
+  {
+    "metaData": {
+      "artist": "Fake Twat",
+      "title": "Patience"
+    },
+    "url": "music/patience.mp3"
+  },
+  {
+    "metaData": {
+      "artist": "Jeremy Clarkson",
+      "title": "My Way"
+    },
+    "url": "music/myway.mp3"
+  }
+]

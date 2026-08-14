@@ -50,11 +50,6 @@
             <div class="icon-image"><img src="img/winamp.png" alt="Winamp"></div>
             <div class="icon-label">Winamp</div>
         </div>
-        
-        <div class="desktop-icon" id="limewire-icon">
-            <div class="icon-image"><img src="img/limewire.png" alt="LimeWire"></div>
-            <div class="icon-label">CrimeWire</div>
-        </div>
 
         <!-- Main Window -->
         <div class="window active" id="main-window" data-page="pages/about.html" style="width: 700px">
@@ -119,9 +114,21 @@
         </div>
 
         <!-- Project Detail Windows -->
+        <div class="window project-window" id="project-5-window" data-page="pages/project-5.html" style="width: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Shot by CREDE</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-scrollbar">
+                <div class="page-mount" data-page-mount></div>
+            </div>
+        </div>
+
         <div class="window project-window" id="project-1-window" data-page="pages/project-1.html" style="width: 700px">
             <div class="title-bar">
-                <div class="title-bar-text">Dover Marina Hotel & Spa</div>
+                <div class="title-bar-text">Dover Marina Hotel &amp; Spa</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
@@ -145,7 +152,7 @@
 
         <div class="window project-window" id="project-3-window" data-page="pages/project-3.html" style="width: 700px">
             <div class="title-bar">
-                <div class="title-bar-text">Project 3</div>
+                <div class="title-bar-text">Lighthouse on the Marsh</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
@@ -157,7 +164,19 @@
 
         <div class="window project-window" id="project-4-window" data-page="pages/project-4.html" style="width: 700px">
             <div class="title-bar">
-                <div class="title-bar-text">Freelance Work & Personal Projects</div>
+                <div class="title-bar-text">QFlooring</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-scrollbar">
+                <div class="page-mount" data-page-mount></div>
+            </div>
+        </div>
+
+        <div class="window project-window" id="project-6-window" data-page="pages/project-6.html" style="width: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">AI Bollocks</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
@@ -181,21 +200,29 @@
                     <span class="task-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
                     <span class="task-text">Portfolio</span>
                 </button>
+                <button class="taskbar-task" data-window="project-5-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Shot by CREDE"></span>
+                    <span class="task-text">Shot by CREDE</span>
+                </button>
                 <button class="taskbar-task" data-window="project-1-window" style="display: none;">
-                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 1"></span>
-                    <span class="task-text">Project 1</span>
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Dover Marina Hotel &amp; Spa"></span>
+                    <span class="task-text">Dover Marina Hotel &amp; Spa</span>
                 </button>
                 <button class="taskbar-task" data-window="project-2-window" style="display: none;">
-                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 2"></span>
-                    <span class="task-text">Project 2</span>
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Sai Care Homes"></span>
+                    <span class="task-text">Sai Care Homes</span>
                 </button>
                 <button class="taskbar-task" data-window="project-3-window" style="display: none;">
-                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 3"></span>
-                    <span class="task-text">Project 3</span>
+                    <span class="task-icon"><img src="img/portfolio.png" alt="Lighthouse on the Marsh"></span>
+                    <span class="task-text">Lighthouse on the Marsh</span>
                 </button>
                 <button class="taskbar-task" data-window="project-4-window" style="display: none;">
-                    <span class="task-icon"><img src="img/portfolio.png" alt="Project 4"></span>
-                    <span class="task-text">Project 4</span>
+                    <span class="task-icon"><img src="img/portfolio.png" alt="QFlooring"></span>
+                    <span class="task-text">QFlooring</span>
+                </button>
+                <button class="taskbar-task" data-window="project-6-window" style="display: none;">
+                    <span class="task-icon"><img src="img/portfolio.png" alt="AI Bollocks"></span>
+                    <span class="task-text">AI Bollocks</span>
                 </button>
                 <button class="taskbar-task" data-window="pinball-window" style="display: none;">
                     <span class="task-icon"><img src="img/pinball.png" alt="3D Pinball"></span>
@@ -256,12 +283,6 @@
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a href="#" class="start-menu-item" data-action="limewire">
-                        <span class="menu-icon"><img src="img/limewire.png" alt="LimeWire"></span>
-                        <span class="menu-text">CrimeWire</span>
-                    </a>
-                </li>
-                <li role="menuitem">
                     <a href="mailto:crede@crede.vip" class="start-menu-item">
                         <span class="menu-icon"><img src="img/email.png" alt="Email"></span>
                         <span class="menu-text">Email Me</span>
@@ -295,12 +316,12 @@
                 </div>
             </div>
             <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
-                <iframe src="https://jspaint.app" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
+                <iframe src="jspaint/index.html" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
             </div>
         </div>
 
         <!-- LimeWire / Apple Music Window -->
-        <div class="window" id="limewire-window" style="width: 1000px; height: 700px">
+        <div class="window desktop-only" id="limewire-window" style="width: 1000px; height: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">CrimeWire - Like torrenting, but with scurvy</div>
                 <div class="title-bar-controls">

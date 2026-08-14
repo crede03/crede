@@ -287,6 +287,7 @@ function maximizeWindow(window) {
 }
 
 function openWindow(windowId) {
+    if (windowId === 'limewire-window' && isMobileViewport()) return;
     const win = document.getElementById(windowId);
     if (!win) return;
     
@@ -416,9 +417,11 @@ function initializeStartMenu() {
             startBtn.setAttribute('aria-expanded', 'false');
             } else if (action === 'limewire') {
                 e.preventDefault();
-                openWindow('limewire-window');
+                if (!isMobileViewport()) {
+                    openWindow('limewire-window');
+                }
                 startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
+                startBtn.setAttribute('aria-expanded', 'false');
             }
         });
     });
@@ -504,9 +507,12 @@ function initializeDesktopIcons() {
         });
     }
 
-    if (limewireIcon) {
-        limewireIcon.addEventListener('dblclick', () => {
-            openWindow('limewire-window');
+    const clockEl = document.getElementById('clock');
+    if (clockEl) {
+        clockEl.addEventListener('click', () => {
+            if (!isMobileViewport()) {
+                openWindow('limewire-window');
+            }
         });
     }
 
@@ -580,23 +586,20 @@ function initializePortfolioItems() {
         });
     });
 
-    // Thumbnail click handlers - switch main image
-    const projectWindows = ['project-1-window', 'project-2-window', 'project-3-window', 'project-4-window'];
-    projectWindows.forEach(windowId => {
-        const window = document.getElementById(windowId);
-        if (window) {
-            const thumbnails = window.querySelectorAll('.project-thumbnail');
-            const mainImage = window.querySelector('.project-main-image');
-            
-            thumbnails.forEach(thumbnail => {
-                thumbnail.addEventListener('click', () => {
-                    if (mainImage) {
-                        mainImage.src = thumbnail.src;
-                        mainImage.alt = thumbnail.alt;
-                    }
-                });
+    // Thumbnail click handlers - switch main image for all project windows
+    const projectWindows = document.querySelectorAll('.project-window');
+    projectWindows.forEach(window => {
+        const thumbnails = window.querySelectorAll('.project-thumbnail');
+        const mainImage = window.querySelector('.project-main-image');
+        
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                if (mainImage) {
+                    mainImage.src = thumbnail.src;
+                    mainImage.alt = thumbnail.alt;
+                }
             });
-        }
+        });
     });
 }
 

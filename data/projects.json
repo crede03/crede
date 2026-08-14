@@ -1,0 +1,324 @@
+[
+  {
+    "id": "5",
+    "title": "Shot by CREDE",
+    "icon": "📸",
+    "tagline": "Shooting people, places and events",
+    "type": "Publicity",
+    "date": "Since 2020",
+    "datetime": "2020-01",
+    "mainImage": "/img/uploads/1786737330632_P1155980.jpg",
+    "mainImageAlt": "Thumbnail 1",
+    "images": [
+      {
+        "src": "/img/uploads/1786737330632_P1155980.jpg",
+        "alt": "Thumbnail 1"
+      },
+      {
+        "src": "/img/uploads/1786737365463_P1155926.jpg",
+        "alt": "Thumbnail 2"
+      },
+      {
+        "src": "/img/uploads/1786737373521_P1156609.jpg",
+        "alt": "Thumbnail 3"
+      },
+      {
+        "src": "/img/uploads/1786737394478_DSC01704.jpg",
+        "alt": "Thumbnail 4"
+      },
+      {
+        "src": "/img/uploads/1786737443367_DSC01745.jpg",
+        "alt": "Thumbnail 5"
+      },
+      {
+        "src": "/img/uploads/1786737452268_DSC01806.jpg",
+        "alt": "Thumbnail 6"
+      },
+      {
+        "src": "/img/uploads/1786737082028_WhatsApp_Image_2026-08-11_at_20_03_37.jpeg",
+        "alt": "Thumbnail 7"
+      }
+    ],
+    "leadDescription": "Nothing brings me joy like shoving expensive glass in front of people's faces!",
+    "paragraphs": [
+      "Joking aside, I'm a somewhat seasoned photographer, specialising in events, portraiture and real estate. Well, seasoned enough to fend off gear acquisition syndrome.",
+      "You can see some of my cherry-picked work above, including photos of awards ceremonies, political publicity stunts, barbecues, and pookie.",
+      "And no, pookie absolutely is not Robert Jenrick."
+    ],
+    "samplesTitle": "Take a look at some samples of my work below:",
+    "links": [],
+    "details": [
+      {
+        "label": "Tools",
+        "value": "Sony Alpha, LUMIX, and whatever lighting gear I can snag on eBay for cheap"
+      },
+      {
+        "label": "Skills",
+        "value": "Adobe Lightroom, Capture One"
+      }
+    ]
+  },
+  {
+    "id": "1",
+    "title": "Dover Marina Hotel & Spa",
+    "icon": "/img/uploads/1786714602628_Untitled_2.png",
+    "tagline": "Tapestry Collection by Hilton",
+    "type": "Hospitality, F&B",
+    "date": "January 2025",
+    "datetime": "2025-01",
+    "mainImage": "/img/dmh/room.jpg",
+    "mainImageAlt": "Dover Marina Hotel & Spa room",
+    "images": [
+      {
+        "src": "/img/dmh/room.jpg",
+        "alt": "Thumbnail 1"
+      },
+      {
+        "src": "/img/dmh/wheelers.jpeg",
+        "alt": "Thumbnail 2"
+      },
+      {
+        "src": "/img/dmh/mrwhite.jpg",
+        "alt": "Thumbnail 3"
+      }
+    ],
+    "leadDescription": "Being part of a shortlisted creative team for a landmark like the Hilton Tapestry Collection Dover Marina Hotel & Spa requires more than just a good eye; it requires a high degree of radical adaptability.",
+    "paragraphs": [
+      "My role centered on upholding the visual prestige of a luxury destination while balancing the needs of third-party partners, such as Nangai Boutique, who utilize the hotel’s high-end aesthetic as a backdrop.",
+      "Whether I'm snapping wide-angle shots of renovated rooms, assisting with mini-campaigns at the Churchill Bar & Lounge or working with unconventional lighting, any time spent at the Dover Marina Hotel is an opportunity to benchmark my skills."
+    ],
+    "samplesTitle": "Take a look at some samples of my work below:",
+    "links": [
+      {
+        "title": "DMH Reel 1 - Script-to-Camera",
+        "url": "https://youtu.be/S3jzahldJxM"
+      },
+      {
+        "title": "DMH Reel 2 - Nangai Boutique Collab",
+        "url": "https://www.youtube.com/watch?v=r7pfkryO7-I"
+      }
+    ],
+    "details": [
+      {
+        "label": "Technologies",
+        "value": "LUMIX Cameras, DaVinci Resolve, Adobe Creative Cloud, WordPress"
+      },
+      {
+        "label": "Skills",
+        "value": "Camera Operation, Video Editing, Audio Mixing, Graphic Design, Print Layout & Design"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Sai Care Homes",
+    "icon": "/img/uploads/1786714609515_Untitled_1.png",
+    "tagline": "Love all, serve all",
+    "type": "Social Care",
+    "date": "November 2024",
+    "datetime": "2024-11",
+    "mainImage": "/img/sai/sai1.jpg",
+    "mainImageAlt": "Sai Care Homes project image 1",
+    "images": [
+      {
+        "src": "/img/sai/sai1.jpg",
+        "alt": "Sai Care Homes project image 1"
+      },
+      {
+        "src": "/img/sai/sai2.jpeg",
+        "alt": "Sai Care Homes project image 2"
+      },
+      {
+        "src": "/img/sai/sai3.jpg",
+        "alt": "Sai Care Homes project image 3"
+      }
+    ],
+    "leadDescription": "I'm currently Head of Marketing at Sai Care Homes - a a comprehensive, \"hands-on\" leadership position that leverages a diverse technical and creative stack.",
+    "paragraphs": [
+      "Operating as a one-man internal agency, I manage everything from our communication with relatives to SEO optimisation. One day, I may be in one of our three homes filming social media content, and on another day I'll be in the office compiling our popular newsletters.",
+      "I adopt a mentality of intellectual gluttony - if there's something I feel I don't know how to do, I'll figure out how to do it."
+    ],
+    "samplesTitle": "Take a look at some samples of my work below:",
+    "links": [
+      {
+        "title": "Sai Care News - Q4 25",
+        "url": "https://www.saicarehomes.com/client/sai/content/newsletter/scn-q4-2025-digital.pdf"
+      },
+      {
+        "title": "Care Group Brochure",
+        "url": "https://www.carehome.co.uk/pdf_brochures/65432219316.pdf"
+      },
+      {
+        "title": "Care Home Brochure",
+        "url": "https://www.saicarehomes.com/client/sai/content/brochure/hatfield-lodge-brochure-final.pdf"
+      },
+      {
+        "title": "Christmas Party Reel",
+        "url": "https://www.facebook.com/share/r/1K3qbX3skp/"
+      },
+      {
+        "title": "WordPress Site",
+        "url": "#"
+      }
+    ],
+    "details": [
+      {
+        "label": "Software",
+        "value": "Meta Business Suite, Ubersuggest, WordPress, Adobe Creative Cloud, DaVinci Resolve, Logic Pro, Affinity"
+      },
+      {
+        "label": "Skills",
+        "value": "Branding, Social Media Management, SEO, Lead Gen, Camera Operation, Video Editing, Audio Mixing, Graphic Design, Print Layout & Design, Compliance & Data Aggregation"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Lighthouse on the Marsh",
+    "icon": "/img/uploads/1786714614765_Untitled_3.png",
+    "tagline": "A helping hand for a disadvantage community",
+    "type": "Education & Training",
+    "date": "July 2020",
+    "datetime": "2020-07",
+    "mainImage": "/img/uploads/1786715596278_IMG_8813.jpeg",
+    "mainImageAlt": "IMG_8813.jpeg",
+    "images": [
+      {
+        "src": "/img/uploads/1786715554321_IMG_7965.jpg",
+        "alt": "My print media debut!"
+      },
+      {
+        "src": "/img/uploads/1786715596278_IMG_8813.jpeg",
+        "alt": "IMG_8813.jpeg"
+      },
+      {
+        "src": "/img/uploads/1786736231427_Crede_Client_Mavis.jpg",
+        "alt": "Crede_Client Mavis.jpg"
+      }
+    ],
+    "leadDescription": "At Lighthouse on the Marsh, I helped lead a Lottery-funded programme called Generations Connect, which aimed to bridge the gap between disconnected youth and elderly communities across the Romney Marsh. As part of this programme, I designed print-ready, engaging marketing materials, conducted hyperlocal, low-budget ad campaigns, and conducted both one-to-one and group sessions in IT and digital creative skills. The programme was a major success, getting the attention of local media and being granted a funding extension by the National Lottery Community Fund.",
+    "paragraphs": [],
+    "samplesTitle": "",
+    "links": [],
+    "details": [
+      {
+        "label": "Tools",
+        "value": "Adobe Photoshop, Illustrator, InDesign, LUMIX Cameras"
+      },
+      {
+        "label": "Role",
+        "value": "Hyperlocal, low-budget marketing, one-to-one IT training"
+      },
+      {
+        "label": "Duration",
+        "value": "2020 to 2023"
+      },
+      {
+        "label": "Status",
+        "value": "Completed"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "title": "QFlooring",
+    "icon": "🏠",
+    "tagline": "Folkestone-based floor store",
+    "type": "Retail",
+    "date": "March 2025",
+    "datetime": "2025-03",
+    "mainImage": "/img/qflooring/q1.jpg",
+    "mainImageAlt": "QFlooring Exterior",
+    "images": [
+      {
+        "src": "/img/qflooring/q1.jpg",
+        "alt": "QFlooring Exterior"
+      },
+      {
+        "src": "/img/qflooring/q2.jpg",
+        "alt": "QFlooring Interior"
+      },
+      {
+        "src": "/img/qflooring/q3.png",
+        "alt": "QFlooring Ad Graphic"
+      }
+    ],
+    "leadDescription": "A rapidly expanding flooring outlet in the heart of Folkestone",
+    "paragraphs": [
+      "QFlooring's owner, Qasim, was looking to hard-launch his new Folkestone storefront, and approached me after seeing some of my previous work. ",
+      "With my support I compiled fresh new flyers, overhauled his digital presence with crisp photography and a seamless Google Business migration, and led a campaign that reached over 80,000 untapped customers on Facebook and Instagram with an approximate 4-8% lead conversion. ",
+      "Not bad, considering the campaign cost a total of £80."
+    ],
+    "samplesTitle": "",
+    "links": [
+      {
+        "title": "QFlooring Website",
+        "url": "https://qflooring.co.uk"
+      },
+      {
+        "title": "QFlooring on Google",
+        "url": "https://share.google/pkCP5CCTgjXyYuvWe"
+      }
+    ],
+    "details": [
+      {
+        "label": "Skills",
+        "value": "Branding, Social Media Management, Awareness Building, Camera Operation, Graphic Design, Print & Layout Design"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "title": "AI Bollocks",
+    "icon": "/img/uploads/1786740146545_channels4_profile.jpg",
+    "tagline": "The Old Testament of AI dross",
+    "type": "AI slop",
+    "date": "May 2023",
+    "datetime": "2023-05",
+    "mainImage": "/img/uploads/1786740866840_hqdefault.jpg",
+    "mainImageAlt": "hqdefault.jpg",
+    "images": [
+      {
+        "src": "/img/uploads/1786740866795_hqdefault-2.jpg",
+        "alt": "hqdefault-2.jpg"
+      },
+      {
+        "src": "/img/uploads/1786740866817_hqdefault-3.jpg",
+        "alt": "hqdefault-3.jpg"
+      },
+      {
+        "src": "/img/uploads/1786740866840_hqdefault.jpg",
+        "alt": "hqdefault.jpg"
+      }
+    ],
+    "leadDescription": "What did this side-project accomplish? Honestly, who knows.",
+    "paragraphs": [
+      "In 2023, AI was still in its infancy - ChatGPT was nothing more than a toy, Will Smith couldn't eat spaghetti, and Copilot wasn't baked into literally every Microsoft product.",
+      "AI Bollocks was my foray into early AI adoption, creating parody videos using RVC for voice and ModelScope for video generation. It took off almost immediately. My videos of shamed celebrities and politicians like Philip Schofield and Theresa May took off on TikTok, and eventually found their way onto various lazy Instagram meme pages - and Reddit.",
+      "My biggest hit by far was AI-Generated Top Gear. Ironically, not much of this was actually AI-generated. Sure, the video was, but a good amount of the voice lines used me as the source, the scripts were written by me, and later episodes eventually morphed into machinima-style videos utilising games like BeamNG to break up the mushy, 144x144 video. A cover of Jeremy Clarkson eventually made it to DriveTribe's Facebook.",
+      "AI Bollocks still has an impact today. My biggest regret was cloning Keir Starmer's voice and uploading it for anyone to use, causing an influx of fake videos with his voice. It also serves a time capsule for early AI, and a reminder of how good, and scary, this medium has become. That's exactly the reason why I stopped - it's not funny when it's lifelike.",
+      "If, miraculously, Google actually ranks this portfolio and you're a fan of the channel, please rest assured - I'm not dead. I will come back at some point. I'm waiting for the right time."
+    ],
+    "samplesTitle": "Take a look at some samples of my work below:",
+    "links": [
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@aibollocks/"
+      },
+      {
+        "title": "YouTube",
+        "url": "https://www.youtube.com/aibollocks/"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/aibollocks"
+      }
+    ],
+    "details": [
+      {
+        "label": "Tools",
+        "value": "Adobe Creative Suite, ModelScope, RVC, Applio, my brain"
+      }
+    ]
+  }
+]

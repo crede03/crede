@@ -1,2 +1,11 @@
 .DS_Store
 **/.DS_Store
+node_modules/
+
+# Mini CMS Tool (Keeps CMS tool local-only and excluded from GitHub / public site)
+cms/
+start-cms.command
+CMS_GUIDE.md
+
+# Logs & temp files
+*.log

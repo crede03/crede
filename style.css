@@ -451,6 +451,13 @@ iframe {
     font-size: 22px;
 }
 
+.portfolio-file-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+}
+
 .portfolio-row-name strong,
 .portfolio-row-name small {
     display: block;
@@ -658,7 +665,7 @@ iframe {
 }
 
 .system-tray { display: flex; align-items: center; padding: 0 12px; height: 34px; background: linear-gradient(to bottom, rgba(101,163,237,.55), rgba(11,44,94,.5)); border: 1px solid rgba(1,21,53,.55); border-top-color: rgba(179,221,255,.5); border-radius: 3px 0 0 3px; }
-.tray-time { color: white; font-size: 11px; font-weight: 400; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
+.tray-time { color: white; font-size: 11px; font-weight: 400; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.8); cursor: pointer; user-select: none; }
 
 /* Vista / Windows 7-inspired Start menu */
 .start-menu { position: fixed; bottom: 46px; left: 0; width: 390px; display: none; z-index: 1001; overflow: hidden; background: linear-gradient(to bottom, #f8fbff, #e7edf5); border: 1px solid #173e79; border-radius: 0 7px 0 0; box-shadow: 0 0 0 1px rgba(255,255,255,.55) inset, 3px -4px 16px rgba(0,0,0,.45); }
@@ -694,6 +701,15 @@ iframe {
     /* The desktop icons are redundant on a small screen and can cover content. */
     .desktop-icon {
         display: none;
+    }
+
+    /* Hide desktop-only components (CrimeWire / Scratchpad) on mobile */
+    .desktop-only,
+    #limewire-window,
+    #limewire-icon,
+    [data-action="limewire"],
+    [data-window="limewire-window"] {
+        display: none !important;
     }
 
     .window {

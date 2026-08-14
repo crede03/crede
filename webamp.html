@@ -36,19 +36,65 @@
         if (!Webamp.browserIsSupported()) {
             root.textContent = "Webamp is not supported by this browser.";
         } else {
-            const webamp = new Webamp({
-                enableHotkeys: false,
-                enableMediaSession: true,
-                windowLayout: {
-                    main: { position: { x: 140, y: 120 } },
-                    equalizer: { position: { x: 140, y: 236 } },
-                    playlist: { position: { x: 140, y: 352 }, size: [0, 4] },
-                },
-            });
+            async function getInitialTracks() {
+                const defaultTracks = [
+                    {
+                        metaData: {
+                            artist: "DJ Mike Llama",
+                            title: "Llama Whippin' Intro"
+                        },
+                        url: "https://cdn.jsdelivr.net/gh/captbaritone/webamp@43434d82acad98e9e63030c1940a0670b657c0a6/packages/webamp/demo/mp3/llama-2.29.mp3",
+                        duration: 5.322286
+                    }
+                ];
 
-            webamp.renderWhenReady(root).catch((error) => {
-                root.textContent = "Webamp could not be loaded.";
-                console.error("Unable to initialize Webamp", error);
+                try {
+                    // Try playlist.json in music folder
+                    const res = await fetch("music/playlist.json", { cache: "no-cache" });
+                    if (res.ok) {
+                        const list = await res.json();
+                        if (Array.isArray(list) && list.length > 0) {
+                            return list.map(item => {
+                                if (typeof item === "string") {
+                                    const cleanName = item.split("/").pop().replace(/\.[^/.]+$/, "");
+                                    return {
+                                        metaData: { artist: "Music", title: cleanName },
+                                        url: item.startsWith("http") || item.startsWith("/") ? item : `music/${item}`
+                                    };
+                                }
+                                return {
+                                    metaData: {
+                                        artist: item.artist || item.metaData?.artist || "Unknown Artist",
+                                        title: item.title || item.metaData?.title || (item.url ? item.url.split("/").pop().replace(/\.[^/.]+$/, "") : "Track")
+                                    },
+                                    url: item.url || (item.filename ? `music/${item.filename}` : item),
+                                    duration: item.duration || item.metaData?.duration
+                                };
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Could not load music/playlist.json, using fallback", e);
+                }
+                return defaultTracks;
+            }
+
+            getInitialTracks().then(initialTracks => {
+                const webamp = new Webamp({
+                    initialTracks: initialTracks,
+                    enableHotkeys: false,
+                    enableMediaSession: true,
+                    windowLayout: {
+                        main: { position: { x: 140, y: 120 } },
+                        equalizer: { position: { x: 140, y: 236 } },
+                        playlist: { position: { x: 140, y: 352 }, size: [0, 4] },
+                    },
+                });
+
+                webamp.renderWhenReady(root).catch((error) => {
+                    root.textContent = "Webamp could not be loaded.";
+                    console.error("Unable to initialize Webamp", error);
+                });
             });
         }
     </script>

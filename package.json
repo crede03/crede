@@ -1,0 +1,13 @@
+{
+  "name": "crede-vip-website",
+  "version": "1.0.0",
+  "description": "CREDE.VIP retro portfolio website and mini CMS",
+  "scripts": {
+    "cms": "node cms/server.js",
+    "start": "node cms/server.js",
+    "test:sync": "node cms/test_sync.js"
+  },
+  "keywords": ["portfolio", "retro-os", "cms"],
+  "author": "Crede Dalton",
+  "license": "ISC"
+}
