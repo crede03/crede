@@ -12,44 +12,46 @@
 <body>
     <div class="desktop">
         <!-- Desktop Icons -->
-        <div class="desktop-icon" id="welcome-icon">
+        <div class="desktop-icon" id="welcome-icon" data-type="window" data-target="main-window">
             <div class="icon-image"><img src="img/welcome.png" alt="Welcome"></div>
             <div class="icon-label">Welcome</div>
         </div>
-        <div class="desktop-icon" id="portfolio-icon">
+
+        <div class="desktop-icon" id="portfolio-icon" data-type="window" data-target="portfolio-window">
             <div class="icon-image"><img src="img/portfolio.png" alt="Portfolio"></div>
             <div class="icon-label">Portfolio</div>
         </div>
-        
-        <div class="desktop-icon" id="email-icon">
-            <div class="icon-image"><img src="img/email.png" alt="Email"></div>
+
+        <div class="desktop-icon" id="email-icon" data-type="url" data-target="mailto:crede@crede.vip">
+            <div class="icon-image"><img src="img/email.png" alt="Email Me"></div>
             <div class="icon-label">Email Me</div>
         </div>
 
-        <div class="desktop-icon" id="linkedin-icon">
+        <div class="desktop-icon" id="linkedin-icon" data-type="url" data-target="https://www.linkedin.com/in/crede-dalton-818334202">
             <div class="icon-image"><img src="img/folder-publicshare.png" alt="LinkedIn"></div>
             <div class="icon-label">LinkedIn</div>
         </div>
 
-        <div class="desktop-icon" id="substack-icon">
+        <div class="desktop-icon" id="substack-icon" data-type="url" data-target="https://substack.com/@credevip">
             <div class="icon-image"><img src="img/substack.png" alt="Substack"></div>
             <div class="icon-label">Substack</div>
         </div>
 
-        <div class="desktop-icon" id="instagram-icon">
+        <div class="desktop-icon" id="instagram-icon" data-type="url" data-target="https://instagram.com/crede.vip">
             <div class="icon-image"><img src="img/folder-images.png" alt="Instagram"></div>
             <div class="icon-label">Instagram</div>
         </div>
-        
-        <div class="desktop-icon" id="paint-icon">
+
+        <div class="desktop-icon" id="paint-icon" data-type="window" data-target="paint-window">
             <div class="icon-image"><img src="img/paint.png" alt="Paint"></div>
             <div class="icon-label">Paint</div>
         </div>
 
-        <div class="desktop-icon" id="webamp-icon">
+        <div class="desktop-icon" id="webamp-icon" data-type="action" data-target="webamp">
             <div class="icon-image"><img src="img/winamp.png" alt="Winamp"></div>
             <div class="icon-label">Winamp</div>
         </div>
+        <!-- /Desktop Icons -->
 
         <!-- Main Window -->
         <div class="window active" id="main-window" data-page="pages/about.html" style="width: 700px">
@@ -252,15 +254,16 @@
                 <div class="start-menu-user">CREDE.VIP</div>
             </div>
             <ul class="start-menu-items" role="menu">
+                <!-- Start Menu Items -->
                 <li role="menuitem">
-                    <a href="#" class="start-menu-item" data-action="welcome">
+                    <a href="#" class="start-menu-item" data-action="main-window">
                         <span class="menu-icon"><img src="img/welcome.png" alt="Welcome"></span>
                         <span class="menu-text">Welcome</span>
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a href="#portfolio" class="start-menu-item" data-action="portfolio">
-                        <span class="menu-icon"><img src="img/portfolio.png" alt="Portfolio"></span>
+                    <a href="#" class="start-menu-item" data-action="portfolio-window">
+                        <span class="menu-icon"><img src="img/portfolio.png" alt="My Portfolio"></span>
                         <span class="menu-text">My Portfolio</span>
                     </a>
                 </li>
@@ -284,12 +287,12 @@
                 </li>
                 <li role="menuitem">
                     <a href="mailto:crede@crede.vip" class="start-menu-item">
-                        <span class="menu-icon"><img src="img/email.png" alt="Email"></span>
+                        <span class="menu-icon"><img src="img/email.png" alt="Email Me"></span>
                         <span class="menu-text">Email Me</span>
                     </a>
                 </li>
                 <li role="menuitem" class="has-divider">
-                    <a href="#" class="start-menu-item" data-action="paint">
+                    <a href="#" class="start-menu-item" data-action="paint-window">
                         <span class="menu-icon"><img src="img/paint.png" alt="Paint"></span>
                         <span class="menu-text">Paint</span>
                     </a>
@@ -300,6 +303,7 @@
                         <span class="menu-text">Winamp</span>
                     </a>
                 </li>
+                <!-- /Start Menu Items -->
             </ul>
             <div class="start-menu-footer">
                 <button class="start-menu-logoff" data-url="https://youtu.be/gdlDLm2icYU">Log Off</button>

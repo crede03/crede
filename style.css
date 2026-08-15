@@ -1,10 +1,15 @@
 /* Custom styles to complement XP.css */
+:root {
+    --wallpaper-desktop: url("img/pape.jpg");
+    --wallpaper-mobile: url("img/pape-mobile.jpg");
+}
+
 html {
     min-height: 100%;
 }
 
 body {
-    background: url("img/pape.jpg") center center / cover no-repeat fixed;
+    background: var(--wallpaper-desktop) center center / cover no-repeat fixed;
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: hidden;
@@ -692,7 +697,7 @@ iframe {
     }
 
     body {
-        background-image: url("img/pape-mobile.jpg");
+        background-image: var(--wallpaper-mobile);
         background-position: center center;
         background-size: cover;
         background-attachment: scroll;

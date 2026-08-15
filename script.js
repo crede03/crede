@@ -385,43 +385,31 @@ function initializeStartMenu() {
                 return;
             }
 
-            if (action === 'welcome') {
+            if (action) {
                 e.preventDefault();
-                openWindow('main-window');
-                startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
-            } else if (action === 'portfolio') {
-                e.preventDefault();
-                openWindow('portfolio-window');
-                startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
-            } else if (action === 'pinball') {
-                e.preventDefault();
-                openWindow('pinball-window');
-                startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
-            } else if (action === 'paint') {
-                e.preventDefault();
-                openWindow('paint-window');
-                startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
-            } else if (action === 'webamp') {
-                e.preventDefault();
-                window.openWebamp?.();
-                startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
-            } else if (action === 'minesweeper') {
-                e.preventDefault();
-                openWindow('minesweeper-window');
-                startMenu.classList.remove('active');
-            startBtn.setAttribute('aria-expanded', 'false');
-            } else if (action === 'limewire') {
-                e.preventDefault();
-                if (!isMobileViewport()) {
-                    openWindow('limewire-window');
-                }
                 startMenu.classList.remove('active');
                 startBtn.setAttribute('aria-expanded', 'false');
+
+                if (action === 'webamp') {
+                    window.openWebamp?.();
+                } else if (action === 'welcome' || action === 'main-window') {
+                    openWindow('main-window');
+                } else if (action === 'portfolio' || action === 'portfolio-window') {
+                    openWindow('portfolio-window');
+                } else if (action === 'paint' || action === 'paint-window') {
+                    openWindow('paint-window');
+                } else if (action === 'pinball' || action === 'pinball-window') {
+                    openWindow('pinball-window');
+                } else if (action === 'minesweeper' || action === 'minesweeper-window') {
+                    openWindow('minesweeper-window');
+                } else if (action === 'limewire' || action === 'limewire-window') {
+                    if (!isMobileViewport()) {
+                        openWindow('limewire-window');
+                    }
+                } else if (action.endsWith('-window') || document.getElementById(action)) {
+                    openWindow(action);
+                }
+                return;
             }
         });
     });
@@ -453,59 +441,49 @@ function initializeStartMenu() {
 
 // Desktop Icons
 function initializeDesktopIcons() {
-    const welcomeIcon = document.getElementById('welcome-icon');
-    const portfolioIcon = document.getElementById('portfolio-icon');
-    const emailIcon = document.getElementById('email-icon');
-    const pinballIcon = document.getElementById('pinball-icon');
-    const linkedinIcon = document.getElementById('linkedin-icon');
-    const substackIcon = document.getElementById('substack-icon');
-    const instagramIcon = document.getElementById('instagram-icon');
-    const limewireIcon = document.getElementById('limewire-icon');
-    const webampIcon = document.getElementById('webamp-icon');
+    const icons = document.querySelectorAll('.desktop-icon');
     
-    const openFromIcon = (windowId) => {
-        if (isMobileViewport()) openWindow(windowId);
-    };
+    icons.forEach(icon => {
+        const type = icon.dataset.type;
+        const target = icon.dataset.target;
+        const id = icon.id;
 
-    if (welcomeIcon) {
-        welcomeIcon.addEventListener('dblclick', () => openWindow('main-window'));
-        welcomeIcon.addEventListener('click', () => openFromIcon('main-window'));
-    }
-    
-    if (portfolioIcon) {
-        portfolioIcon.addEventListener('dblclick', () => openWindow('portfolio-window'));
-        portfolioIcon.addEventListener('click', () => openFromIcon('portfolio-window'));
-    }
-    
-    if (emailIcon) {
-        emailIcon.addEventListener('dblclick', () => {
-            window.location.href = 'mailto:crede@crede.vip';
-        });
-    }
+        const openItem = () => {
+            if (type === 'window' || target?.endsWith('-window')) {
+                openWindow(target || id.replace('-icon', '-window'));
+            } else if (type === 'url' || target?.startsWith('http') || target?.startsWith('mailto:')) {
+                if (target?.startsWith('mailto:')) {
+                    window.location.href = target;
+                } else if (target) {
+                    window.open(target, '_blank');
+                }
+            } else if (type === 'action' || target === 'webamp') {
+                window.openWebamp?.();
+            } else {
+                // Fallbacks by ID
+                if (id === 'welcome-icon') openWindow('main-window');
+                else if (id === 'portfolio-icon') openWindow('portfolio-window');
+                else if (id === 'email-icon') window.location.href = 'mailto:crede@crede.vip';
+                else if (id === 'linkedin-icon') window.open('https://www.linkedin.com/in/crede-dalton-818334202', '_blank');
+                else if (id === 'substack-icon') window.open('https://substack.com/@credevip', '_blank');
+                else if (id === 'instagram-icon') window.open('https://instagram.com/crede.vip', '_blank');
+                else if (id === 'paint-icon') openWindow('paint-window');
+                else if (id === 'webamp-icon') window.openWebamp?.();
+                else if (id === 'pinball-icon') openWindow('pinball-window');
+                else if (id === 'limewire-icon') openWindow('limewire-window');
+                else if (id === 'minesweeper-icon') openWindow('minesweeper-window');
+            }
+        };
 
-    if (linkedinIcon) {
-        linkedinIcon.addEventListener('dblclick', () => {
-            window.open('https://www.linkedin.com/in/crede-dalton-818334202', '_blank');
+        icon.addEventListener('dblclick', openItem);
+        icon.addEventListener('click', () => {
+            icons.forEach(i => i.classList.remove('selected'));
+            icon.classList.add('selected');
+            if (isMobileViewport()) {
+                openItem();
+            }
         });
-    }
-
-    if (substackIcon) {
-        substackIcon.addEventListener('dblclick', () => {
-            window.open('https://substack.com/@credevip', '_blank');
-        });
-    }
-
-    if (instagramIcon) {
-        instagramIcon.addEventListener('dblclick', () => {
-            window.open('https://instagram.com/crede.vip', '_blank');
-        });
-    }
-    
-    if (pinballIcon) {
-        pinballIcon.addEventListener('dblclick', () => {
-            openWindow('pinball-window');
-        });
-    }
+    });
 
     const clockEl = document.getElementById('clock');
     if (clockEl) {
@@ -515,35 +493,6 @@ function initializeDesktopIcons() {
             }
         });
     }
-
-    if (webampIcon) {
-        webampIcon.addEventListener('dblclick', () => {
-            window.openWebamp?.();
-        });
-    }
-    
-    const paintIcon = document.getElementById('paint-icon');
-    if (paintIcon) {
-        paintIcon.addEventListener('dblclick', () => {
-            openWindow('paint-window');
-        });
-    }
-    
-    const minesweeperIcon = document.getElementById('minesweeper-icon');
-    if (minesweeperIcon) {
-        minesweeperIcon.addEventListener('dblclick', () => {
-            openWindow('minesweeper-window');
-        });
-    }
-    
-    // Single click selection
-    const icons = document.querySelectorAll('.desktop-icon');
-    icons.forEach(icon => {
-        icon.addEventListener('click', () => {
-            icons.forEach(i => i.classList.remove('selected'));
-            icon.classList.add('selected');
-        });
-    });
 }
 
 // Shutdown dialog cancel button

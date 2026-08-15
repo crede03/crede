@@ -1,0 +1,169 @@
+{
+  "desktop": [
+    {
+      "id": "welcome",
+      "title": "Welcome",
+      "icon": "img/welcome.png",
+      "enabled": true,
+      "type": "window",
+      "target": "main-window"
+    },
+    {
+      "id": "portfolio",
+      "title": "Portfolio",
+      "icon": "img/portfolio.png",
+      "enabled": true,
+      "type": "window",
+      "target": "portfolio-window"
+    },
+    {
+      "id": "email",
+      "title": "Email Me",
+      "icon": "img/email.png",
+      "enabled": true,
+      "type": "url",
+      "target": "mailto:crede@crede.vip"
+    },
+    {
+      "id": "linkedin",
+      "title": "LinkedIn",
+      "icon": "img/folder-publicshare.png",
+      "enabled": true,
+      "type": "url",
+      "target": "https://www.linkedin.com/in/crede-dalton-818334202"
+    },
+    {
+      "id": "substack",
+      "title": "Substack",
+      "icon": "img/substack.png",
+      "enabled": true,
+      "type": "url",
+      "target": "https://substack.com/@credevip"
+    },
+    {
+      "id": "instagram",
+      "title": "Instagram",
+      "icon": "img/folder-images.png",
+      "enabled": true,
+      "type": "url",
+      "target": "https://instagram.com/crede.vip"
+    },
+    {
+      "id": "paint",
+      "title": "Paint",
+      "icon": "img/paint.png",
+      "enabled": true,
+      "type": "window",
+      "target": "paint-window"
+    },
+    {
+      "id": "webamp",
+      "title": "Winamp",
+      "icon": "img/winamp.png",
+      "enabled": true,
+      "type": "action",
+      "target": "webamp"
+    },
+    {
+      "id": "pinball",
+      "title": "3D Pinball",
+      "icon": "img/pinball.png",
+      "enabled": false,
+      "type": "window",
+      "target": "pinball-window"
+    },
+    {
+      "id": "limewire",
+      "title": "CrimeWire",
+      "icon": "img/limewire.png",
+      "enabled": false,
+      "type": "window",
+      "target": "limewire-window",
+      "desktopOnly": true
+    }
+  ],
+  "startMenu": [
+    {
+      "id": "welcome",
+      "title": "Welcome",
+      "icon": "img/welcome.png",
+      "enabled": true,
+      "type": "window",
+      "target": "main-window"
+    },
+    {
+      "id": "portfolio",
+      "title": "My Portfolio",
+      "icon": "img/portfolio.png",
+      "enabled": true,
+      "type": "window",
+      "target": "portfolio-window"
+    },
+    {
+      "id": "substack",
+      "title": "Substack",
+      "icon": "img/substack.png",
+      "enabled": true,
+      "type": "url",
+      "target": "https://substack.com/@credevip"
+    },
+    {
+      "id": "linkedin",
+      "title": "LinkedIn",
+      "icon": "img/folder-publicshare.png",
+      "enabled": true,
+      "type": "url",
+      "target": "https://www.linkedin.com/in/crede-dalton-818334202"
+    },
+    {
+      "id": "instagram",
+      "title": "Instagram",
+      "icon": "img/folder-images.png",
+      "enabled": true,
+      "type": "url",
+      "target": "https://instagram.com/crede.vip"
+    },
+    {
+      "id": "email",
+      "title": "Email Me",
+      "icon": "img/email.png",
+      "enabled": true,
+      "type": "url",
+      "target": "mailto:crede@crede.vip"
+    },
+    {
+      "id": "paint",
+      "title": "Paint",
+      "icon": "img/paint.png",
+      "enabled": true,
+      "type": "window",
+      "target": "paint-window",
+      "divider": true
+    },
+    {
+      "id": "webamp",
+      "title": "Winamp",
+      "icon": "img/winamp.png",
+      "enabled": true,
+      "type": "action",
+      "target": "webamp"
+    },
+    {
+      "id": "pinball",
+      "title": "3D Pinball",
+      "icon": "img/pinball.png",
+      "enabled": false,
+      "type": "window",
+      "target": "pinball-window"
+    },
+    {
+      "id": "limewire",
+      "title": "CrimeWire",
+      "icon": "img/limewire.png",
+      "enabled": false,
+      "type": "window",
+      "target": "limewire-window",
+      "desktopOnly": true
+    }
+  ]
+}
