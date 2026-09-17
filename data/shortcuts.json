@@ -17,6 +17,22 @@
       "target": "portfolio-window"
     },
     {
+      "id": "paint",
+      "title": "Paint",
+      "icon": "img/paint.png",
+      "enabled": true,
+      "type": "window",
+      "target": "paint-window"
+    },
+    {
+      "id": "webamp",
+      "title": "Winamp",
+      "icon": "img/winamp.png",
+      "enabled": true,
+      "type": "action",
+      "target": "webamp"
+    },
+    {
       "id": "email",
       "title": "Email Me",
       "icon": "img/email.png",
@@ -41,28 +57,44 @@
       "target": "https://substack.com/@credevip"
     },
     {
+      "id": "clippy",
+      "title": "Clippy",
+      "icon": "img/clippy.png",
+      "enabled": true,
+      "type": "action",
+      "target": "clippy"
+    },
+    {
+      "id": "cmd",
+      "title": "Command Prompt",
+      "icon": "img/cmd-win7.png",
+      "enabled": false,
+      "type": "window",
+      "target": "terminal-window"
+    },
+    {
+      "id": "minesweeper",
+      "title": "Minesweeper",
+      "icon": "img/mines-win7.png",
+      "enabled": false,
+      "type": "window",
+      "target": "minesweeper-window"
+    },
+    {
+      "id": "display-prop",
+      "title": "Display Settings",
+      "icon": "img/display-win7.png",
+      "enabled": false,
+      "type": "window",
+      "target": "display-properties-window"
+    },
+    {
       "id": "instagram",
       "title": "Instagram",
       "icon": "img/folder-images.png",
-      "enabled": true,
+      "enabled": false,
       "type": "url",
       "target": "https://instagram.com/crede.vip"
-    },
-    {
-      "id": "paint",
-      "title": "Paint",
-      "icon": "img/paint.png",
-      "enabled": true,
-      "type": "window",
-      "target": "paint-window"
-    },
-    {
-      "id": "webamp",
-      "title": "Winamp",
-      "icon": "img/winamp.png",
-      "enabled": true,
-      "type": "action",
-      "target": "webamp"
     },
     {
       "id": "pinball",
@@ -73,13 +105,12 @@
       "target": "pinball-window"
     },
     {
-      "id": "limewire",
-      "title": "CrimeWire",
-      "icon": "img/limewire.png",
+      "id": "system-properties",
+      "title": "System Properties",
+      "icon": "img/computer-win7.png",
       "enabled": false,
       "type": "window",
-      "target": "limewire-window",
-      "desktopOnly": true
+      "target": "system-properties-window"
     }
   ],
   "startMenu": [
@@ -90,6 +121,14 @@
       "enabled": true,
       "type": "window",
       "target": "main-window"
+    },
+    {
+      "id": "email",
+      "title": "Email Me",
+      "icon": "img/email.png",
+      "enabled": true,
+      "type": "url",
+      "target": "mailto:crede@crede.vip"
     },
     {
       "id": "portfolio",
@@ -113,23 +152,16 @@
       "icon": "img/folder-publicshare.png",
       "enabled": true,
       "type": "url",
-      "target": "https://www.linkedin.com/in/crede-dalton-818334202"
+      "target": "https://www.linkedin.com/in/crede-dalton-818334202",
+      "divider": true
     },
     {
-      "id": "instagram",
-      "title": "Instagram",
-      "icon": "img/folder-images.png",
+      "id": "minesweeper",
+      "title": "Minesweeper",
+      "icon": "img/mines-win7.png",
       "enabled": true,
-      "type": "url",
-      "target": "https://instagram.com/crede.vip"
-    },
-    {
-      "id": "email",
-      "title": "Email Me",
-      "icon": "img/email.png",
-      "enabled": true,
-      "type": "url",
-      "target": "mailto:crede@crede.vip"
+      "type": "window",
+      "target": "minesweeper-window"
     },
     {
       "id": "paint",
@@ -138,7 +170,7 @@
       "enabled": true,
       "type": "window",
       "target": "paint-window",
-      "divider": true
+      "divider": false
     },
     {
       "id": "webamp",
@@ -149,21 +181,54 @@
       "target": "webamp"
     },
     {
+      "id": "clippy",
+      "title": "Clippy",
+      "icon": "img/clippy.png",
+      "enabled": true,
+      "type": "action",
+      "target": "clippy"
+    },
+    {
+      "id": "cmd",
+      "title": "Command Prompt",
+      "icon": "img/cmd-win7.png",
+      "enabled": true,
+      "type": "window",
+      "target": "terminal-window",
+      "divider": true
+    },
+    {
+      "id": "display-prop",
+      "title": "Display Properties",
+      "icon": "img/display-win7.png",
+      "enabled": true,
+      "type": "window",
+      "target": "display-properties-window",
+      "divider": false
+    },
+    {
+      "id": "system-properties",
+      "title": "System Properties",
+      "icon": "img/computer-win7.png",
+      "enabled": true,
+      "type": "window",
+      "target": "system-properties-window"
+    },
+    {
+      "id": "instagram",
+      "title": "Instagram",
+      "icon": "img/folder-images.png",
+      "enabled": false,
+      "type": "url",
+      "target": "https://instagram.com/crede.vip"
+    },
+    {
       "id": "pinball",
       "title": "3D Pinball",
       "icon": "img/pinball.png",
       "enabled": false,
       "type": "window",
       "target": "pinball-window"
-    },
-    {
-      "id": "limewire",
-      "title": "CrimeWire",
-      "icon": "img/limewire.png",
-      "enabled": false,
-      "type": "window",
-      "target": "limewire-window",
-      "desktopOnly": true
     }
   ]
 }

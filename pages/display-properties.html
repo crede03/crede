@@ -1,0 +1,101 @@
+<div class="page-content display-properties-content">
+    <section class="tabs" style="max-width: 500px">
+        <menu role="tablist" aria-label="Display Properties Tabs">
+            <button role="tab" aria-controls="tab-background" aria-selected="true">Background</button>
+            <button role="tab" aria-controls="tab-appearance">Appearance</button>
+            <button role="tab" aria-controls="tab-screensaver">Screen Saver</button>
+        </menu>
+        <!-- the tab content -->
+        <article role="tabpanel" id="tab-background">
+            <div class="monitor-preview-container">
+                <div class="crt-monitor">
+                    <div class="crt-screen" id="wallpaper-crt-screen"></div>
+                </div>
+            </div>
+            <fieldset class="prop-fieldset">
+                <legend>Select a Wallpaper:</legend>
+                <div class="wallpaper-list-container">
+                    <select id="wallpaper-select" class="prop-select" style="width: 100%; font-size: 11px;">
+                        <option value="default" selected>Default (Crede Custom)</option>
+                        <option value="bliss">Windows XP Bliss</option>
+                        <option value="clouds">Windows 98 Clouds</option>
+                        <option value="matrix">Digital Matrix</option>
+                        <option value="teal">Classic Retro Teal (#008080)</option>
+                        <option value="cyber">Cyberpunk Midnight</option>
+                    </select>
+                </div>
+                <div class="prop-row" style="margin-top: 8px;">
+                    <label for="custom-wallpaper-url">Custom Image URL:</label>
+                    <input type="text" id="custom-wallpaper-url" placeholder="https://..." style="width: 100%; margin-top: 4px; box-sizing: border-box; font-size: 11px;">
+                </div>
+            </fieldset>
+        </article>
+
+        <article role="tabpanel" id="tab-appearance" hidden="">
+            <div class="monitor-preview-container">
+                <div class="crt-monitor">
+                    <div class="crt-screen appearance-crt-screen" id="appearance-crt-screen">
+                        <div class="mini-window" style="background: rgba(0, 100, 200, 0.4); border: 1px solid rgba(255,255,255,0.8); border-radius: 4px; padding: 4px; margin: 10px auto; width: 80%;">
+                            <div class="mini-titlebar" style="font-size: 9px; font-weight: bold; color: #fff; text-shadow: 0 0 4px #000;">Aero Glass Preview</div>
+                            <div class="mini-body" style="background: #fff; padding: 4px; font-size: 8px; border-radius: 2px; margin-top: 2px;">Windows 7 System</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <fieldset class="prop-fieldset">
+                <legend>Window Color &amp; Appearance:</legend>
+                <div style="font-size: 11px; line-height: 1.6;">
+                    <p style="margin: 0 0 8px 0;"><strong>Active System:</strong> Windows 7 Aero Style</p>
+                    <div style="margin-bottom: 8px;">
+                        <input type="checkbox" id="aero-transparency-toggle" checked>
+                        <label for="aero-transparency-toggle">Enable Aero Glass Transparency</label>
+                    </div>
+                    <div style="margin-top: 8px;">
+                        <label for="aero-tint-select">Color Accent Tint:</label>
+                        <select id="aero-tint-select" style="width: 100%; margin-top: 4px; font-size: 11px;">
+                            <option value="blue" selected>Sky Blue (Default)</option>
+                            <option value="slate">Slate Gray</option>
+                            <option value="emerald">Emerald Sea</option>
+                            <option value="ruby">Ruby Velvet</option>
+                            <option value="purple">Midnight Purple</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </article>
+
+        <article role="tabpanel" id="tab-screensaver" hidden="">
+            <div class="monitor-preview-container">
+                <div class="crt-monitor">
+                    <canvas class="crt-screen crt-canvas" id="screensaver-crt-canvas" width="140" height="95"></canvas>
+                </div>
+            </div>
+            <fieldset class="prop-fieldset">
+                <legend>Screen Saver:</legend>
+                <div class="prop-row">
+                    <select id="screensaver-select" class="prop-select" style="width: 100%; font-size: 11px;">
+                        <option value="flowerbox" selected>3D FlowerBox (OpenGL)</option>
+                        <option value="starfield">Starfield Simulation</option>
+                        <option value="matrix">Matrix Code Rain</option>
+                        <option value="bouncing">Bouncing 3D Logo</option>
+                        <option value="none">(None)</option>
+                    </select>
+                </div>
+                <div class="prop-row" style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 11px;">
+                    <label for="screensaver-timeout">Wait:</label>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <input type="number" id="screensaver-timeout" value="60" min="10" max="600" style="width: 55px; font-size: 11px;">
+                        <span>seconds</span>
+                    </div>
+                    <button type="button" id="screensaver-test-btn" style="padding: 2px 10px; font-size: 11px;">Preview</button>
+                </div>
+            </fieldset>
+        </article>
+    </section>
+
+    <div class="dialog-actions" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button type="button" id="display-prop-ok" class="default" style="padding: 3px 14px; font-size: 11px;">OK</button>
+        <button type="button" id="display-prop-cancel" style="padding: 3px 14px; font-size: 11px;">Cancel</button>
+        <button type="button" id="display-prop-apply" style="padding: 3px 14px; font-size: 11px;">Apply</button>
+    </div>
+</div>

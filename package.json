@@ -7,7 +7,14 @@
     "start": "node cms/server.js",
     "test:sync": "node cms/test_sync.js"
   },
-  "keywords": ["portfolio", "retro-os", "cms"],
+  "keywords": [
+    "portfolio",
+    "retro-os",
+    "cms"
+  ],
   "author": "Crede Dalton",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "clippyjs": "^0.1.0"
+  }
 }

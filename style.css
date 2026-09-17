@@ -1,18 +1,24 @@
-/* Custom styles to complement XP.css */
+/* Custom styles to complement 7.css */
 :root {
     --wallpaper-desktop: url("img/pape.jpg");
     --wallpaper-mobile: url("img/pape-mobile.jpg");
+    --w7-w-bg: rgba(45, 95, 165, 0.65);
 }
 
-html {
-    min-height: 100%;
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 body {
     background: var(--wallpaper-desktop) center center / cover no-repeat fixed;
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
     -webkit-font-smoothing: antialiased;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
     opacity: 0;
@@ -38,9 +44,12 @@ body.page-loaded {
 }
 
 .desktop {
-    min-height: 100vh;
-    padding-bottom: 40px;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
     position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* Desktop Icons */
@@ -115,12 +124,14 @@ body.page-loaded {
     left: 520px;
 }
 
-/* Windows - XP.css handles most styling, we just add positioning and visibility */
+/* Windows - 7.css handles most styling, we just add positioning and visibility */
 .window {
     position: absolute;
     min-width: 300px;
     min-height: 200px;
-    max-width: 90%;
+    max-width: 90vw;
+    max-height: calc(100vh - 56px);
+    max-height: calc(100dvh - 56px);
     display: none;
     z-index: 10;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
@@ -140,10 +151,11 @@ iframe {
     box-sizing: border-box;
     flex: 1;
     min-height: 0;
+    overflow-y: auto;
 }
 
 .window .window-body.has-scrollbar {
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .page-mount {
@@ -159,6 +171,67 @@ iframe {
 
 .window.active {
     display: flex !important;
+}
+
+/* Inactive Window Dimming & Visual Depth */
+.window:not(.active) {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.window:not(.active) .title-bar {
+    filter: saturate(0.35) brightness(0.88);
+}
+
+.window:not(.active) .title-bar-text {
+    color: rgba(255, 255, 255, 0.72) !important;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+
+.window:not(.active) .title-bar-controls button {
+    opacity: 0.75;
+}
+
+/* Aero Customization (Tints & Transparency) */
+body.aero-solid .window {
+    background-color: #dce7f3 !important;
+    backdrop-filter: none !important;
+}
+
+body.aero-solid .taskbar {
+    background: #2a4768 !important;
+    backdrop-filter: none !important;
+}
+
+body.tint-slate {
+    --w7-w-bg: rgba(100, 120, 140, 0.7);
+}
+body.tint-slate .title-bar,
+body.tint-slate .taskbar {
+    background: linear-gradient(to bottom, rgba(120, 140, 160, 0.85), rgba(70, 85, 100, 0.95)) !important;
+}
+
+body.tint-emerald {
+    --w7-w-bg: rgba(40, 110, 70, 0.7);
+}
+body.tint-emerald .title-bar,
+body.tint-emerald .taskbar {
+    background: linear-gradient(to bottom, rgba(46, 139, 87, 0.85), rgba(20, 80, 50, 0.95)) !important;
+}
+
+body.tint-ruby {
+    --w7-w-bg: rgba(140, 35, 45, 0.7);
+}
+body.tint-ruby .title-bar,
+body.tint-ruby .taskbar {
+    background: linear-gradient(to bottom, rgba(165, 42, 42, 0.85), rgba(100, 20, 30, 0.95)) !important;
+}
+
+body.tint-purple {
+    --w7-w-bg: rgba(95, 45, 130, 0.7);
+}
+body.tint-purple .title-bar,
+body.tint-purple .taskbar {
+    background: linear-gradient(to bottom, rgba(110, 60, 150, 0.85), rgba(60, 25, 90, 0.95)) !important;
 }
 
 .title-bar {
@@ -244,11 +317,49 @@ iframe {
 
 .section h2 {
     font-size: 18px;
-    color: #000080;
+    color: #16467d;
     margin-top: 0;
     margin-bottom: 15px;
     border-bottom: 2px solid #c0c0c0;
     padding-bottom: 5px;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #1e3a5f;
+    font-weight: 600;
+    margin: 10px 0 14px 0;
+    line-height: 1.4;
+}
+
+.about-quote {
+    margin: 16px 0;
+    padding: 10px 14px;
+    background: #f4f7fb;
+    border: 1px solid #b2c4d6;
+    box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #d9e3ed;
+    color: #0f2b59;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    border-radius: 2px;
+}
+
+.cta-section {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(to right, #edf4fc, #e1eefc);
+    border: 1px solid #b8cee5;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.cta-text {
+    margin: 0 !important;
+    font-size: 15px;
+    font-weight: bold;
+    color: #16467d;
 }
 
 .section p {
@@ -257,7 +368,7 @@ iframe {
     margin-bottom: 15px;
 }
 
-/* Button Group - XP.css handles button styling */
+/* Button Group - 7.css handles button styling */
 .button-group {
     display: flex;
     flex-direction: row;
@@ -338,7 +449,7 @@ iframe {
     padding: 0 10px;
     border: 1px solid #9baaba;
     background: #ffffff;
-    color: #444;
+    color: #283746;
     font-size: 12px;
     overflow: hidden;
     white-space: nowrap;
@@ -351,7 +462,7 @@ iframe {
 }
 
 .explorer-address-chevron {
-    color: #8b98a7;
+    color: #5c6c7d;
     font-size: 17px;
 }
 
@@ -372,7 +483,7 @@ iframe {
 
 .explorer-heading p {
     margin: 0;
-    color: #687584;
+    color: #3b4e63;
     font-size: 12px;
 }
 
@@ -382,8 +493,9 @@ iframe {
     border: 1px solid #9eafc2;
     border-radius: 2px;
     background: #eef4fb;
-    color: #315b86;
+    color: #16467d;
     font-size: 11px;
+    font-weight: 600;
 }
 
 .portfolio-list {
@@ -444,6 +556,13 @@ iframe {
     min-width: 0;
 }
 
+.portfolio-row-name > span:not(.portfolio-file-icon) {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .portfolio-file-icon {
     display: grid;
     place-items: center;
@@ -463,24 +582,33 @@ iframe {
     display: block;
 }
 
-.portfolio-row-name strong,
-.portfolio-row-name small {
+.portfolio-row-name strong {
     display: block;
+    color: #16467d;
+    font-size: 13px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.portfolio-row-name strong {
-    color: #16467d;
-    font-size: 13px;
-}
-
-.portfolio-row-name small,
-.portfolio-row-type,
-.portfolio-row time {
+.portfolio-row-name small {
+    display: block;
     color: #687584;
     font-size: 11px;
+    line-height: 1.35;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.portfolio-row-type,
+.portfolio-row time {
+    min-width: 0;
+    color: #687584;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .explorer-footer {
@@ -708,12 +836,8 @@ iframe {
         display: none;
     }
 
-    /* Hide desktop-only components (CrimeWire / Scratchpad) on mobile */
-    .desktop-only,
-    #limewire-window,
-    #limewire-icon,
-    [data-action="limewire"],
-    [data-window="limewire-window"] {
+    /* Hide desktop-only components on mobile */
+    .desktop-only {
         display: none !important;
     }
 
@@ -747,7 +871,6 @@ iframe {
         cursor: default;
     }
 
-    .title-bar-controls button,
     .start-button,
     .taskbar-task,
     .shutdown-cancel-btn,
@@ -758,8 +881,8 @@ iframe {
     }
 
     .title-bar-controls button {
-        min-width: 34px;
-        min-height: 34px;
+        min-width: 40px;
+        min-height: 40px;
     }
 
     .content-header {
@@ -941,21 +1064,535 @@ iframe {
     }
 }
 
-/* Scrollbar Styling */
-.window-body::-webkit-scrollbar {
-    width: 16px;
+/* ========================================================
+   98.JS RETRO UPGRADES & POLISH
+   ======================================================== */
+
+/* Desktop Selection Marquee Box */
+.selection-marquee {
+    position: absolute;
+    border: 1px dotted #000080;
+    background: rgba(0, 0, 128, 0.2);
+    pointer-events: none;
+    z-index: 5;
 }
 
-.window-body::-webkit-scrollbar-track {
+/* Context Menus (Windows 7 Style) */
+.context-menu {
+    position: fixed;
+    background: #f0f0f0;
+    border: 1px solid #979797;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    min-width: 180px;
+    z-index: 99999;
+    font-size: 12px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    padding: 3px;
+    color: #000;
+}
+
+.context-menu-item {
+    padding: 4px 20px 4px 14px;
+    cursor: pointer;
+    color: #1e1e1e;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    margin: 1px 0;
+    font-size: 12px;
+}
+
+.context-menu-item:hover {
+    background: linear-gradient(to bottom, #edf4fc 0%, #daebfc 100%);
+    border: 1px solid #7da2ce;
+    color: #000000;
+}
+
+.context-menu-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 4px 8px;
+    border: none;
+}
+
+/* Hidden element helper */
+[hidden] {
+    display: none !important;
+}
+
+/* Blue Screen of Death (BSOD) */
+.bsod-overlay {
+    position: fixed;
+    inset: 0;
+    background: #0000aa;
+    color: #ffffff;
+    z-index: 999999;
+    font-family: "Courier New", Courier, monospace;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+    user-select: none;
+    cursor: pointer;
+}
+
+.bsod-overlay.active {
+    display: flex;
+}
+
+.bsod-content {
+    max-width: 680px;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.bsod-title {
+    background: #aaaaaa;
+    color: #0000aa;
+    display: inline-block;
+    padding: 2px 12px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.bsod-prompt {
+    margin-top: 24px;
+    animation: bsodBlink 1s infinite;
+}
+
+@keyframes bsodBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* Screensaver Overlay */
+.screensaver-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    z-index: 90000;
+    display: none;
+    cursor: none;
+}
+
+.screensaver-overlay.active {
+    display: block;
+}
+
+.screensaver-canvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+}
+
+/* Authentic Windows 7 Command Prompt */
+.terminal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #000000 !important;
+    color: #cccccc !important;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.terminal-screen {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    padding: 8px 12px;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: flex;
+    flex-direction: column;
+    outline: none;
+    background: #000000 !important;
+    cursor: text;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    box-sizing: border-box !important;
+}
+
+.terminal-banner,
+.terminal-history {
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    color: #cccccc;
+}
+
+.terminal-line {
+    margin-bottom: 2px;
+    word-break: break-all;
+    white-space: pre-wrap;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    color: #cccccc;
+    line-height: 1.35;
+}
+
+.term-highlight {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.terminal-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    margin-top: 2px;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    position: relative;
+    background: transparent !important;
+    cursor: text;
+}
+
+.terminal-prompt {
+    color: #cccccc !important;
+    white-space: pre !important;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    user-select: none;
+    line-height: 1.4;
+    margin-right: 6px;
+}
+
+.terminal-typed-display {
+    color: #ffffff !important;
+    white-space: pre !important;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    line-height: 1.4;
+}
+
+.terminal-blinking-cursor {
+    color: #ffffff !important;
+    font-family: "Consolas", "Lucida Console", "Courier New", monospace !important;
+    font-size: 14px !important;
+    font-weight: bold;
+    line-height: 1.4;
+    animation: termCursorBlink 1s step-start infinite;
+    user-select: none;
+}
+
+@keyframes termCursorBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+.terminal-hidden-input {
+    position: absolute !important;
+    opacity: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: auto !important;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    color: transparent !important;
+    cursor: text !important;
+    z-index: 10 !important;
+}
+
+/* Display Properties Dialog */
+.display-properties-content {
+    font-size: 11px;
+}
+
+/* 7.css Tablist styling and browser reset */
+menu[role="tablist"] {
+    margin: 0 0 -2px 0;
+    padding: 0 0 0 3px;
+}
+
+section.tabs {
+    width: 100%;
+}
+
+.monitor-preview-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.crt-monitor {
+    width: 180px;
+    height: 140px;
+    background: #dcd7c9;
+    border: 3px outset #ffffff;
+    border-radius: 8px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    padding: 8px 8px 16px 8px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.crt-screen {
+    width: 140px;
+    height: 95px;
+    background: #008080;
+    border: 2px inset #808080;
+    border-radius: 4px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.crt-canvas {
+    width: 140px;
+    height: 95px;
+    background: #000;
+}
+
+.prop-fieldset {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+}
+
+.prop-fieldset legend {
+    padding: 0 4px;
+}
+
+.prop-select {
+    width: 100%;
+}
+
+.theme-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.theme-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+/* Minesweeper Game Window */
+.minesweeper-window-inner {
     background: #c0c0c0;
-    border: 1px solid #808080;
+    border: 3px outset #ffffff;
+    padding: 6px;
+    display: inline-block;
 }
 
-.window-body::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #c0c0c0 0%, #808080 100%);
-    border: 1px solid #808080;
+.minesweeper-menu-bar {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #808080;
+    padding-bottom: 3px;
 }
 
-.window-body::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #d4d0c8 0%, #a0a0a0 100%);
+.ms-menu-item {
+    cursor: pointer;
+    padding: 1px 4px;
+}
+
+.ms-menu-item:hover {
+    background: #000080;
+    color: #ffffff;
+}
+
+.minesweeper-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px inset #ffffff;
+    padding: 4px 6px;
+    background: #c0c0c0;
+    margin-bottom: 6px;
+}
+
+.ms-counter {
+    background: #000000;
+    color: #ff0000;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 1px 4px;
+    border: 1px inset #808080;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.ms-face-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px outset #ffffff;
+    background: #c0c0c0;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.ms-face-btn:active {
+    border: 2px inset #ffffff;
+}
+
+.minesweeper-board {
+    display: grid;
+    border: 3px inset #ffffff;
+    background: #808080;
+    gap: 1px;
+}
+
+.ms-cell {
+    width: 20px;
+    height: 20px;
+    background: #c0c0c0;
+    border: 2px outset #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.ms-cell.revealed {
+    border: 1px solid #7b7b7b;
+    background: #bdbdbd;
+}
+
+.ms-cell.mine {
+    background: #ff4444;
+}
+
+/* ========================================================
+   AUTHENTIC MS AGENT CLIPPY BALLOON (pithings/clippy)
+   ======================================================== */
+.clippy-interactive-balloon {
+    position: fixed;
+    z-index: 100000;
+    width: 250px;
+    background: #ffffe1;
+    border: 1px solid #000000;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.35);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: Tahoma, "Segoe UI", sans-serif;
+    font-size: 11px;
+    color: #000000;
+    line-height: 1.4;
+    display: none;
+}
+
+.clippy-interactive-balloon::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    right: 20px;
+    border-width: 8px 8px 0;
+    border-style: solid;
+    border-color: #ffffe1 transparent;
+    display: block;
+    width: 0;
+}
+
+.clippy-interactive-balloon::before {
+    content: "";
+    position: absolute;
+    bottom: -9px;
+    right: 19px;
+    border-width: 9px 9px 0;
+    border-style: solid;
+    border-color: #000000 transparent;
+    display: block;
+    width: 0;
+}
+
+.clippy-balloon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 11px;
+    border-bottom: 1px solid #e0d080;
+    padding-bottom: 3px;
+    margin-bottom: 6px;
+    color: #333333;
+}
+
+.clippy-balloon-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+    color: #666666;
+}
+
+.clippy-quick-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.clippy-pill {
+    background: #ffffff;
+    border: 1px solid #999999;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+}
+
+.clippy-pill:hover {
+    background: #000080;
+    color: #ffffff;
+    border-color: #000080;
+}
+
+/* 8-Direction Window Resize Handles (Desktop) */
+.win-resize-handle {
+    position: absolute;
+    z-index: 50;
+}
+
+.win-resize-n  { top: 0; left: 6px; right: 6px; height: 5px; cursor: n-resize; }
+.win-resize-s  { bottom: 0; left: 6px; right: 6px; height: 5px; cursor: s-resize; }
+.win-resize-e  { top: 6px; bottom: 6px; right: 0; width: 5px; cursor: e-resize; }
+.win-resize-w  { top: 6px; bottom: 6px; left: 0; width: 5px; cursor: w-resize; }
+.win-resize-ne { top: 0; right: 0; width: 8px; height: 8px; cursor: ne-resize; }
+.win-resize-nw { top: 0; left: 0; width: 8px; height: 8px; cursor: nw-resize; }
+.win-resize-se { bottom: 0; right: 0; width: 8px; height: 8px; cursor: se-resize; }
+.win-resize-sw { bottom: 0; left: 0; width: 8px; height: 8px; cursor: sw-resize; }
+
+@media (max-width: 768px) {
+    .win-resize-handle {
+        display: none !important;
+    }
+    .clippy-container {
+        bottom: 52px;
+        right: 10px;
+    }
+    .clippy-bubble {
+        max-width: 220px;
+    }
 }

@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CREDE.VIP</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css" id="theme-7">
-    <link rel="stylesheet" href="https://unpkg.com/xp.css" id="theme-xp">
-    <link rel="stylesheet" href="https://unpkg.com/98.css" id="theme-98">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="desktop">
+<body class="has-scrollbar">
+    <div class="desktop" id="desktop">
+        <!-- Desktop Selection Marquee Box -->
+        <div class="selection-marquee" id="selection-marquee" hidden></div>
+
         <!-- Desktop Icons -->
         <div class="desktop-icon" id="welcome-icon" data-type="window" data-target="main-window">
             <div class="icon-image"><img src="img/welcome.png" alt="Welcome"></div>
@@ -20,6 +21,16 @@
         <div class="desktop-icon" id="portfolio-icon" data-type="window" data-target="portfolio-window">
             <div class="icon-image"><img src="img/portfolio.png" alt="Portfolio"></div>
             <div class="icon-label">Portfolio</div>
+        </div>
+
+        <div class="desktop-icon" id="paint-icon" data-type="window" data-target="paint-window">
+            <div class="icon-image"><img src="img/paint.png" alt="Paint"></div>
+            <div class="icon-label">Paint</div>
+        </div>
+
+        <div class="desktop-icon" id="webamp-icon" data-type="action" data-target="webamp">
+            <div class="icon-image"><img src="img/winamp.png" alt="Winamp"></div>
+            <div class="icon-label">Winamp</div>
         </div>
 
         <div class="desktop-icon" id="email-icon" data-type="url" data-target="mailto:crede@crede.vip">
@@ -37,27 +48,19 @@
             <div class="icon-label">Substack</div>
         </div>
 
-        <div class="desktop-icon" id="instagram-icon" data-type="url" data-target="https://instagram.com/crede.vip">
-            <div class="icon-image"><img src="img/folder-images.png" alt="Instagram"></div>
-            <div class="icon-label">Instagram</div>
-        </div>
-
-        <div class="desktop-icon" id="paint-icon" data-type="window" data-target="paint-window">
-            <div class="icon-image"><img src="img/paint.png" alt="Paint"></div>
-            <div class="icon-label">Paint</div>
-        </div>
-
-        <div class="desktop-icon" id="webamp-icon" data-type="action" data-target="webamp">
-            <div class="icon-image"><img src="img/winamp.png" alt="Winamp"></div>
-            <div class="icon-label">Winamp</div>
+        <div class="desktop-icon" id="clippy-icon" data-type="action" data-target="clippy">
+            <div class="icon-image"><img src="img/clippy.png" alt="Clippy"></div>
+            <div class="icon-label">Clippy</div>
         </div>
         <!-- /Desktop Icons -->
 
         <!-- Main Window -->
-        <div class="window active" id="main-window" data-page="pages/about.html" style="width: 700px">
+        <div class="window glass active" id="main-window" data-page="pages/about.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">CREDE.VIP</div>
                 <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
@@ -66,36 +69,30 @@
                 <li role="menuitem" tabindex="0" aria-haspopup="true">
                   Socials
                   <ul role="menu">
-                    <li role="menuitem">
-                      <a href="https://www.instagram.com/crede.vip">
-                        Instagram
-                      </a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="https://www.youtube.com/@crede.">
-                          YouTube
-                        </a>
-                      </li>
-                    <li role="menuitem">
-                      <a href="https://substack.com/@credevip">
-                        Substack
-                      </a>
-                    </li>
-                    <li role="menuitem" class="has-divider">
-                      <a href="https://www.linkedin.com/in/crede-dalton-818334202">
-                        LinkedIn
-                      </a>
-                    </li>
+                    <li role="menuitem"><a href="https://www.instagram.com/crede.vip" target="_blank">Instagram</a></li>
+                    <li role="menuitem"><a href="https://www.youtube.com/@crede." target="_blank">YouTube</a></li>
+                    <li role="menuitem"><a href="https://substack.com/@credevip" target="_blank">Substack</a></li>
+                    <li role="menuitem" class="has-divider"><a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank">LinkedIn</a></li>
                     <li role="menuitem"><a href="mailto:crede@crede.vip">Email Me</a></li>
                   </ul>
                 </li>
                 <li role="menuitem" tabindex="0" aria-haspopup="true">
-                  Fun Stuff
+                  Accessories
                   <ul role="menu">
-                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="paint">Paint</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="paint-window">Paint</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="terminal-window">Command Prompt</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="minesweeper-window">Minesweeper</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="display-properties-window">Display Properties</a></li>
                   </ul>
                 </li>
-              </ul>
+                <li role="menuitem" tabindex="0" aria-haspopup="true">
+                  Help
+                  <ul role="menu">
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="system-properties-window">System Properties</a></li>
+                    <li role="menuitem"><a href="#" id="menu-toggle-clippy">Toggle Clippy</a></li>
+                  </ul>
+                </li>
+            </ul>
 
             <div class="window-body has-space has-scrollbar">
                 <div class="page-mount" data-page-mount></div>
@@ -103,10 +100,12 @@
         </div>
 
         <!-- Portfolio Window -->
-        <div class="window" id="portfolio-window" data-page="pages/portfolio.html" style="width: 700px">
+        <div class="window glass" id="portfolio-window" data-page="pages/portfolio.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">My Portfolio</div>
                 <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
                     <button aria-label="Close"></button>
                 </div>
             </div>
@@ -116,7 +115,7 @@
         </div>
 
         <!-- Project Detail Windows -->
-        <div class="window project-window" id="project-5-window" data-page="pages/project-5.html" style="width: 700px">
+        <div class="window glass project-window" id="project-5-window" data-page="pages/project-5.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Shot by CREDE</div>
                 <div class="title-bar-controls">
@@ -128,7 +127,7 @@
             </div>
         </div>
 
-        <div class="window project-window" id="project-1-window" data-page="pages/project-1.html" style="width: 700px">
+        <div class="window glass project-window" id="project-1-window" data-page="pages/project-1.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Dover Marina Hotel &amp; Spa</div>
                 <div class="title-bar-controls">
@@ -140,7 +139,7 @@
             </div>
         </div>
 
-        <div class="window project-window" id="project-2-window" data-page="pages/project-2.html" style="width: 700px">
+        <div class="window glass project-window" id="project-2-window" data-page="pages/project-2.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Sai Care Homes</div>
                 <div class="title-bar-controls">
@@ -152,7 +151,7 @@
             </div>
         </div>
 
-        <div class="window project-window" id="project-3-window" data-page="pages/project-3.html" style="width: 700px">
+        <div class="window glass project-window" id="project-3-window" data-page="pages/project-3.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Lighthouse on the Marsh</div>
                 <div class="title-bar-controls">
@@ -164,7 +163,7 @@
             </div>
         </div>
 
-        <div class="window project-window" id="project-4-window" data-page="pages/project-4.html" style="width: 700px">
+        <div class="window glass project-window" id="project-4-window" data-page="pages/project-4.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">QFlooring</div>
                 <div class="title-bar-controls">
@@ -176,7 +175,7 @@
             </div>
         </div>
 
-        <div class="window project-window" id="project-6-window" data-page="pages/project-6.html" style="width: 700px">
+        <div class="window glass project-window" id="project-6-window" data-page="pages/project-6.html" style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">AI Bollocks</div>
                 <div class="title-bar-controls">
@@ -188,12 +187,103 @@
             </div>
         </div>
 
+        <!-- /Project Detail Windows -->
+
+        <!-- App Windows -->
+        <div class="window glass" id="terminal-window" data-page="pages/terminal.html" style="width: 620px; height: 400px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Command Prompt</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; height: calc(100% - 30px); background: #000; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="page-mount" data-page-mount></div>
+            </div>
+        </div>
+
+        <div class="window glass" id="minesweeper-window" data-page="pages/minesweeper.html" style="width: 250px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Minesweeper</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 8px;">
+                <div class="page-mount" data-page-mount></div>
+            </div>
+        </div>
+
+        <div class="window glass" id="display-properties-window" data-page="pages/display-properties.html" style="width: 440px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Display Properties</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-space">
+                <div class="page-mount" data-page-mount></div>
+            </div>
+        </div>
+
+        <div class="window glass" id="system-properties-window" role="dialog" aria-labelledby="system-properties-title" data-page="pages/system-properties.html" style="width: 420px;">
+            <div class="title-bar">
+                <div class="title-bar-text" id="system-properties-title">System Properties</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-space">
+                <div class="page-mount" data-page-mount></div>
+            </div>
+        </div>
+
+        <!-- Paint Window -->
+        <div class="window glass" id="paint-window" style="width: 900px; height: 700px">
+            <div class="title-bar">
+                <div class="title-bar-text">Paint</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
+                <iframe src="jspaint/index.html" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
+            </div>
+        </div>
+
+
+        <!-- Webamp runs directly on the desktop, without an outer faux window. -->
+        <div class="webamp-host" id="webamp-host" hidden>
+            <iframe src="webamp.html" title="Personal Webamp instance" allow="autoplay"></iframe>
+        </div>
+
+        <!-- Shutdown Error Dialog -->
+        <div class="window is-bright" id="shutdown-dialog" role="dialog" aria-labelledby="shutdown-dialog-title" style="width: 420px;">
+            <div class="title-bar">
+                <div class="title-bar-text" id="shutdown-dialog-title">Critical Error</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body has-space">
+                <h2 class="instruction instruction-primary">The progress bar's only here for show.</h2>
+                <div role="progressbar" class="marquee"></div>
+            </div>
+            <footer style="display: flex; justify-content: flex-end; gap: 6px; padding: 8px">
+                <button type="button" class="default shutdown-cancel-btn">Cancel</button>
+            </footer>
+        </div>
+
         <!-- Taskbar -->
         <div class="taskbar">
             <button class="start-button" id="start-btn" aria-label="Open Start menu" aria-expanded="false">
                 <img class="start-image" src="img/start.png" alt="Start">
             </button>
-            <div class="taskbar-tasks">
+            <div class="taskbar-tasks" id="taskbar-tasks">
                 <button class="taskbar-task active" data-window="main-window">
                     <span class="task-icon"><img src="img/welcome.png" alt="Welcome"></span>
                     <span class="task-text">Welcome</span>
@@ -226,17 +316,25 @@
                     <span class="task-icon"><img src="img/portfolio.png" alt="AI Bollocks"></span>
                     <span class="task-text">AI Bollocks</span>
                 </button>
-                <button class="taskbar-task" data-window="pinball-window" style="display: none;">
-                    <span class="task-icon"><img src="img/pinball.png" alt="3D Pinball"></span>
-                    <span class="task-text">3D Pinball</span>
+                <button class="taskbar-task" data-window="terminal-window" style="display: none;">
+                    <span class="task-icon"><img src="img/cmd-win7.png" alt="MS-DOS"></span>
+                    <span class="task-text">Command Prompt</span>
+                </button>
+                <button class="taskbar-task" data-window="minesweeper-window" style="display: none;">
+                    <span class="task-icon"><img src="img/mines-win7.png" alt="Minesweeper"></span>
+                    <span class="task-text">Minesweeper</span>
+                </button>
+                <button class="taskbar-task" data-window="display-properties-window" style="display: none;">
+                    <span class="task-icon"><img src="img/display-win7.png" alt="Display"></span>
+                    <span class="task-text">Display Properties</span>
+                </button>
+                <button class="taskbar-task" data-window="system-properties-window" style="display: none;">
+                    <span class="task-icon"><img src="img/computer-win7.png" alt="System"></span>
+                    <span class="task-text">System Properties</span>
                 </button>
                 <button class="taskbar-task" data-window="paint-window" style="display: none;">
                     <span class="task-icon"><img src="img/paint.png" alt="Paint"></span>
                     <span class="task-text">Paint</span>
-                </button>
-                <button class="taskbar-task" data-window="limewire-window" style="display: none;">
-                    <span class="task-icon"><img src="img/limewire.png" alt="LimeWire"></span>
-                    <span class="task-text">CrimeWire</span>
                 </button>
                 <button class="taskbar-task" id="webamp-task" data-webamp-task style="display: none;">
                     <span class="task-icon"><img src="img/winamp.png" alt="Winamp"></span>
@@ -262,6 +360,12 @@
                     </a>
                 </li>
                 <li role="menuitem">
+                    <a href="mailto:crede@crede.vip" class="start-menu-item">
+                        <span class="menu-icon"><img src="img/email.png" alt="Email Me"></span>
+                        <span class="menu-text">Email Me</span>
+                    </a>
+                </li>
+                <li role="menuitem">
                     <a href="#" class="start-menu-item" data-action="portfolio-window">
                         <span class="menu-icon"><img src="img/portfolio.png" alt="My Portfolio"></span>
                         <span class="menu-text">My Portfolio</span>
@@ -273,25 +377,19 @@
                         <span class="menu-text">Substack</span>
                     </a>
                 </li>
-                <li role="menuitem">
+                <li role="menuitem" class="has-divider">
                     <a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank" class="start-menu-item">
                         <span class="menu-icon"><img src="img/folder-publicshare.png" alt="LinkedIn"></span>
                         <span class="menu-text">LinkedIn</span>
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a href="https://instagram.com/crede.vip" target="_blank" class="start-menu-item">
-                        <span class="menu-icon"><img src="img/folder-images.png" alt="Instagram"></span>
-                        <span class="menu-text">Instagram</span>
+                    <a href="#" class="start-menu-item" data-action="minesweeper-window">
+                        <span class="menu-icon"><img src="img/mines-win7.png" alt="Minesweeper"></span>
+                        <span class="menu-text">Minesweeper</span>
                     </a>
                 </li>
                 <li role="menuitem">
-                    <a href="mailto:crede@crede.vip" class="start-menu-item">
-                        <span class="menu-icon"><img src="img/email.png" alt="Email Me"></span>
-                        <span class="menu-text">Email Me</span>
-                    </a>
-                </li>
-                <li role="menuitem" class="has-divider">
                     <a href="#" class="start-menu-item" data-action="paint-window">
                         <span class="menu-icon"><img src="img/paint.png" alt="Paint"></span>
                         <span class="menu-text">Paint</span>
@@ -303,64 +401,45 @@
                         <span class="menu-text">Winamp</span>
                     </a>
                 </li>
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="clippy">
+                        <span class="menu-icon"><img src="img/clippy.png" alt="Clippy"></span>
+                        <span class="menu-text">Clippy</span>
+                    </a>
+                </li>
+                <li role="menuitem" class="has-divider">
+                    <a href="#" class="start-menu-item" data-action="terminal-window">
+                        <span class="menu-icon"><img src="img/cmd-win7.png" alt="Command Prompt"></span>
+                        <span class="menu-text">Command Prompt</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="display-properties-window">
+                        <span class="menu-icon"><img src="img/display-win7.png" alt="Display Properties"></span>
+                        <span class="menu-text">Display Properties</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="system-properties-window">
+                        <span class="menu-icon"><img src="img/computer-win7.png" alt="System Properties"></span>
+                        <span class="menu-text">System Properties</span>
+                    </a>
+                </li>
                 <!-- /Start Menu Items -->
             </ul>
             <div class="start-menu-footer">
                 <button class="start-menu-logoff" data-url="https://youtu.be/gdlDLm2icYU">Log Off</button>
-                <button class="start-menu-shutdown" type="button" onclick="const d=document.getElementById('shutdown-dialog'); if(d){d.style.display='block'; d.classList.add('active');}">Turn Off</button>
+                <button class="start-menu-shutdown" type="button" id="start-menu-shutdown-btn">Turn Off</button>
             </div>
-        </div>
-
-        <!-- Paint Window -->
-        <div class="window" id="paint-window" style="width: 900px; height: 700px">
-            <div class="title-bar">
-                <div class="title-bar-text">Paint</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
-                <iframe src="jspaint/index.html" style="width: 100%; height: 100%; border: none;" allow="scripts" allowfullscreen></iframe>
-            </div>
-        </div>
-
-        <!-- LimeWire / Apple Music Window -->
-        <div class="window desktop-only" id="limewire-window" style="width: 1000px; height: 700px">
-            <div class="title-bar">
-                <div class="title-bar-text">CrimeWire - Like torrenting, but with scurvy</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="window-body" style="padding: 0; height: calc(100% - 30px); overflow: hidden; border-bottom: 2px solid #808080;">
-                <iframe src="scratchpad.html" style="width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-        </div>
-
-        <!-- Webamp runs directly on the desktop, without an outer faux window. -->
-        <div class="webamp-host" id="webamp-host" hidden>
-            <iframe src="webamp.html" title="Personal Webamp instance" allow="autoplay"></iframe>
-        </div>
-
-        <!-- Shutdown Error Dialog -->
-        <div class="window is-bright" id="shutdown-dialog" role="dialog" aria-labelledby="shutdown-dialog-title" style="width: 420px;">
-            <div class="title-bar">
-                <div class="title-bar-text" id="shutdown-dialog-title">Critical Error</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Close"></button>
-                </div>
-            </div>
-            <div class="window-body has-space">
-                <h2 class="instruction instruction-primary">The progress bar's only here for show.</h2>
-                <div role="progressbar" class="marquee"></div>
-            </div>
-            <footer style="text-align: right">
-                <button type="button" class="shutdown-cancel-btn">Cancel</button>
-            </footer>
         </div>
 
     </div>
 
+    <!-- Scripts -->
+    <script src="js/sounds.js"></script>
+    <script src="js/flowerbox.js"></script>
+    <script src="js/screensaver.js"></script>
+    <script type="module" src="js/clippy.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
