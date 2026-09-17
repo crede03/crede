@@ -425,7 +425,14 @@ var Agent = class {
 	_dragging;
 	_resizeHandle;
 	_mouseDownHandle;
+	_touchStartHandle;
+	_touchMoveHandle;
+	_touchEndHandle;
 	_dblClickHandle;
+	_dragStartX;
+	_dragStartY;
+	_hasMoved;
+	_preventClick;
 	constructor(mapUrl, data, sounds) {
 		this._queue = new Queue(this._onQueueEmpty.bind(this));
 		this._el = document.createElement("div");
@@ -433,7 +440,8 @@ var Agent = class {
 			position: "fixed",
 			zIndex: "10001",
 			cursor: "pointer",
-			display: "none"
+			display: "none",
+			touchAction: "none"
 		});
 		document.body.appendChild(this._el);
 		this._animator = new Animator(this._el, mapUrl, data, sounds);
@@ -547,8 +555,8 @@ var Agent = class {
 	}
 	show(fast) {
 		this._hidden = false;
+		this._el.style.display = "block";
 		if (fast) {
-			this._el.style.display = "block";
 			this.resume();
 			this._onQueueEmpty();
 			return;
@@ -645,13 +653,22 @@ var Agent = class {
 	_setupEvents() {
 		this._resizeHandle = this.reposition.bind(this);
 		this._mouseDownHandle = this._onMouseDown.bind(this);
+		this._touchStartHandle = this._onTouchStart.bind(this);
 		this._dblClickHandle = this._onDoubleClick.bind(this);
 		window.addEventListener("resize", this._resizeHandle);
 		this._el.addEventListener("mousedown", this._mouseDownHandle);
+		this._el.addEventListener("touchstart", this._touchStartHandle, { passive: false });
 		this._el.addEventListener("dblclick", this._dblClickHandle);
 	}
 	_onDoubleClick() {
 		if (!this.play("ClickedOn")) this.animate();
+	}
+	_getViewportBounds() {
+		let wW = window.innerWidth;
+		const taskbar = document.querySelector('.taskbar');
+		const taskbarH = taskbar ? taskbar.offsetHeight : 46;
+		let wH = Math.max(100, window.innerHeight - taskbarH);
+		return { wW, wH };
 	}
 	reposition() {
 		const style = getComputedStyle(this._el);
@@ -659,10 +676,9 @@ var Agent = class {
 		if (style.visibility === "hidden") return;
 		if (style.width === "0" || style.height === "0") return;
 		let o = this._el.getBoundingClientRect();
-		let bH = this._el.offsetHeight;
-		let bW = this._el.offsetWidth;
-		let wW = window.innerWidth;
-		let wH = window.innerHeight;
+		let bH = this._el.offsetHeight || 93;
+		let bW = this._el.offsetWidth || 124;
+		const { wW, wH } = this._getViewportBounds();
 		let top = o.top;
 		let left = o.left;
 		let m = 5;
@@ -674,6 +690,34 @@ var Agent = class {
 		this._el.style.top = top + "px";
 		this._balloon.reposition();
 	}
+	_getEventPos(e) {
+		if (e.touches && e.touches.length > 0) {
+			return {
+				clientX: e.touches[0].clientX,
+				clientY: e.touches[0].clientY,
+				pageX: e.touches[0].pageX,
+				pageY: e.touches[0].pageY
+			};
+		}
+		if (e.changedTouches && e.changedTouches.length > 0) {
+			return {
+				clientX: e.changedTouches[0].clientX,
+				clientY: e.changedTouches[0].clientY,
+				pageX: e.changedTouches[0].pageX,
+				pageY: e.changedTouches[0].pageY
+			};
+		}
+		return {
+			clientX: e.clientX,
+			clientY: e.clientY,
+			pageX: e.pageX,
+			pageY: e.pageY
+		};
+	}
+	_onTouchStart(e) {
+		if (e.touches && e.touches.length !== 1) return;
+		this._startDrag(e);
+	}
 	_onMouseDown(e) {
 		e.preventDefault();
 		this._startDrag(e);
@@ -682,19 +726,32 @@ var Agent = class {
 		this.pause();
 		this._balloon.hide(true);
 		this._offset = this._calculateClickOffset(e);
+		const pos = this._getEventPos(e);
+		this._dragStartX = pos.clientX;
+		this._dragStartY = pos.clientY;
+		this._hasMoved = false;
+
 		this._moveHandle = this._dragMove.bind(this);
 		this._upHandle = this._finishDrag.bind(this);
+		this._touchMoveHandle = (ev) => {
+			if (ev.cancelable) ev.preventDefault();
+			this._dragMove(ev);
+		};
+		this._touchEndHandle = this._finishDrag.bind(this);
+
 		window.addEventListener("mousemove", this._moveHandle);
 		window.addEventListener("mouseup", this._upHandle);
+		window.addEventListener("touchmove", this._touchMoveHandle, { passive: false });
+		window.addEventListener("touchend", this._touchEndHandle);
+		window.addEventListener("touchcancel", this._touchEndHandle);
 		this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
 	}
 	_calculateClickOffset(e) {
-		let mouseX = e.pageX;
-		let mouseY = e.pageY;
+		const pos = this._getEventPos(e);
 		let o = this._el.getBoundingClientRect();
 		return {
-			top: mouseY - (o.top + window.pageYOffset),
-			left: mouseX - (o.left + window.pageXOffset)
+			top: pos.pageY - (o.top + window.pageYOffset),
+			left: pos.pageX - (o.left + window.pageXOffset)
 		};
 	}
 	_updateLocation() {
@@ -703,36 +760,48 @@ var Agent = class {
 		this._dragUpdateLoop = window.setTimeout(this._updateLocation.bind(this), 10);
 	}
 	_dragMove(e) {
-		e.preventDefault();
-		let x = e.clientX - this._offset.left;
-		let y = e.clientY - this._offset.top;
+		if (e.cancelable) e.preventDefault();
+		const pos = this._getEventPos(e);
+		if (Math.hypot(pos.clientX - this._dragStartX, pos.clientY - this._dragStartY) > 5) {
+			this._hasMoved = true;
+		}
+		let x = pos.clientX - this._offset.left;
+		let y = pos.clientY - this._offset.top;
 		this._targetX = x;
 		this._targetY = y;
 		this._clampTarget();
 	}
-	_finishDrag() {
+	_finishDrag(e) {
 		window.clearTimeout(this._dragUpdateLoop);
 		window.removeEventListener("mousemove", this._moveHandle);
 		window.removeEventListener("mouseup", this._upHandle);
+		if (this._touchMoveHandle) {
+			window.removeEventListener("touchmove", this._touchMoveHandle);
+			window.removeEventListener("touchend", this._touchEndHandle);
+			window.removeEventListener("touchcancel", this._touchEndHandle);
+		}
+		if (this._hasMoved) {
+			this._preventClick = true;
+			setTimeout(() => { this._preventClick = false; }, 350);
+		}
 		this._balloon.show();
 		this.reposition();
 		this.resume();
+		this._el.dispatchEvent(new CustomEvent("clippy-drag-end", { detail: { hasMoved: this._hasMoved } }));
 	}
 	_clampTarget() {
 		let m = 5;
-		let bW = this._el.offsetWidth;
-		let bH = this._el.offsetHeight;
-		let wW = window.innerWidth;
-		let wH = window.innerHeight;
+		let bW = this._el.offsetWidth || 124;
+		let bH = this._el.offsetHeight || 93;
+		const { wW, wH } = this._getViewportBounds();
 		this._targetX = Math.max(m, Math.min(this._targetX, wW - bW - m));
 		this._targetY = Math.max(m, Math.min(this._targetY, wH - bH - m));
 	}
 	_clampXY(x, y) {
 		let m = 5;
-		let bW = this._el.offsetWidth;
-		let bH = this._el.offsetHeight;
-		let wW = window.innerWidth;
-		let wH = window.innerHeight;
+		let bW = this._el.offsetWidth || 124;
+		let bH = this._el.offsetHeight || 93;
+		const { wW, wH } = this._getViewportBounds();
 		return {
 			x: Math.max(m, Math.min(x, wW - bW - m)),
 			y: Math.max(m, Math.min(y, wH - bH - m))
@@ -748,6 +817,14 @@ var Agent = class {
 		window.clearTimeout(this._dragUpdateLoop);
 		window.removeEventListener("mousemove", this._moveHandle);
 		window.removeEventListener("mouseup", this._upHandle);
+		if (this._touchStartHandle) {
+			this._el.removeEventListener("touchstart", this._touchStartHandle);
+		}
+		if (this._touchMoveHandle) {
+			window.removeEventListener("touchmove", this._touchMoveHandle);
+			window.removeEventListener("touchend", this._touchEndHandle);
+			window.removeEventListener("touchcancel", this._touchEndHandle);
+		}
 		this._animator.dispose();
 		this._balloon.dispose();
 		this._queue.dispose();

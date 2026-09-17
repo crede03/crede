@@ -132,8 +132,23 @@ function loadSavedAppearance() {
 
 // Helper: Wallpaper Management
 function setWallpaper(type, customUrl) {
+    const isMobile = isMobileViewport();
+    if (!type || type === 'default') {
+        document.body.style.background = '';
+        document.body.style.backgroundImage = '';
+        document.body.style.backgroundSize = '';
+        document.body.style.backgroundPosition = '';
+        document.body.style.backgroundRepeat = '';
+        document.body.style.backgroundAttachment = '';
+
+        try {
+            localStorage.setItem('crede_wallpaper_type', 'default');
+            localStorage.removeItem('crede_wallpaper_url');
+        } catch (e) {}
+        return;
+    }
+
     const wallpapers = {
-        'default': 'url("img/pape.jpg")',
         'bliss': 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80")',
         'clouds': 'url("https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=1920&q=80")',
         'matrix': 'radial-gradient(circle, #001a00 0%, #000000 100%)',
@@ -141,16 +156,21 @@ function setWallpaper(type, customUrl) {
         'cyber': 'linear-gradient(135deg, #0d001a 0%, #1a0033 50%, #001133 100%)'
     };
 
-    let bgStyle = wallpapers[type] || wallpapers['default'];
+    let bgStyle = wallpapers[type];
     if (type === 'custom' && customUrl) {
         bgStyle = `url("${customUrl}")`;
     }
 
+    if (!bgStyle) {
+        setWallpaper('default');
+        return;
+    }
+
     document.body.style.background = bgStyle;
     document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center center';
+    document.body.style.backgroundPosition = isMobile ? '18% center' : 'center center';
     document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed';
 
     try {
         localStorage.setItem('crede_wallpaper_type', type);
@@ -947,6 +967,18 @@ function initializeDisplayProperties() {
         screen.style.backgroundSize = 'cover';
         screen.style.backgroundPosition = 'center';
     };
+    // Populate current saved settings into controls
+    try {
+        const savedWp = localStorage.getItem('crede_wallpaper_type') || 'default';
+        if (wpSelect) wpSelect.value = savedWp;
+        const savedUrl = localStorage.getItem('crede_wallpaper_url') || '';
+        if (customInput) customInput.value = savedUrl;
+        const savedTint = localStorage.getItem('crede_aero_tint') || 'blue';
+        if (aeroTintSelect) aeroTintSelect.value = savedTint;
+        const savedTrans = localStorage.getItem('crede_aero_transparency');
+        if (aeroTransToggle) aeroTransToggle.checked = (savedTrans !== 'false');
+    } catch (e) {}
+
     wpSelect?.addEventListener('change', updateWallpaperPreview);
     customInput?.addEventListener('input', updateWallpaperPreview);
     updateWallpaperPreview();
@@ -959,14 +991,6 @@ function initializeDisplayProperties() {
             window.ScreensaverEngine.previewOnCanvas(ssCanvas, ssSelect.value);
         }
     });
-
-    // Populate current saved settings into controls
-    try {
-        const savedTint = localStorage.getItem('crede_aero_tint') || 'blue';
-        if (aeroTintSelect) aeroTintSelect.value = savedTint;
-        const savedTrans = localStorage.getItem('crede_aero_transparency');
-        if (aeroTransToggle) aeroTransToggle.checked = (savedTrans !== 'false');
-    } catch (e) {}
 
     const applyDisplay = () => {
         const type = wpSelect?.value || 'default';
@@ -1479,4 +1503,9 @@ function updateClock() {
 
 window.addEventListener('resize', () => {
     layoutDesktopIcons();
+    const type = localStorage.getItem('crede_wallpaper_type') || 'default';
+    if (type !== 'default') {
+        document.body.style.backgroundAttachment = isMobileViewport() ? 'scroll' : 'fixed';
+        document.body.style.backgroundPosition = isMobileViewport() ? '18% center' : 'center center';
+    }
 });

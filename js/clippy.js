@@ -28,6 +28,8 @@
         ]
     };
 
+    let hasUserPositioned = false;
+
     async function loadClippyConfig() {
         try {
             const res = await fetch('data/clippy.json');
@@ -74,13 +76,95 @@
 
                 if (isVisible) {
                     agent.show();
+                    if (agent._el) agent._el.style.display = 'block';
                     positionClippy();
                 } else {
                     agent.hide();
+                    if (agent._el) agent._el.style.display = 'none';
+                }
+
+                if (agent._el) {
+                    agent._el.style.touchAction = 'none';
+                }
+
+                // Drag end event from clippyjs core
+                agent._el?.addEventListener('clippy-drag-end', (e) => {
+                    if (e.detail?.hasMoved) {
+                        hasUserPositioned = true;
+                    }
+                    updateBalloonPosition();
+                });
+
+                // Fallback touch drag support if loaded from CDN without touch events
+                if (agent._el && !agent._touchStartHandle) {
+                    let isTouchDragging = false;
+                    let tStartX = 0, tStartY = 0;
+                    let initLeft = 0, initTop = 0;
+                    let tMoved = false;
+
+                    agent._el.addEventListener('touchstart', (e) => {
+                        if (e.touches.length !== 1) return;
+                        const touch = e.touches[0];
+                        tStartX = touch.clientX;
+                        tStartY = touch.clientY;
+                        const rect = agent._el.getBoundingClientRect();
+                        initLeft = rect.left;
+                        initTop = rect.top;
+                        tMoved = false;
+                    }, { passive: false });
+
+                    window.addEventListener('touchmove', (e) => {
+                        if (e.touches.length !== 1) return;
+                        const touch = e.touches[0];
+                        const dx = touch.clientX - tStartX;
+                        const dy = touch.clientY - tStartY;
+
+                        if (!tMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+                            tMoved = true;
+                            isTouchDragging = true;
+                            agent.pause();
+                            const balloon = document.getElementById('clippy-interactive-balloon');
+                            if (balloon) balloon.style.display = 'none';
+                        }
+
+                        if (isTouchDragging) {
+                            if (e.cancelable) e.preventDefault();
+                            const bW = agent._el.offsetWidth || 124;
+                            const bH = agent._el.offsetHeight || 93;
+                            const wW = window.innerWidth;
+                            const taskbarH = document.querySelector('.taskbar')?.offsetHeight || 46;
+                            const wH = Math.max(100, window.innerHeight - taskbarH);
+                            const m = 5;
+
+                            let targetX = initLeft + dx;
+                            let targetY = initTop + dy;
+
+                            targetX = Math.max(m, Math.min(targetX, wW - bW - m));
+                            targetY = Math.max(m, Math.min(targetY, wH - bH - m));
+
+                            agent._el.style.left = `${targetX}px`;
+                            agent._el.style.top = `${targetY}px`;
+                        }
+                    }, { passive: false });
+
+                    const endTouch = () => {
+                        if (isTouchDragging) {
+                            isTouchDragging = false;
+                            hasUserPositioned = true;
+                            agent._preventClick = true;
+                            setTimeout(() => { agent._preventClick = false; }, 350);
+                            agent.resume();
+                            updateBalloonPosition();
+                        }
+                    };
+
+                    window.addEventListener('touchend', endTouch);
+                    window.addEventListener('touchcancel', endTouch);
                 }
 
                 // Click on Clippy triggers attention animation & speech
                 agent._el?.addEventListener('click', () => {
+                    if (agent._preventClick) return;
                     if (agent.hasAnimation('GetAttention')) {
                         agent.play('GetAttention');
                     } else {
@@ -117,11 +201,20 @@
 
     function positionClippy() {
         if (!agent || !agent._el) return;
+        if (hasUserPositioned) {
+            agent.reposition?.();
+            updateBalloonPosition();
+            return;
+        }
         const width = window.innerWidth;
         const height = window.innerHeight;
+        const taskbarH = document.querySelector('.taskbar')?.offsetHeight || 46;
         const x = Math.max(20, width - 180);
-        const y = Math.max(20, height - 200);
+        const y = Math.max(20, height - taskbarH - 120);
+        agent._el.style.left = `${x}px`;
+        agent._el.style.top = `${y}px`;
         agent.moveTo(x, y, 0);
+        updateBalloonPosition();
     }
 
     function showInteractivePrompt(customText) {
@@ -134,9 +227,6 @@
             balloonEl.className = 'clippy-interactive-balloon';
             document.body.appendChild(balloonEl);
         }
-
-        balloonEl.style.display = 'block';
-        updateBalloonPosition();
 
         if (customText) {
             balloonEl.innerHTML = `
@@ -151,6 +241,8 @@
             `;
             document.getElementById('clippy-close-btn')?.addEventListener('click', () => balloonEl.style.display = 'none');
             document.getElementById('clippy-ask-more')?.addEventListener('click', () => showInteractivePrompt());
+            balloonEl.style.display = 'block';
+            updateBalloonPosition();
             return;
         }
 
@@ -165,6 +257,8 @@
                 </div>
             `;
             document.getElementById('clippy-close-btn')?.addEventListener('click', () => balloonEl.style.display = 'none');
+            balloonEl.style.display = 'block';
+            updateBalloonPosition();
             return;
         }
 
@@ -258,14 +352,36 @@
                 }
             });
         });
+
+        balloonEl.style.display = 'block';
+        updateBalloonPosition();
     }
 
     function updateBalloonPosition() {
         const balloonEl = document.getElementById('clippy-interactive-balloon');
         if (!balloonEl || !agent || !agent._el) return;
         const rect = agent._el.getBoundingClientRect();
-        const top = Math.max(10, rect.top - 180);
-        const left = Math.max(10, rect.left - 240);
+        const bWidth = balloonEl.offsetWidth || 250;
+        const bHeight = balloonEl.getBoundingClientRect().height || balloonEl.offsetHeight || 160;
+
+        // Try placing balloon above clippy; if no room, place below
+        let top = rect.top - bHeight - 12;
+        if (top < 10) {
+            const taskbarH = document.querySelector('.taskbar')?.offsetHeight || 46;
+            if (rect.bottom + 12 + bHeight <= window.innerHeight - taskbarH) {
+                top = rect.bottom + 12;
+            } else {
+                top = Math.max(10, window.innerHeight - taskbarH - bHeight - 10);
+            }
+        }
+
+        // Keep balloon within horizontal bounds
+        let left = rect.right - bWidth;
+        if (left < 10) left = 10;
+        if (left + bWidth > window.innerWidth - 10) {
+            left = window.innerWidth - bWidth - 10;
+        }
+
         balloonEl.style.top = `${top}px`;
         balloonEl.style.left = `${left}px`;
     }
@@ -332,9 +448,11 @@
             if (agent) {
                 if (isVisible) {
                     agent.show();
+                    if (agent._el) agent._el.style.display = 'block';
                     positionClippy();
                 } else {
                     agent.hide();
+                    if (agent._el) agent._el.style.display = 'none';
                     const balloon = document.getElementById('clippy-interactive-balloon');
                     if (balloon) balloon.style.display = 'none';
                 }
@@ -345,6 +463,7 @@
             if (!agent) await initClippy();
             if (!isVisible) await this.toggle(true);
             agent?.show();
+            if (agent?._el) agent._el.style.display = 'block';
             positionClippy();
             agent?.play('Explain');
             showInteractivePrompt(msg);
@@ -353,6 +472,7 @@
             if (!agent) await initClippy();
             if (!isVisible) await this.toggle(true);
             agent?.show();
+            if (agent?._el) agent._el.style.display = 'block';
             positionClippy();
             if (agent?.hasAnimation('GetAttention')) {
                 agent.play('GetAttention');
