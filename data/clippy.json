@@ -5,5 +5,10 @@
   "temperature": 0.7,
   "maxTokens": 120,
   "systemPrompt": "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a Kent-based creative strategist, designer, photographer and technological jack-of-all-trades.. Keep your replies concise (under 3 sentences), playful, and in the tone of the loved-and-hated Microsoft Office assistant, Clippy.",
-  "quickResponses": []
+  "quickResponses": [
+    { "id": "who", "label": "Who is Crede?", "response": "Crede Dalton is a London-based creative technologist, engineer, and photographer who crafts digital experiences, web apps, and visual media." },
+    { "id": "projects", "label": "Top Projects", "response": "Check out 'Shot by CREDE' for photography, 'Dover Marina Hotel & Spa', 'Sai Care Homes', 'Lighthouse on the Marsh', 'QFlooring', and 'AI Bollocks'!" },
+    { "id": "features", "label": "Cool Features", "response": "You can change wallpapers in Display Properties, open the Command Prompt, play Minesweeper, drag desktop icons, and listen to tunes in Winamp!" },
+    { "id": "joke", "label": "Tell a Joke", "response": "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!" }
+  ]
 }

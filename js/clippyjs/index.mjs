@@ -101,15 +101,14 @@ var Animator = class Animator {
 	showAnimation(animationName, stateChangeCallback) {
 		this._exiting = false;
 		if (!this.hasAnimation(animationName)) return false;
+		window.clearTimeout(this._loop);
 		this._currentAnimation = this._data.animations[animationName];
 		this.currentAnimationName = animationName;
-		if (!this._started) {
-			this._step();
-			this._started = true;
-		}
 		this._currentFrameIndex = 0;
 		this._currentFrame = void 0;
 		this._endCallback = stateChangeCallback;
+		this._step();
+		this._started = true;
 		return true;
 	}
 	_draw() {
@@ -155,14 +154,23 @@ var Animator = class Animator {
 		if (!(this._atLastFrame() && this._currentAnimation.useExitBranching)) this._currentFrame = this._currentAnimation.frames[this._currentFrameIndex];
 		this._draw();
 		this._playSound();
-		this._loop = window.setTimeout(this._step.bind(this), this._currentFrame.duration);
-		if (this._endCallback && frameChanged && this._atLastFrame()) if (this._currentAnimation.useExitBranching && !this._exiting) this._endCallback(this.currentAnimationName, Animator.States.WAITING);
-		else this._endCallback(this.currentAnimationName, Animator.States.EXITED);
+		if (this._endCallback && frameChanged && this._atLastFrame()) {
+			if (this._currentAnimation.useExitBranching && !this._exiting) {
+				this._endCallback(this.currentAnimationName, Animator.States.WAITING);
+				this._loop = window.setTimeout(this._step.bind(this), this._currentFrame.duration);
+			} else {
+				this._endCallback(this.currentAnimationName, Animator.States.EXITED);
+				return;
+			}
+		} else {
+			this._loop = window.setTimeout(this._step.bind(this), this._currentFrame.duration);
+		}
 	}
 	pause() {
 		window.clearTimeout(this._loop);
 	}
 	resume() {
+		window.clearTimeout(this._loop);
 		this._step();
 	}
 	dispose() {
@@ -524,32 +532,51 @@ var Agent = class {
 		};
 		requestAnimationFrame(animate);
 	}
-	_playInternal(animation, callback) {
+	_playInternal(animation, callback, onStart) {
 		if (this._isIdleAnimation() && this._idlePromise) {
+			this._animator.exitAnimation();
 			this._idlePromise.then(() => {
-				this._playInternal(animation, callback);
+				this._playInternal(animation, callback, onStart);
 			});
 			return;
 		}
+		if (onStart) onStart();
 		this._animator.showAnimation(animation, callback);
 	}
 	play(animation, timeout, cb) {
 		if (!this.hasAnimation(animation)) return false;
-		if (timeout === void 0) timeout = 5e3;
+		if (timeout === void 0) {
+			let animData = this._animator?._data?.animations?.[animation];
+			let naturalDuration = 0;
+			if (animData && Array.isArray(animData.frames)) {
+				for (let i = 0; i < animData.frames.length; i++) {
+					naturalDuration += (animData.frames[i].duration || 100);
+				}
+			}
+			timeout = Math.max(8000, naturalDuration + 3000);
+		}
 		this._addToQueue(function(complete) {
 			let completed = false;
+			let timer = null;
 			let callback = function(name, state) {
 				if (state === Animator.States.EXITED) {
+					if (timer) {
+						window.clearTimeout(timer);
+						timer = null;
+					}
 					completed = true;
 					if (cb) cb();
 					complete();
 				}
 			};
-			if (timeout) window.setTimeout(() => {
-				if (completed) return;
-				this._animator.exitAnimation();
-			}, timeout);
-			this._playInternal(animation, callback);
+			this._playInternal(animation, callback, () => {
+				if (timeout) {
+					timer = window.setTimeout(() => {
+						if (completed) return;
+						this._animator.exitAnimation();
+					}, timeout);
+				}
+			});
 		}, this);
 		return true;
 	}
@@ -604,8 +631,15 @@ var Agent = class {
 	}
 	animate() {
 		let animations = this.animations();
-		let anim = animations[Math.floor(Math.random() * animations.length)];
-		if (anim.indexOf("Idle") === 0) return this.animate();
+		let r = [];
+		for (let i = 0; i < animations.length; i++) {
+			let a = animations[i];
+			if (a.indexOf("Idle") !== 0 && a.indexOf("Look") !== 0 && a !== "Hide" && a !== "Show" && a !== "RestPose") {
+				r.push(a);
+			}
+		}
+		if (!r.length) return false;
+		let anim = r[Math.floor(Math.random() * r.length)];
 		return this.play(anim);
 	}
 	_getDirection(x, y) {
@@ -623,15 +657,27 @@ var Agent = class {
 		return "Top";
 	}
 	_onQueueEmpty() {
-		if (this._hidden || this._isIdleAnimation()) return;
+		if (this._hidden || this._isIdleAnimation() || (this._queue && this._queue._queue && this._queue._queue.length > 0)) return;
 		let idleAnim = this._getIdleAnimation();
+		if (!idleAnim) return;
 		this._idlePromise = new Promise((resolve) => {
 			this._idleResolve = resolve;
 		});
-		this._animator.showAnimation(idleAnim, this._onIdleComplete.bind(this));
+		let idleTimeout = window.setTimeout(() => {
+			if (this._isIdleAnimation()) {
+				this._animator.exitAnimation();
+			}
+		}, 4000);
+		this._animator.showAnimation(idleAnim, (name, state) => {
+			if (state === Animator.States.EXITED) {
+				window.clearTimeout(idleTimeout);
+				this._onIdleComplete(name, state);
+			}
+		});
 	}
 	_onIdleComplete(name, state) {
 		if (state === Animator.States.EXITED) {
+			this._animator.currentAnimationName = null;
 			if (this._idleResolve) this._idleResolve();
 			this._idlePromise = null;
 			this._idleResolve = null;
@@ -639,16 +685,24 @@ var Agent = class {
 	}
 	_isIdleAnimation() {
 		let c = this._animator.currentAnimationName;
-		return c && c.indexOf("Idle") === 0;
+		return !!(c && c.indexOf("Idle") === 0);
 	}
 	_getIdleAnimation() {
+		const subtleIdles = ["Idle1_1", "IdleSideToSide", "IdleHeadScratch", "IdleFingerTap", "IdleEyeBrowRaise", "LookLeft", "LookRight", "LookUp"];
+		const available = subtleIdles.filter(a => this.hasAnimation(a));
+		if (available.length > 0 && Math.random() < 0.85) {
+			return available[Math.floor(Math.random() * available.length)];
+		}
 		let animations = this.animations();
 		let r = [];
 		for (let i = 0; i < animations.length; i++) {
 			let a = animations[i];
 			if (a.indexOf("Idle") === 0) r.push(a);
 		}
-		return r[Math.floor(Math.random() * r.length)];
+		return r.length ? r[Math.floor(Math.random() * r.length)] : (available[0] || "Idle1_1");
+	}
+	isBusy() {
+		return !!(this._queue?._active || (this._queue?._queue && this._queue._queue.length > 0) || this._isIdleAnimation());
 	}
 	_setupEvents() {
 		this._resizeHandle = this.reposition.bind(this);

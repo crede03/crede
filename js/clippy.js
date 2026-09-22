@@ -39,7 +39,7 @@
                     clippyConfig = {
                         ...clippyConfig,
                         ...data,
-                        quickResponses: Array.isArray(data.quickResponses) ? data.quickResponses : clippyConfig.quickResponses
+                        quickResponses: (Array.isArray(data.quickResponses) && data.quickResponses.length > 0) ? data.quickResponses : clippyConfig.quickResponses
                     };
                 }
             }
@@ -165,6 +165,7 @@
                 // Click on Clippy triggers attention animation & speech
                 agent._el?.addEventListener('click', () => {
                     if (agent._preventClick) return;
+                    agent.stopCurrent?.();
                     if (agent.hasAnimation('GetAttention')) {
                         agent.play('GetAttention');
                     } else {
@@ -173,13 +174,21 @@
                     showInteractivePrompt();
                 });
 
-                // Random idle animation every 8 seconds
+                // Gentle subtle idle animation every 30 seconds when idle
                 if (idleInterval) clearInterval(idleInterval);
                 idleInterval = setInterval(() => {
-                    if (isVisible && agent && !isThinking) {
-                        agent.animate();
+                    if (isVisible && agent && !isThinking && !agent.isBusy?.()) {
+                        if (document.body.classList.contains('screensaver-active') || window.ScreensaverEngine?.isRunning?.()) {
+                            return;
+                        }
+                        const subtleIdles = ['Idle1_1', 'IdleSideToSide', 'IdleHeadScratch', 'IdleFingerTap', 'IdleEyeBrowRaise', 'LookLeft', 'LookRight', 'LookUp'];
+                        const available = subtleIdles.filter(a => agent.hasAnimation(a));
+                        if (available.length > 0) {
+                            const picked = available[Math.floor(Math.random() * available.length)];
+                            agent.play(picked);
+                        }
                     }
-                }, 8000);
+                }, 30000);
 
                 // Initial greeting after 1.5 seconds
                 setTimeout(() => {
@@ -350,6 +359,7 @@
                 const askId = pill.dataset.ask;
                 const match = (clippyConfig.quickResponses || []).find(r => r.id === askId);
                 if (match && match.response) {
+                    agent?.stopCurrent?.();
                     agent?.play('Explain');
                     showInteractivePrompt(match.response);
                 }
@@ -392,7 +402,8 @@
     async function askOpenRouter(prompt) {
         if (!apiKey) return;
         isThinking = true;
-        agent?.play('Thinking');
+        agent?.stopCurrent?.();
+        agent?.play('Thinking', 25000);
         showInteractivePrompt();
 
         const model = clippyConfig.model || 'google/gemini-2.5-flash';
@@ -434,10 +445,12 @@
             const data = await response.json();
             const reply = data.choices?.[0]?.message?.content || "It looks like my paperclip gears got stuck! Try asking again.";
             isThinking = false;
+            agent?.stopCurrent?.();
             agent?.play('Congratulate');
             showInteractivePrompt(reply);
         } catch(err) {
             isThinking = false;
+            agent?.stopCurrent?.();
             agent?.play('Explain');
             showInteractivePrompt(`<strong>Oops:</strong> ${err.message || 'Connection error'}. Check your key or try again.`);
         }
@@ -473,6 +486,7 @@
             agent?.show();
             if (agent?._el) agent._el.style.display = 'block';
             positionClippy();
+            agent?.stopCurrent?.();
             agent?.play('Explain');
             showInteractivePrompt(msg);
         },
@@ -483,6 +497,7 @@
             agent?.show();
             if (agent?._el) agent._el.style.display = 'block';
             positionClippy();
+            agent?.stopCurrent?.();
             if (agent?.hasAnimation('GetAttention')) {
                 agent.play('GetAttention');
             } else {
