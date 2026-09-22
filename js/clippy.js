@@ -219,6 +219,9 @@
 
     function showInteractivePrompt(customText) {
         if (!agent) return;
+        if (document.body.classList.contains('screensaver-active') || window.ScreensaverEngine?.isRunning?.()) {
+            return;
+        }
 
         let balloonEl = document.getElementById('clippy-interactive-balloon');
         if (!balloonEl) {
@@ -459,7 +462,12 @@
             }
             try { localStorage.setItem('crede_clippy_visible', String(isVisible)); } catch(e){}
         },
+        hideBalloon: function() {
+            const balloon = document.getElementById('clippy-interactive-balloon');
+            if (balloon) balloon.style.display = 'none';
+        },
         speak: async function(msg) {
+            window.ScreensaverEngine?.stop?.();
             if (!agent) await initClippy();
             if (!isVisible) await this.toggle(true);
             agent?.show();
@@ -469,6 +477,7 @@
             showInteractivePrompt(msg);
         },
         openPrompt: async function() {
+            window.ScreensaverEngine?.stop?.();
             if (!agent) await initClippy();
             if (!isVisible) await this.toggle(true);
             agent?.show();

@@ -88,7 +88,7 @@
                 <li role="menuitem" tabindex="0" aria-haspopup="true">
                   Help
                   <ul role="menu">
-                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="system-properties-window">System Properties</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="system-properties-window">About This Website</a></li>
                     <li role="menuitem"><a href="#" id="menu-toggle-clippy">Toggle Clippy</a></li>
                   </ul>
                 </li>
@@ -230,14 +230,14 @@
             </div>
         </div>
 
-        <div class="window glass" id="system-properties-window" role="dialog" aria-labelledby="system-properties-title" data-page="pages/system-properties.html" style="width: 420px;">
+        <div class="window glass" id="system-properties-window" aria-labelledby="system-properties-title" data-page="pages/system-properties.html" style="width: 480px;">
             <div class="title-bar">
-                <div class="title-bar-text" id="system-properties-title">System Properties</div>
+                <div class="title-bar-text" id="system-properties-title">About This Website</div>
                 <div class="title-bar-controls">
                     <button aria-label="Close"></button>
                 </div>
             </div>
-            <div class="window-body has-space">
+            <div class="window-body has-space has-scrollbar">
                 <div class="page-mount" data-page-mount></div>
             </div>
         </div>
@@ -261,8 +261,13 @@
             <iframe src="webamp.html" title="Personal Webamp instance" allow="autoplay"></iframe>
         </div>
 
+        <!-- Screensaver Elements -->
+        <div id="screensaver-overlay" class="screensaver-overlay">
+            <canvas id="screensaver-canvas"></canvas>
+        </div>
+
         <!-- Shutdown Error Dialog -->
-        <div class="window is-bright" id="shutdown-dialog" role="dialog" aria-labelledby="shutdown-dialog-title" style="width: 420px;">
+        <div class="window is-bright" id="shutdown-dialog" aria-labelledby="shutdown-dialog-title" style="width: 420px;">
             <div class="title-bar">
                 <div class="title-bar-text" id="shutdown-dialog-title">Critical Error</div>
                 <div class="title-bar-controls">
@@ -329,8 +334,8 @@
                     <span class="task-text">Display Properties</span>
                 </button>
                 <button class="taskbar-task" data-window="system-properties-window" style="display: none;">
-                    <span class="task-icon"><img src="img/computer-win7.png" alt="System"></span>
-                    <span class="task-text">System Properties</span>
+                    <span class="task-icon"><img src="img/computer-win7.png" alt="About"></span>
+                    <span class="task-text">About This Website</span>
                 </button>
                 <button class="taskbar-task" data-window="paint-window" style="display: none;">
                     <span class="task-icon"><img src="img/paint.png" alt="Paint"></span>
@@ -421,8 +426,8 @@
                 </li>
                 <li role="menuitem">
                     <a href="#" class="start-menu-item" data-action="system-properties-window">
-                        <span class="menu-icon"><img src="img/computer-win7.png" alt="System Properties"></span>
-                        <span class="menu-text">System Properties</span>
+                        <span class="menu-icon"><img src="img/computer-win7.png" alt="About This Website"></span>
+                        <span class="menu-text">About This Website</span>
                     </a>
                 </li>
                 <!-- /Start Menu Items -->

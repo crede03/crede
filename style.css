@@ -137,7 +137,6 @@ body.page-loaded {
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
     resize: none;
     overflow: hidden;
-    display: flex;
     flex-direction: column;
 }
 
@@ -171,6 +170,15 @@ iframe {
 
 .window.active {
     display: flex !important;
+}
+
+/* Ensure dialog windows obey our window manager and are not hidden by 7.css :target rules */
+.window[role="dialog"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: absolute !important;
+    transform: none !important;
+    transition: none !important;
 }
 
 /* Inactive Window Dimming & Visual Depth */
@@ -363,6 +371,90 @@ body.tint-purple .title-bar {
     color: #333;
     line-height: 1.6;
     margin-bottom: 15px;
+}
+
+/* Cookie Notice - Windows 7 Aero Style */
+.cookie-notice {
+    margin-top: 0;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: linear-gradient(180deg, #fbfcfe 0%, #edf3fa 50%, #e1ecf8 100%);
+    border: 1px solid #9bb5d1;
+    border-radius: 4px;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.9),
+                inset -1px -1px 0 rgba(200, 218, 238, 0.4),
+                0 2px 5px rgba(0, 30, 60, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.35s ease, margin 0.3s ease, padding 0.3s ease;
+    max-height: 200px;
+}
+
+.cookie-notice.dismissed {
+    opacity: 0;
+    transform: translateY(6px);
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-color: transparent;
+}
+
+.cookie-notice-icon {
+    font-size: 26px;
+    line-height: 1;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15));
+}
+
+.cookie-notice-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.cookie-notice-title {
+    margin: 0 0 3px 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: #16467d;
+    letter-spacing: 0.1px;
+}
+
+.cookie-notice-text {
+    margin: 0 !important;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #334455;
+}
+
+.cookie-notice-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.cookie-notice-actions button {
+    padding: 3px 14px;
+    font-size: 11px;
+    min-width: 65px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .cookie-notice {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .cookie-notice-actions {
+        align-self: flex-end;
+    }
 }
 
 /* Button Group - 7.css handles button styling */
@@ -1191,7 +1283,7 @@ body.tint-purple .title-bar {
     position: fixed;
     inset: 0;
     background: #000000;
-    z-index: 90000;
+    z-index: 2000000;
     display: none;
     cursor: none;
 }
@@ -1204,6 +1296,15 @@ body.tint-purple .title-bar {
     width: 100vw;
     height: 100vh;
     display: block;
+}
+
+/* Suppress Clippy and balloons while screensaver is active */
+body.screensaver-active .clippy-interactive-balloon,
+body.screensaver-active [class*="clippy-balloon"],
+body.screensaver-active .clippy {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 /* Authentic Windows 7 Command Prompt */

@@ -64,17 +64,44 @@
         }, timeoutSeconds * 1000);
     }
 
+    // Helper to reset canvas context
+    function getFreshCanvas(canvasElement) {
+        if (!canvasElement) return null;
+        const newCanvas = canvasElement.cloneNode(true);
+        newCanvas.id = canvasElement.id;
+        if (canvasElement.parentNode) {
+            canvasElement.parentNode.replaceChild(newCanvas, canvasElement);
+        }
+        return newCanvas;
+    }
+
     function startScreensaver(customMode) {
         if (!overlay) overlay = document.getElementById('screensaver-overlay');
-        if (!canvas) canvas = document.getElementById('screensaver-canvas');
-        if (canvas && !ctx) ctx = canvas.getContext('2d');
-        if (!overlay || !canvas || !ctx) return;
+        let currentCanvas = document.getElementById('screensaver-canvas');
+        if (!overlay || !currentCanvas) return;
 
         const currentMode = customMode || mode;
         if (currentMode === 'none') return;
 
         isRunning = true;
+        document.body.classList.add('screensaver-active');
         overlay.classList.add('active');
+
+        // Hide clippy balloon and suppress tooltips
+        const clippyBalloon = document.getElementById('clippy-interactive-balloon');
+        if (clippyBalloon) clippyBalloon.style.display = 'none';
+        document.querySelectorAll('.clippy-interactive-balloon, [class*="clippy-balloon"]').forEach(b => {
+            b.style.display = 'none';
+        });
+        window.ClippySystem?.hideBalloon?.();
+
+        // Always get a fresh canvas to avoid context conflicts between 2D and WebGL
+        canvas = getFreshCanvas(currentCanvas);
+        ctx = null;
+        if (currentMode !== 'flowerbox' && currentMode !== '3dflowerbox') {
+            ctx = canvas.getContext('2d');
+        }
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
@@ -85,6 +112,7 @@
     function stopScreensaver() {
         if (!isRunning) return;
         isRunning = false;
+        document.body.classList.remove('screensaver-active');
         if (overlay) overlay.classList.remove('active');
         if (animFrame) cancelAnimationFrame(animFrame);
         startIdleTimer();
@@ -250,6 +278,7 @@
         init: init,
         start: startScreensaver,
         stop: stopScreensaver,
+        isRunning: function() { return isRunning; },
         setMode: function(m) {
             mode = m;
             try { localStorage.setItem('crede_screensaver_mode', m); } catch(e){}
@@ -263,10 +292,23 @@
         },
         getTimeout: function() { return timeoutSeconds; },
         previewOnCanvas: function(targetCanvas, targetMode) {
-            const previewCtx = targetCanvas.getContext('2d');
-            previewCtx.fillStyle = '#000';
-            previewCtx.fillRect(0, 0, targetCanvas.width, targetCanvas.height);
-            runScreensaver(targetCanvas, previewCtx, targetMode, () => true);
+            // First stop existing animation if any
+            if (targetCanvas._previewIsRunning) {
+                targetCanvas._previewIsRunning.value = false;
+            }
+            const isRunningRef = { value: true };
+            
+            const freshCanvas = getFreshCanvas(targetCanvas);
+            freshCanvas._previewIsRunning = isRunningRef;
+            
+            if (targetMode === 'flowerbox' || targetMode === '3dflowerbox') {
+                runScreensaver(freshCanvas, null, targetMode, () => isRunningRef.value);
+            } else {
+                const previewCtx = freshCanvas.getContext('2d');
+                previewCtx.fillStyle = '#000';
+                previewCtx.fillRect(0, 0, freshCanvas.width, freshCanvas.height);
+                runScreensaver(freshCanvas, previewCtx, targetMode, () => isRunningRef.value);
+            }
         }
     };
 })();

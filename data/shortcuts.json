@@ -106,7 +106,7 @@
     },
     {
       "id": "system-properties",
-      "title": "System Properties",
+      "title": "About This Website",
       "icon": "img/computer-win7.png",
       "enabled": false,
       "type": "window",
@@ -208,7 +208,7 @@
     },
     {
       "id": "system-properties",
-      "title": "System Properties",
+      "title": "About This Website",
       "icon": "img/computer-win7.png",
       "enabled": true,
       "type": "window",

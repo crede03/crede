@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whoopsie!</title>
+    <link rel="icon" href="data:,">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000082;
+            color: #ffffff;
+            font-family: 'Lucida Console', 'Courier New', Monaco, Consolas, monospace;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: clamp(20px, 4vw, 50px);
+            line-height: 1.55;
+            font-size: clamp(12px, 1.6vw, 15px);
+            letter-spacing: 0.2px;
+        }
+
+        .bsod-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .bsod-header {
+            font-weight: bold;
+        }
+
+        .bsod-stop-code-title {
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .bsod-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .bsod-prompt {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .rebooting-screen {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            display: none;
+            z-index: 99999;
+        }
+
+        .rebooting-screen.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bsod-container">
+        <p class="bsod-header">
+            A problem has been detected and CREDE.VIP has been shut down to prevent damage to your computer.
+        </p>
+
+        <p class="bsod-stop-code-title">
+            PAGE_NOT_FOUND_404
+        </p>
+
+        <div class="bsod-section">
+            <p>
+                If this is the first time you've seen this Stop error screen, check the address bar for finger slippage.
+                If this screen appears again, follow these steps:
+            </p>
+            <p>
+                Press any key to restart and return to the CREDE.VIP desktop.
+            </p>
+            <p>
+                Check to make sure the cat hasn't pissed on your router.
+            </p>
+            <p>
+                Stop reading this absolute dross and spend your time on another strange corner of the internet.
+            </p>
+        </div>
+
+        <div class="bsod-section">
+            <p>Technical information:</p>
+            <p>*** STOP: 0x00000404 (0x00000000, 0xF73120AE, 0xC0000034, 0x00000000)</p>
+            <p>*** crede.sys - Address F73120AE base at F7310000, DateStamp 3d6dd67c</p>
+        </div>
+
+        <div class="bsod-section">
+            <p>Beginning dump of physical memory</p>
+            <p id="dump-status">Physical memory dump complete.</p>
+            <p>Contact your system administrator or technical support group for further assistance.</p>
+        </div>
+
+    </div>
+
+    <div class="rebooting-screen" id="reboot-screen"></div>
+
+    <script>
+        (function () {
+            let restarting = false;
+
+            function restartToDesktop() {
+                if (restarting) return;
+                restarting = true;
+                const screen = document.getElementById('reboot-screen');
+                if (screen) screen.classList.add('active');
+                setTimeout(() => {
+                    window.location.href = '/index.html';
+                }, 300);
+            }
+
+            // Click anywhere to reboot
+            document.body.addEventListener('click', restartToDesktop);
+
+            // Press any key to reboot
+            window.addEventListener('keydown', restartToDesktop);
+
+            // Automatic 20-second redirect timer
+            setTimeout(restartToDesktop, 20000);
+        })();
+    </script>
+</body>
+
+</html>

@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     initializeContextMenus();
     initializeSystrayVolume();
     initializePortfolioItems();
+    initializeCookieNotice();
     initializeTerminal();
     initializeDisplayProperties();
     initializeMinesweeper();
@@ -259,6 +260,15 @@ function initializeWindows() {
         // Add 8-Direction Resize Handles (Desktop only)
         if (!isMobileViewport() && !win.classList.contains('is-bright')) {
             addResizeHandles(win);
+        }
+    });
+
+    // Close button for About This Website / System dialog
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.sysprop-close-btn')) {
+            window.SoundSystem?.playClick();
+            const win = document.getElementById('system-properties-window');
+            if (win) closeWindow(win);
         }
     });
 
@@ -724,7 +734,7 @@ function executeCommand(cmd, historyEl) {
             printLine("  dir / ls          - List files & directory contents");
             printLine("  cat / type <file> - View text document (e.g. cat bio.txt)");
             printLine("  projects          - List Crede's major portfolio works");
-            printLine("  open <window>     - Open window (portfolio, paint, minesweeper, display, system)");
+            printLine("  open <window>     - Open window (portfolio, paint, minesweeper, display, about)");
             printLine("  clippy [question] - Summon & talk to Clippy AI assistant");
             printLine("  flowerbox         - Launch 3D FlowerBox OpenGL screensaver");
             printLine("  matrix            - Enter the Matrix digital rain screensaver");
@@ -778,7 +788,7 @@ function executeCommand(cmd, historyEl) {
             else if (arg.includes('paint')) openWindow('paint-window');
             else if (arg.includes('minesweeper')) openWindow('minesweeper-window');
             else if (arg.includes('display')) openWindow('display-properties-window');
-            else if (arg.includes('system')) openWindow('system-properties-window');
+            else if (arg.includes('system') || arg.includes('about')) openWindow('system-properties-window');
             else openWindow('main-window');
             break;
 
@@ -1312,6 +1322,7 @@ function initializeStartMenu() {
             if (d) {
                 d.style.display = 'block';
                 d.classList.add('active');
+                centerWindow(d);
                 window.SoundSystem?.playError();
             }
         });
@@ -1499,6 +1510,38 @@ function updateClock() {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const clockEl = document.getElementById('clock');
     if (clockEl) clockEl.textContent = `${hours}:${minutes}`;
+}
+
+// Cookie Notice
+function initializeCookieNotice() {
+    const notice = document.getElementById('cookie-notice');
+    if (!notice) return;
+
+    if (localStorage.getItem('crede_cookie_consent')) {
+        notice.style.display = 'none';
+        return;
+    }
+
+    const dismissNotice = (choice) => {
+        try {
+            localStorage.setItem('crede_cookie_consent', choice);
+        } catch (e) {}
+        window.SoundSystem?.playClick();
+        notice.classList.add('dismissed');
+        setTimeout(() => {
+            if (notice.parentNode) notice.remove();
+        }, 350);
+    };
+
+    const acceptBtn = notice.querySelector('.cookie-accept-btn');
+    const dismissBtn = notice.querySelector('.cookie-dismiss-btn');
+
+    if (acceptBtn) {
+        acceptBtn.onclick = () => dismissNotice('accepted');
+    }
+    if (dismissBtn) {
+        dismissBtn.onclick = () => dismissNotice('dismissed');
+    }
 }
 
 window.addEventListener('resize', () => {

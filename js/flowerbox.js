@@ -45,11 +45,20 @@
     }
     function flatten(v) {
         const res = [];
-        for (let i = 0; i < v.length; i++) {
-            if (Array.isArray(v[i])) {
-                for (let j = 0; j < v[i].length; j++) res.push(v[i][j]);
-            } else {
-                res.push(v[i]);
+        // If it's a 4x4 matrix, transpose to column-major for WebGL
+        if (v.length === 4 && Array.isArray(v[0]) && v[0].length === 4) {
+            for (let c = 0; c < 4; c++) {
+                for (let r = 0; r < 4; r++) {
+                    res.push(v[r][c]);
+                }
+            }
+        } else {
+            for (let i = 0; i < v.length; i++) {
+                if (Array.isArray(v[i])) {
+                    for (let j = 0; j < v[i].length; j++) res.push(v[i][j]);
+                } else {
+                    res.push(v[i]);
+                }
             }
         }
         return new Float32Array(res);
@@ -189,16 +198,16 @@
                 const vjprev = vertices[(i - 1) * surface.y_divisions + j] || v;
                 const vjnext = vertices[(i + 1) * surface.y_divisions + j] || v;
 
-                let partial_x, partial_y;
-                if (j % surface.x_divisions === 0) partial_x = subtract(vinext, v);
-                else if ((j + 1) % surface.x_divisions === 0) partial_x = subtract(v, viprev);
-                else partial_x = add(subtract(vinext, v), subtract(v, viprev));
+                let partial_y, partial_x;
+                if (j === 0) partial_y = subtract(vinext, v);
+                else if (j === surface.y_divisions - 1) partial_y = subtract(v, viprev);
+                else partial_y = add(subtract(vinext, v), subtract(v, viprev));
 
-                if (i % surface.y_divisions === 0) partial_y = subtract(vjnext, v);
-                else if ((i + 1) % surface.y_divisions === 0) partial_y = subtract(v, vjprev);
-                else partial_y = add(subtract(vjnext, v), subtract(v, vjprev));
+                if (i === 0) partial_x = subtract(vjnext, v);
+                else if (i === surface.x_divisions - 1) partial_x = subtract(v, vjprev);
+                else partial_x = add(subtract(vjnext, v), subtract(v, vjprev));
 
-                const n = normalize(cross(partial_y, partial_x));
+                const n = normalize(cross(partial_x, partial_y));
                 normals.push(vec4(n[0], n[1], n[2], 0.0));
             }
         }
@@ -210,12 +219,12 @@
         const indices = [];
         for (let i = 0; i < surface.x_divisions - 1; i++) {
             for (let j = 0; j < surface.y_divisions - 1; j++) {
-                const a = i * surface.x_divisions + j;
-                const b = i * surface.x_divisions + j + 1;
-                const c = (i + 1) * surface.x_divisions + j + 1;
-                const d = (i + 1) * surface.x_divisions + j;
-                indices.push(a, b, c);
-                indices.push(a, c, d);
+                const a = i * surface.y_divisions + j;
+                const b = i * surface.y_divisions + j + 1;
+                const c = (i + 1) * surface.y_divisions + j + 1;
+                const d = (i + 1) * surface.y_divisions + j;
+                indices.push(a, d, c);
+                indices.push(a, c, b);
             }
         }
         return indices;
@@ -306,7 +315,7 @@
         gl.useProgram(prog);
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
-        gl.cullFace(gl.FRONT);
+        gl.cullFace(gl.BACK);
 
         const iBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuffer);

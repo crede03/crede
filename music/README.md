@@ -2,7 +2,7 @@
 
 Drop any `.mp3`, `.wav`, `.ogg`, `.m4a`, or `.flac` audio files into this folder (`/music/`).
 
-## How it Works:
+## How it works:
 
 1. **Automatic Loading via `playlist.json`**:
    `playlist.json` lists the tracks that Webamp loads on startup.

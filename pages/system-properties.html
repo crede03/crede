@@ -1,23 +1,165 @@
 <div class="page-content system-properties-content">
-    <div class="sysprop-header" style="display: flex; gap: 16px; align-items: center; margin-bottom: 16px;">
-        <img src="img/welcome.png" alt="Computer" style="width: 48px; height: 48px;">
-        <div>
-            <h3 style="margin: 0 0 4px 0;">CREDE.VIP</h3>
-            <div style="font-size: 11px; color: #444;">Rev 2</div>
-        </div>
-    </div>
+    <section class="tabs" style="width: 100%;">
+        <menu role="tablist" aria-label="About Tabs">
+            <button role="tab" aria-controls="about-tab-general" aria-selected="true">General</button>
+            <button role="tab" aria-controls="about-tab-technologies">Technologies &amp; Credits</button>
+        </menu>
 
-    <fieldset class="prop-fieldset" style="margin-bottom: 12px;">
-        <legend>Registered to:</legend>
-        <div style="font-size: 12px; line-height: 1.6;">
-            <strong>Crede Dalton</strong><br>
-        </div>
-    </fieldset>
+        <!-- Tab 1: General -->
+        <article role="tabpanel" id="about-tab-general">
+            <div class="about-header"
+                style="display: flex; gap: 16px; align-items: center; margin-bottom: 14px; padding: 4px 0;">
+                <img src="img/computer-win7.png" alt="CREDE.VIP"
+                    style="width: 52px; height: 52px; object-fit: contain; flex-shrink: 0;">
+                <div>
+                    <h3 style="margin: 0 0 2px 0; font-size: 15px; font-weight: bold; color: #15293e;">CREDE.VIP OS</h3>
+                    <div style="font-size: 11.5px; color: #4b5866;">'We're going to die!' edition</div>
+                    <div style="font-size: 10.5px; color: #738090;">Build 2026.09</div>
+                </div>
+            </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+            <fieldset class="prop-fieldset" style="margin-bottom: 10px;">
+                <legend>System</legend>
+                <div style="font-size: 11px; line-height: 1.7; color: #222;">
+                    <div><strong>Registered to:</strong> Crede Dalton</div>
+                    <div><strong>Contact:</strong> <a href="mailto:crede@crede.vip"
+                            style="color: #0066cc;">crede@crede.vip</a></div>
+                </div>
+            </fieldset>
+
+            <fieldset class="prop-fieldset" style="margin-bottom: 6px;">
+                <legend>About This Website</legend>
+                <p style="font-size: 11px; line-height: 1.6; margin: 2px 0 6px 0; color: #333;">
+                    Welcome to <strong>CREDE.VIP</strong> — my portfolio website and quiet corner of the internet.
+                    There's no Meta Pixels to track you here!
+                </p>
+                <p style="font-size: 11px; line-height: 1.6; margin: 0; color: #333;">
+                    I wanted my portfolio to be a reflection of me - versatile, nostalgic, and, at times, unstable. So,
+                    naturally, I had to base it off Windows Vista!
+                </p>
+            </fieldset>
+        </article>
+
+        <!-- Tab 2: Technologies & Credits -->
+        <article role="tabpanel" id="about-tab-technologies" hidden>
+            <p style="font-size: 11px; margin: 2px 0 10px 0; color: #444;">
+                This website is made possible thanks to these open-source projects, recreations, and web standards:
+            </p>
+
+            <div class="tech-credits-container has-scrollbar"
+                style="max-height: 255px; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 8px;">
+                <!-- JS Paint -->
+                <div class="tech-credit-card"
+                    style="background: rgba(255,255,255,0.75); border: 1px solid #c2c9d1; border-radius: 4px; padding: 8px 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="font-weight: bold; font-size: 12px; color: #104e92;">Paint.JS (JS Paint)</span>
+                        <a href="https://github.com/1j01/jspaint" target="_blank" rel="noopener noreferrer"
+                            style="font-size: 11px; color: #0066cc; font-weight: 500;">GitHub ↗</a>
+                    </div>
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        A web-based remake of classic MS Paint featuring progressive web app support, session history,
+                        image formats, and modern accessibility tools.
+                    </div>
+                    <div style="font-size: 10px; color: #666; margin-top: 4px;">By Isaiah Odhner · <a
+                            href="https://jspaint.app" target="_blank" rel="noopener noreferrer"
+                            style="color: #444;">jspaint.app</a></div>
+                </div>
+
+                <!-- Webamp -->
+                <div class="tech-credit-card"
+                    style="background: rgba(255,255,255,0.75); border: 1px solid #c2c9d1; border-radius: 4px; padding: 8px 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="font-weight: bold; font-size: 12px; color: #104e92;">Webamp</span>
+                        <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener noreferrer"
+                            style="font-size: 11px; color: #0066cc; font-weight: 500;">GitHub ↗</a>
+                    </div>
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        A faithful in-browser reimplementation of Winamp in HTML5 and JavaScript using the Web Audio API
+                        with equalizer, playlist, and skin support.
+                    </div>
+                    <div style="font-size: 10px; color: #666; margin-top: 4px;">By Jordan Eldredge · <a
+                            href="https://webamp.org" target="_blank" rel="noopener noreferrer"
+                            style="color: #444;">webamp.org</a></div>
+                </div>
+
+                <!-- Clippy.js -->
+                <div class="tech-credit-card"
+                    style="background: rgba(255,255,255,0.75); border: 1px solid #c2c9d1; border-radius: 4px; padding: 8px 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="font-weight: bold; font-size: 12px; color: #104e92;">Clippy.JS</span>
+                        <a href="https://github.com/pithings/clippy" target="_blank" rel="noopener noreferrer"
+                            style="font-size: 11px; color: #0066cc; font-weight: 500;">GitHub ↗</a>
+                    </div>
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        Nostalgic (or annoying) desktop assistant bringing back Microsoft Agent animations, sound
+                        effects, and conversational prompts right on the web desktop.
+                    </div>
+                    <div style="font-size: 10px; color: #666; margin-top: 4px;">Created by Smore / pi0 / pithings · <a
+                            href="https://github.com/pithings/clippy" target="_blank" rel="noopener noreferrer"
+                            style="color: #444;">github.com/pithings/clippy</a></div>
+                </div>
+
+                <!-- 7.css -->
+                <div class="tech-credit-card"
+                    style="background: rgba(255,255,255,0.75); border: 1px solid #c2c9d1; border-radius: 4px; padding: 8px 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="font-weight: bold; font-size: 12px; color: #104e92;">7.css</span>
+                        <a href="https://github.com/khang-nd/7.css" target="_blank" rel="noopener noreferrer"
+                            style="font-size: 11px; color: #0066cc; font-weight: 500;">GitHub ↗</a>
+                    </div>
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        CSS framework recreating the authentic Windows 7 / Vista Aero Glass look, window frames, tabs,
+                        and desktop controls.
+                    </div>
+                    <div style="font-size: 10px; color: #666; margin-top: 4px;">By khang-nd · <a
+                            href="https://github.com/khang-nd/7.css" target="_blank" rel="noopener noreferrer"
+                            style="color: #444;">github.com/khang-nd/7.css</a></div>
+                </div>
+
+                <!-- Retro Screensavers -->
+                <div class="tech-credit-card"
+                    style="background: rgba(255,255,255,0.75); border: 1px solid #c2c9d1; border-radius: 4px; padding: 8px 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="font-weight: bold; font-size: 12px; color: #104e92;">Retro Screensavers</span>
+                        <span
+                            style="font-size: 10.5px; color: #666; background: #eef1f5; padding: 1px 6px; border-radius: 2px;">WebGL
+                            / 2D Canvas</span>
+                    </div>
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        Custom real-time rendering engines reproducing the 3D FlowerBox (OpenGL), 3D Starfield warp
+                        simulation, and Matrix digital rain.
+                    </div>
+                </div>
+
+                <!-- Web Audio Sound Engine -->
+                <div class="tech-credit-card"
+                    style="background: rgba(255,255,255,0.75); border: 1px solid #c2c9d1; border-radius: 4px; padding: 8px 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                        <span style="font-weight: bold; font-size: 12px; color: #104e92;">Web Audio Sound Engine</span>
+                        <span
+                            style="font-size: 10.5px; color: #666; background: #eef1f5; padding: 1px 6px; border-radius: 2px;">Web
+                            Audio API</span>
+                    </div>
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        Synthesizer and sound fx pipeline for authentic Windows startup chime, window click, navigation,
+                        and minimize sound effects.
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <div class="dialog-actions"
+        style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center;">
         <a href="mailto:crede@crede.vip" style="text-decoration: none;">
-            <button type="button">Contact Crede</button>
+            <button type="button" style="padding: 3px 12px; font-size: 11px;">Contact Crede</button>
         </a>
-        <button type="button" class="default sysprop-close-btn">OK</button>
+        <button type="button" class="default sysprop-close-btn" style="padding: 3px 20px; font-size: 11px;">OK</button>
     </div>
 </div>

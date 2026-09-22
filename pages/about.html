@@ -1,44 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Me · CREDE.VIP</title>
-</head>
-<body>
-<main class="page-content">
-<div class="content-header">
-                    <div class="intro-layout">
-                        <div class="intro-photo">
-                            <div class="photo-frame">
-                                <img src="img/pfp.png" alt="Crede Photo" id="profile-photo">
-                            </div>
-                        </div>
-                        <div class="intro-copy">
-                            <h1>Hello, I'm <span class="highlight">Crede</span></h1>
-                            <p class="subtitle">
-                                I’m a results-driven marketer and content-creator with over five years of experience in developing and promoting brands in hospitality, healthcare and the non-profit sector.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="content-body">
-                    <div class="section">
-                        <h2>About Me</h2>
-                        <h3 class="section-subtitle">Ironically, I struggle to brand and market myself. I blame the inner critic for that one.</h3>
-                        <p><strong>Officially, I’m a Head of Marketing.</strong> It’s the title that sits on the LinkedIn profile. But it’s a bit sanitized, isn't it? It doesn’t quite capture the eons of time I spend on Affinity figuring out what font to use, or the three hours I just spent having a marde with WordPress because a plugin’s developed a bout of dementia and forgotten where the CSS file is.</p>
-                        <p>So, maybe <strong>Creative Lead?</strong> It sounds sexier. It radiates the ‘performative MacBook user’ vibe I want to give off. It acknowledges my <strong>UAL accreditation</strong> and the fact that I’m a <strong>hybrid shooter</strong> who knows how to cure camera-shyness. It covers the <strong>print and layout design</strong> – because unlike most "leads," I actually know what the hell FOGRA39 is.</p>
-                        <p>But then I’m also the <strong>ad man.</strong> The <strong>social media manager.</strong> The guy reaching customers you never knew you had. Like people who've recently had kids (who will wreck your lovely carpet). That’s over 80,000 unlocked views for your hard-wood floor promo.</p>
-                        <p>If I call myself a <strong>Full-Stack Creative</strong>, I sound like a tech startup's fever dream. Ew.</p>
-                        <p>The truth? I’m a human swiss army knife who is dangerously competent in too many disciplines. I can build the site, shoot the campaign, design the brochure, code the tracking, and fix the computer if the whole thing crashes (which it will if it runs Windows 11).</p>
-                        <blockquote class="about-quote">I am a silverware set in a world of plastic forks.</blockquote>
-                    </div>
 
-                    <div class="section cta-section">
-                        <p class="cta-text">Have a click around my portfolio!</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me · CREDE.VIP</title>
+</head>
+
+<body>
+    <main class="page-content">
+        <!-- Cookie Notice (Windows 7 Aero Style) -->
+        <div class="cookie-notice" id="cookie-notice" role="region" aria-label="Cookie Notice">
+            <div class="cookie-notice-icon" aria-hidden="true">🍪</div>
+            <div class="cookie-notice-content">
+                <h4 class="cookie-notice-title">Cookie Notice (The honest kind)</h4>
+                <p class="cookie-notice-text">
+                    We only use essential local storage to remember your desktop settings and window positions.
+                    CREDE.VIP does not track you - I don't care about your shopping habits or the propaganda you
+                    consume on Facebook.
+                </p>
+            </div>
+            <div class="cookie-notice-actions">
+                <button type="button" class="default cookie-accept-btn" id="cookie-accept-btn"
+                    onclick="if(window.SoundSystem)window.SoundSystem.playClick();try{localStorage.setItem('crede_cookie_consent','accepted')}catch(e){};var el=this.closest('.cookie-notice');el.classList.add('dismissed');setTimeout(function(){el.remove()},350);">Accept</button>
+                <button type="button" class="cookie-dismiss-btn" id="cookie-dismiss-btn"
+                    onclick="if(window.SoundSystem)window.SoundSystem.playClick();try{localStorage.setItem('crede_cookie_consent','dismissed')}catch(e){};var el=this.closest('.cookie-notice');el.classList.add('dismissed');setTimeout(function(){el.remove()},350);">Dismiss</button>
+            </div>
+        </div>
+
+        <div class="content-header">
+            <div class="intro-layout">
+                <div class="intro-photo">
+                    <div class="photo-frame">
+                        <img src="img/pfp.png" alt="Crede Photo" id="profile-photo">
                     </div>
                 </div>
-</main>
+                <div class="intro-copy">
+                    <h1>Hello, I'm <span class="highlight">Crede</span></h1>
+                    <p class="subtitle">
+                        I’m a results-driven marketer and content-creator with over five years of experience in
+                        developing and promoting brands in a wide scope of sectors.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="section">
+                <h2>About Me</h2>
+                <h3 class="section-subtitle">Ironically, I struggle to brand and market myself. I blame the inner critic
+                    for that one.</h3>
+                <p><strong>Officially, I’m a Head of Marketing.</strong> It’s the title that sits on the LinkedIn
+                    profile. But it’s a bit ceremonial. It doesn’t quite capture the eons of time I spend
+                    figuring out what font to use, or the three hours I just spent having a marde with WordPress because
+                    a plugin’s developed a bout of dementia and forgotten where the CSS file is.</p>
+                <p>So, maybe <strong>Creative Lead?</strong> It sounds sexier. It radiates the ‘performative MacBook
+                    user’ vibe I want to give off. It acknowledges my <strong>UAL accreditation</strong> and the fact
+                    that I’m a <strong>hybrid shooter</strong> who knows how to cure camera-shyness. It covers the
+                    <strong>print and layout design</strong> – because unlike most "leads," I actually know what the
+                    hell FOGRA39 is.
+                </p>
+                <p>But then I’m also the <strong>ad man.</strong> The <strong>social media manager.</strong> The guy
+                    reaching customers you never knew you had. Like people who've recently had kids (who will wreck your
+                    lovely carpet). That’s over 80,000 unlocked views for your hard-wood floor promo.</p>
+                <p>If I call myself a <strong>Full-Stack Creative</strong>, I sound like a tech startup's fever dream.
+                    Ew.</p>
+                <p>The truth? I’m a human swiss army knife who is dangerously competent in too many disciplines. I can
+                    build the site, shoot the campaign, design the brochure, code the tracking, and fix the computer if
+                    the whole thing crashes (which it will if it runs Windows 11).</p>
+                <blockquote class="about-quote">I am a silverware set in a world of plastic forks.</blockquote>
+            </div>
+
+            <div class="section cta-section">
+                <p class="cta-text">Have a click around my portfolio!</p>
+            </div>
+        </div>
+    </main>
 </body>
+
 </html>
