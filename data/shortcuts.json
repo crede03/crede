@@ -43,7 +43,7 @@
     {
       "id": "linkedin",
       "title": "LinkedIn",
-      "icon": "img/folder-publicshare.png",
+      "icon": "img/linkedin.png",
       "enabled": true,
       "type": "url",
       "target": "https://www.linkedin.com/in/crede-dalton-818334202"
@@ -149,7 +149,7 @@
     {
       "id": "linkedin",
       "title": "LinkedIn",
-      "icon": "img/folder-publicshare.png",
+      "icon": "img/linkedin.png",
       "enabled": true,
       "type": "url",
       "target": "https://www.linkedin.com/in/crede-dalton-818334202",
