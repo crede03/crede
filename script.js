@@ -302,6 +302,7 @@ function startResize(win, dir, e) {
     resizeStartRect = win.getBoundingClientRect();
     resizeStartMouse = { x: e.clientX, y: e.clientY };
     bringToFront(win);
+    document.querySelectorAll('iframe').forEach(f => f.style.pointerEvents = 'none');
 
     document.addEventListener('mousemove', onResize);
     document.addEventListener('mouseup', stopResize);
@@ -311,8 +312,9 @@ function onResize(e) {
     if (!resizingWindow) return;
     const dx = e.clientX - resizeStartMouse.x;
     const dy = e.clientY - resizeStartMouse.y;
-    const minW = 260;
-    const minH = 160;
+    const comp = window.getComputedStyle(resizingWindow);
+    const minW = Math.max(parseFloat(comp.minWidth) || 0, 260);
+    const minH = Math.max(parseFloat(comp.minHeight) || 0, 160);
 
     let newWidth = resizeStartRect.width;
     let newHeight = resizeStartRect.height;
@@ -344,6 +346,8 @@ function onResize(e) {
 
 function stopResize() {
     resizingWindow = null;
+    resizeDirection = '';
+    document.querySelectorAll('iframe').forEach(f => f.style.pointerEvents = '');
     document.removeEventListener('mousemove', onResize);
     document.removeEventListener('mouseup', stopResize);
 }
@@ -364,6 +368,7 @@ function startDrag(win, e) {
     const rect = win.getBoundingClientRect();
     dragOffset.x = e.clientX - rect.left;
     dragOffset.y = e.clientY - rect.top;
+    document.querySelectorAll('iframe').forEach(f => f.style.pointerEvents = 'none');
     document.addEventListener('mousemove', onDrag);
     document.addEventListener('mouseup', stopDrag);
     bringToFront(win);
@@ -383,6 +388,7 @@ function onDrag(e) {
 
 function stopDrag() {
     draggedWindow = null;
+    document.querySelectorAll('iframe').forEach(f => f.style.pointerEvents = '');
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
 }
@@ -404,6 +410,12 @@ function bringToFront(win) {
 function closeWindow(win) {
     win.classList.remove('active');
     win.style.display = 'none';
+    if (win.id === 'wmp-window') {
+        const frame = document.getElementById('wmp-frame');
+        if (frame && frame.contentWindow && typeof frame.contentWindow.pauseTrack === 'function') {
+            frame.contentWindow.pauseTrack();
+        }
+    }
     updateTaskbar();
 }
 
@@ -416,11 +428,15 @@ function minimizeWindow(win) {
 function maximizeWindow(win) {
     if (win.classList.contains('maximized')) {
         win.classList.remove('maximized');
-        win.style.width = '';
-        win.style.height = '';
-        win.style.left = '';
-        win.style.top = '';
+        win.style.width = win.dataset.preMaxWidth || '';
+        win.style.height = win.dataset.preMaxHeight || '';
+        win.style.left = win.dataset.preMaxLeft || '';
+        win.style.top = win.dataset.preMaxTop || '';
     } else {
+        win.dataset.preMaxWidth = win.style.width || `${win.offsetWidth}px`;
+        win.dataset.preMaxHeight = win.style.height || `${win.offsetHeight}px`;
+        win.dataset.preMaxLeft = win.style.left || `${win.offsetLeft}px`;
+        win.dataset.preMaxTop = win.style.top || `${win.offsetTop}px`;
         win.classList.add('maximized');
         const margin = isMobileViewport() ? 0 : 8;
         const taskbarHeight = 44;
@@ -434,6 +450,13 @@ function maximizeWindow(win) {
 function openWindow(windowId) {
     const win = document.getElementById(windowId);
     if (!win) return;
+
+    if (windowId === 'wmp-window') {
+        const frame = document.getElementById('wmp-frame');
+        if (frame && (!frame.src || frame.src === 'about:blank' || !frame.src.includes('wmp/index.html'))) {
+            frame.src = frame.getAttribute('data-src') || 'wmp/index.html';
+        }
+    }
 
     window.SoundSystem?.playClick();
     win.classList.add('active');
@@ -758,6 +781,7 @@ function executeCommand(cmd, historyEl) {
             printLine("PORTFOLIO.EXE  512,000 bytes");
             printLine("PAINT.EXE      128,400 bytes");
             printLine("WINAMP.EXE     640,000 bytes");
+            printLine("WMP.EXE        890,000 bytes");
             printLine("MINESWPR.EXE    84,000 bytes");
             printLine("BIO.TXT          2,048 bytes");
             printLine("CONTACT.TXT        512 bytes");
@@ -786,10 +810,16 @@ function executeCommand(cmd, historyEl) {
         case 'open':
             if (arg.includes('portfolio')) openWindow('portfolio-window');
             else if (arg.includes('paint')) openWindow('paint-window');
+            else if (arg.includes('wmp') || arg.includes('media') || arg.includes('player')) openWindow('wmp-window');
             else if (arg.includes('minesweeper')) openWindow('minesweeper-window');
             else if (arg.includes('display')) openWindow('display-properties-window');
             else if (arg.includes('system') || arg.includes('about')) openWindow('system-properties-window');
             else openWindow('main-window');
+            break;
+
+        case 'wmp':
+        case 'wmplayer':
+            openWindow('wmp-window');
             break;
 
         case 'clippy':

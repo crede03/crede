@@ -33,6 +33,11 @@
             <div class="icon-label">Winamp</div>
         </div>
 
+        <div class="desktop-icon" id="wmp-icon" data-type="window" data-target="wmp-window">
+            <div class="icon-image"><img src="img/wmp.png" alt="Windows Media Player"></div>
+            <div class="icon-label">Windows Media Player</div>
+        </div>
+
         <div class="desktop-icon" id="email-icon" data-type="url" data-target="mailto:crede@crede.vip">
             <div class="icon-image"><img src="img/email.png" alt="Email Me"></div>
             <div class="icon-label">Email Me</div>
@@ -80,6 +85,7 @@
                   Accessories
                   <ul role="menu">
                     <li role="menuitem"><a href="#" class="start-menu-item" data-action="paint-window">Paint</a></li>
+                    <li role="menuitem"><a href="#" class="start-menu-item" data-action="wmp-window">Windows Media Player</a></li>
                     <li role="menuitem"><a href="#" class="start-menu-item" data-action="terminal-window">Command Prompt</a></li>
                     <li role="menuitem"><a href="#" class="start-menu-item" data-action="minesweeper-window">Minesweeper</a></li>
                     <li role="menuitem"><a href="#" class="start-menu-item" data-action="display-properties-window">Display Properties</a></li>
@@ -255,6 +261,21 @@
             </div>
         </div>
 
+        <!-- Windows Media Player Window -->
+        <div class="window glass" id="wmp-window" style="width: 980px; height: 680px; min-width: 640px; min-height: 480px; display: none;">
+            <div class="title-bar">
+                <div class="title-bar-text">Windows Media Player</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body" style="padding: 0; width: 100%; height: calc(100% - 30px); flex: 1; min-height: 0; overflow: hidden; position: relative; background: #000;">
+                <iframe id="wmp-frame" data-src="wmp/index.html" style="width: 100%; height: 100%; border: none; display: block;" allow="autoplay; encrypted-media; camera; microphone" allowfullscreen></iframe>
+            </div>
+        </div>
+
 
         <!-- Webamp runs directly on the desktop, without an outer faux window. -->
         <div class="webamp-host" id="webamp-host" hidden>
@@ -345,6 +366,10 @@
                     <span class="task-icon"><img src="img/winamp.png" alt="Winamp"></span>
                     <span class="task-text">Winamp</span>
                 </button>
+                <button class="taskbar-task" data-window="wmp-window" style="display: none;">
+                    <span class="task-icon"><img src="img/wmp.png" alt="Windows Media Player"></span>
+                    <span class="task-text">Windows Media Player</span>
+                </button>
             </div>
             <div class="system-tray">
                 <div class="tray-time" id="clock"></div>
@@ -404,6 +429,12 @@
                     <a href="#" class="start-menu-item" data-action="webamp">
                         <span class="menu-icon"><img src="img/winamp.png" alt="Winamp"></span>
                         <span class="menu-text">Winamp</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="wmp-window">
+                        <span class="menu-icon"><img src="img/wmp.png" alt="Windows Media Player"></span>
+                        <span class="menu-text">Windows Media Player</span>
                     </a>
                 </li>
                 <li role="menuitem">

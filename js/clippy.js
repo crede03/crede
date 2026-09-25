@@ -1,5 +1,5 @@
 // Interactive Real Microsoft Agent Clippy using pithings/clippy (clippyjs)
-(async function() {
+(async function () {
     let agent = null;
     let apiKey = '';
     let isVisible = true;
@@ -11,17 +11,17 @@
         apiKey = localStorage.getItem('crede_openrouter_key') || '';
         const storedVis = localStorage.getItem('crede_clippy_visible');
         if (storedVis !== null) isVisible = storedVis === 'true';
-    } catch(e) {}
+    } catch (e) { }
 
     let clippyConfig = {
         enabled: true,
         greeting: "It looks like you're exploring Crede's site!",
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-3.8-flash",
         temperature: 0.7,
         maxTokens: 120,
-        systemPrompt: "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a London-based creative technologist, engineer, and photographer. Keep your replies concise (under 3 sentences), playful, and in genuine Clippy style ('It looks like you...').",
+        systemPrompt: "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a Kent and London-based full-stack creative. Keep your replies concise (under 3 sentences), playful, and in genuine Clippy style ('It looks like you...').",
         quickResponses: [
-            { id: 'who', label: 'Who is Crede?', response: "Crede Dalton is a London-based creative technologist, engineer, and photographer who crafts digital experiences, web apps, and visual media." },
+            { id: 'who', label: 'Who is Crede?', response: "Crede Dalton is a Kent-based full-stack creative who crafts digital experiences, web apps, and visual media." },
             { id: 'projects', label: 'Top Projects', response: "Check out 'Shot by CREDE' for photography, 'Dover Marina Hotel & Spa', 'Sai Care Homes', 'Lighthouse on the Marsh', 'QFlooring', and 'AI Bollocks'!" },
             { id: 'features', label: 'Cool Features', response: "You can change wallpapers in Display Properties, open the Command Prompt, play Minesweeper, drag desktop icons, and listen to tunes in Winamp!" },
             { id: 'joke', label: 'Tell a Joke', response: "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!" }
@@ -43,7 +43,7 @@
                     };
                 }
             }
-        } catch(e) {
+        } catch (e) {
             // Offline or fallback to bundled defaults
         }
     }
@@ -64,7 +64,7 @@
                     const core = await import('./clippyjs/index.mjs');
                     initAgent = core.initAgent;
                     Clippy = (await import('./clippyjs/agents/clippy/index.mjs')).default;
-                } catch(localErr) {
+                } catch (localErr) {
                     console.info('Loading Clippy from CDN fallback...', localErr);
                     const core = await import('https://unpkg.com/clippyjs@0.1.0/dist/index.mjs');
                     initAgent = core.initAgent;
@@ -199,7 +199,7 @@
 
                 window.addEventListener('resize', positionClippy);
                 return agent;
-            } catch(err) {
+            } catch (err) {
                 console.warn('Unable to load official clippyjs agent:', err);
                 return null;
             }
@@ -275,13 +275,11 @@
         }
 
         const renderQuickPills = () => {
-            if (!Array.isArray(clippyConfig.quickResponses) || clippyConfig.quickResponses.length === 0) {
-                return '';
-            }
-            return clippyConfig.quickResponses.map(qr => {
+            const pills = (Array.isArray(clippyConfig.quickResponses) ? clippyConfig.quickResponses : []).map(qr => {
                 const label = qr.label || qr.id || 'Ask';
                 return `<button class="clippy-pill" data-ask="${qr.id}">${label}</button>`;
             }).join('');
+            return pills + `<button class="clippy-pill clippy-die-btn" id="clippy-die-btn" title="Hide Clippy">Please die!</button>`;
         };
 
         if (!apiKey) {
@@ -292,7 +290,7 @@
                 </div>
                 <div class="clippy-balloon-body">
                     <p style="margin: 0 0 6px 0;">${clippyConfig.greeting || "It looks like you're exploring Crede's site!"}</p>
-                    <p style="margin: 0 0 8px 0; font-weight: bold;">Crede is too cheap to buy me tokens. Feed me an OpenRouter API key:</p>
+                    <p style="margin: 0 0 8px 0; font-weight: bold;">Crede won't eat into his Greggs budget to buy me credit. Give me an OpenRouter API key:</p>
                     <div style="display: flex; gap: 4px; margin-bottom: 8px;">
                         <input type="password" id="clippy-key-input" placeholder="sk-or-v1-..." style="flex: 1; font-size: 11px; padding: 2px 4px; border: 1px inset #808080;">
                         <button id="clippy-save-key-btn" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Save</button>
@@ -308,9 +306,9 @@
                 const val = document.getElementById('clippy-key-input')?.value?.trim();
                 if (val) {
                     apiKey = val;
-                    try { localStorage.setItem('crede_openrouter_key', apiKey); } catch(e){}
+                    try { localStorage.setItem('crede_openrouter_key', apiKey); } catch (e) { }
                     agent?.play('Congratulate');
-                    showInteractivePrompt("Yum, tokens! I'm fully powered now. Ask me anything about Crede!");
+                    showInteractivePrompt("Thanks for paying my child support! Go on, ask a question.");
                 }
             });
         } else {
@@ -344,7 +342,7 @@
 
             document.getElementById('clippy-clear-key')?.addEventListener('click', () => {
                 apiKey = '';
-                try { localStorage.removeItem('crede_openrouter_key'); } catch(e){}
+                try { localStorage.removeItem('crede_openrouter_key'); } catch (e) { }
                 showInteractivePrompt("Key forgotten. Feed me another whenever you like!");
             });
         }
@@ -363,6 +361,13 @@
                     agent?.play('Explain');
                     showInteractivePrompt(match.response);
                 }
+            });
+        });
+
+        // Wire 'Please die!' button to hide Clippy
+        balloonEl.querySelectorAll('#clippy-die-btn, .clippy-die-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.ClippySystem?.toggle(false);
             });
         });
 
@@ -448,7 +453,7 @@
             agent?.stopCurrent?.();
             agent?.play('Congratulate');
             showInteractivePrompt(reply);
-        } catch(err) {
+        } catch (err) {
             isThinking = false;
             agent?.stopCurrent?.();
             agent?.play('Explain');
@@ -458,7 +463,7 @@
 
     window.ClippySystem = {
         init: initClippy,
-        toggle: async function(show) {
+        toggle: async function (show) {
             if (!agent) await initClippy();
             isVisible = (typeof show === 'boolean') ? show : !isVisible;
             if (agent) {
@@ -473,13 +478,19 @@
                     if (balloon) balloon.style.display = 'none';
                 }
             }
-            try { localStorage.setItem('crede_clippy_visible', String(isVisible)); } catch(e){}
+            try { localStorage.setItem('crede_clippy_visible', String(isVisible)); } catch (e) { }
         },
-        hideBalloon: function() {
+        hide: async function () {
+            return this.toggle(false);
+        },
+        show: async function () {
+            return this.toggle(true);
+        },
+        hideBalloon: function () {
             const balloon = document.getElementById('clippy-interactive-balloon');
             if (balloon) balloon.style.display = 'none';
         },
-        speak: async function(msg) {
+        speak: async function (msg) {
             window.ScreensaverEngine?.stop?.();
             if (!agent) await initClippy();
             if (!isVisible) await this.toggle(true);
@@ -490,7 +501,7 @@
             agent?.play('Explain');
             showInteractivePrompt(msg);
         },
-        openPrompt: async function() {
+        openPrompt: async function () {
             window.ScreensaverEngine?.stop?.();
             if (!agent) await initClippy();
             if (!isVisible) await this.toggle(true);
@@ -505,11 +516,11 @@
             }
             showInteractivePrompt();
         },
-        play: async function(animName) {
+        play: async function (animName) {
             if (!agent) await initClippy();
             if (agent && agent.hasAnimation(animName)) agent.play(animName);
         },
-        isVisible: function() { return isVisible; }
+        isVisible: function () { return isVisible; }
     };
 
     // Initialize immediately

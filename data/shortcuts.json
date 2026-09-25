@@ -33,6 +33,14 @@
       "target": "webamp"
     },
     {
+      "id": "wmp",
+      "title": "Windows Media Player",
+      "icon": "img/wmp.png",
+      "enabled": true,
+      "type": "window",
+      "target": "wmp-window"
+    },
+    {
       "id": "email",
       "title": "Email Me",
       "icon": "img/email.png",
@@ -179,6 +187,15 @@
       "enabled": true,
       "type": "action",
       "target": "webamp"
+    },
+    {
+      "id": "wmp",
+      "title": "Windows Media Player",
+      "icon": "img/wmp.png",
+      "enabled": true,
+      "type": "window",
+      "target": "wmp-window",
+      "divider": false
     },
     {
       "id": "clippy",
