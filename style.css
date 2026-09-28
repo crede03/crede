@@ -1674,6 +1674,44 @@ section.tabs {
     color: #666666;
 }
 
+.clippy-interactive-balloon.is-proactive {
+    animation: clippyPopIn 0.25s ease-out;
+}
+
+@keyframes clippyPopIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.clippy-proactive-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.clippy-proactive-btn {
+    background: #ffffff;
+    border: 1px solid #707070;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-family: Tahoma, "Segoe UI", sans-serif;
+}
+
+.clippy-proactive-btn:hover {
+    background: #000080;
+    color: #ffffff;
+    border-color: #000080;
+}
+
 .clippy-quick-pills {
     display: flex;
     flex-wrap: wrap;

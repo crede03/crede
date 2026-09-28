@@ -2,33 +2,43 @@
 (async function () {
     let agent = null;
     let apiKey = '';
+    let storedVis = null;
     let isVisible = true;
     let isThinking = false;
     let idleInterval = null;
     let initPromise = null;
+    let hasUserPositioned = false;
+    let showKeyDrawer = false;
+
+    // Contextual awareness state
+    let lastProactiveTime = 0;
+    let proactiveTimer = null;
+    const seenTriggersThisSession = new Set();
 
     try {
         apiKey = localStorage.getItem('crede_openrouter_key') || '';
-        const storedVis = localStorage.getItem('crede_clippy_visible');
+        storedVis = localStorage.getItem('crede_clippy_visible');
         if (storedVis !== null) isVisible = storedVis === 'true';
     } catch (e) { }
 
     let clippyConfig = {
         enabled: true,
+        proxyUrl: "https://clippy-api.crede.workers.dev",
+        proactiveEnabled: true,
+        proactiveCooldownSeconds: 35,
         greeting: "It looks like you're exploring Crede's site!",
-        model: "google/gemini-3.8-flash",
+        model: "qwen/qwen3.8-27b:free",
         temperature: 0.7,
-        maxTokens: 120,
-        systemPrompt: "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a Kent and London-based full-stack creative. Keep your replies concise (under 3 sentences), playful, and in genuine Clippy style ('It looks like you...').",
+        maxTokens: 140,
+        systemPrompt: "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a London/Kent-based creative lead, photographer, and technologist. Keep your replies concise (under 3 sentences), playful, and in genuine Clippy style ('It looks like you...').",
         quickResponses: [
             { id: 'who', label: 'Who is Crede?', response: "Crede Dalton is a Kent-based full-stack creative who crafts digital experiences, web apps, and visual media." },
             { id: 'projects', label: 'Top Projects', response: "Check out 'Shot by CREDE' for photography, 'Dover Marina Hotel & Spa', 'Sai Care Homes', 'Lighthouse on the Marsh', 'QFlooring', and 'AI Bollocks'!" },
             { id: 'features', label: 'Cool Features', response: "You can change wallpapers in Display Properties, open the Command Prompt, play Minesweeper, drag desktop icons, and listen to tunes in Winamp!" },
             { id: 'joke', label: 'Tell a Joke', response: "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!" }
-        ]
+        ],
+        contextQuips: {}
     };
-
-    let hasUserPositioned = false;
 
     async function loadClippyConfig() {
         try {
@@ -39,7 +49,8 @@
                     clippyConfig = {
                         ...clippyConfig,
                         ...data,
-                        quickResponses: (Array.isArray(data.quickResponses) && data.quickResponses.length > 0) ? data.quickResponses : clippyConfig.quickResponses
+                        quickResponses: (Array.isArray(data.quickResponses) && data.quickResponses.length > 0) ? data.quickResponses : clippyConfig.quickResponses,
+                        contextQuips: (data.contextQuips && typeof data.contextQuips === 'object') ? data.contextQuips : clippyConfig.contextQuips
                     };
                 }
             }
@@ -226,8 +237,91 @@
         updateBalloonPosition();
     }
 
+    // Context Awareness Logic
+    function canTriggerProactive(triggerKey) {
+        if (!clippyConfig.enabled || clippyConfig.proactiveEnabled === false) return false;
+        if (!isVisible || !agent) return false;
+        if (document.body.classList.contains('screensaver-active') || window.ScreensaverEngine?.isRunning?.()) return false;
+
+        const cooldown = (clippyConfig.proactiveCooldownSeconds || 35) * 1000;
+        if (Date.now() - lastProactiveTime < cooldown) return false;
+        if (seenTriggersThisSession.has(triggerKey)) return false;
+
+        return true;
+    }
+
+    function handleContextTrigger(triggerKey) {
+        if (!canTriggerProactive(triggerKey)) return;
+        const quip = clippyConfig.contextQuips?.[triggerKey];
+        if (!quip || !quip.text) return;
+
+        lastProactiveTime = Date.now();
+        seenTriggersThisSession.add(triggerKey);
+
+        agent.stopCurrent?.();
+        if (quip.anim && agent.hasAnimation(quip.anim)) {
+            agent.play(quip.anim);
+        } else {
+            agent.play('Explain');
+        }
+
+        showProactiveBalloon(quip.text);
+    }
+
+    function showProactiveBalloon(text) {
+        if (!agent) return;
+        let balloonEl = document.getElementById('clippy-interactive-balloon');
+        if (!balloonEl) {
+            balloonEl = document.createElement('div');
+            balloonEl.id = 'clippy-interactive-balloon';
+            balloonEl.className = 'clippy-interactive-balloon';
+            document.body.appendChild(balloonEl);
+        }
+
+        balloonEl.classList.add('is-proactive');
+        balloonEl.innerHTML = `
+            <div class="clippy-balloon-header">
+                <span>Clippy</span>
+                <button class="clippy-balloon-close" id="clippy-close-btn">&times;</button>
+            </div>
+            <div class="clippy-balloon-body">
+                <p style="margin: 0 0 6px 0;">${text}</p>
+                <div class="clippy-proactive-actions">
+                    <button class="clippy-proactive-btn" id="clippy-proactive-ask">Ask Clippy</button>
+                    <button class="clippy-proactive-btn" id="clippy-proactive-dismiss">Dismiss</button>
+                </div>
+            </div>
+        `;
+
+        const closeProactive = () => {
+            if (proactiveTimer) clearTimeout(proactiveTimer);
+            balloonEl.style.display = 'none';
+            balloonEl.classList.remove('is-proactive');
+        };
+
+        document.getElementById('clippy-close-btn')?.addEventListener('click', closeProactive);
+        document.getElementById('clippy-proactive-dismiss')?.addEventListener('click', closeProactive);
+        document.getElementById('clippy-proactive-ask')?.addEventListener('click', () => {
+            if (proactiveTimer) clearTimeout(proactiveTimer);
+            balloonEl.classList.remove('is-proactive');
+            showInteractivePrompt();
+        });
+
+        balloonEl.style.display = 'block';
+        updateBalloonPosition();
+
+        if (proactiveTimer) clearTimeout(proactiveTimer);
+        proactiveTimer = setTimeout(() => {
+            if (balloonEl.classList.contains('is-proactive')) {
+                balloonEl.style.display = 'none';
+                balloonEl.classList.remove('is-proactive');
+            }
+        }, 9000);
+    }
+
     function showInteractivePrompt(customText) {
         if (!agent) return;
+        if (proactiveTimer) clearTimeout(proactiveTimer);
         if (document.body.classList.contains('screensaver-active') || window.ScreensaverEngine?.isRunning?.()) {
             return;
         }
@@ -239,6 +333,8 @@
             balloonEl.className = 'clippy-interactive-balloon';
             document.body.appendChild(balloonEl);
         }
+
+        balloonEl.classList.remove('is-proactive');
 
         if (customText) {
             balloonEl.innerHTML = `
@@ -282,70 +378,64 @@
             return pills + `<button class="clippy-pill clippy-die-btn" id="clippy-die-btn" title="Hide Clippy">Please die!</button>`;
         };
 
-        if (!apiKey) {
-            balloonEl.innerHTML = `
-                <div class="clippy-balloon-header">
-                    <span>Clippy Assistant</span>
-                    <button class="clippy-balloon-close" id="clippy-close-btn">&times;</button>
+        balloonEl.innerHTML = `
+            <div class="clippy-balloon-header">
+                <span>Clippy (AI Assistant)</span>
+                <button class="clippy-balloon-close" id="clippy-close-btn">&times;</button>
+            </div>
+            <div class="clippy-balloon-body">
+                <p style="margin: 0 0 6px 0;">${clippyConfig.greeting || "It looks like you're exploring Crede's site!"}</p>
+                <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                    <input type="text" id="clippy-chat-input" placeholder="Ask Clippy anything..." maxlength="180" style="flex: 1; font-size: 11px; padding: 2px 4px; border: 1px inset #808080;">
+                    <button id="clippy-send-chat-btn" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Ask</button>
                 </div>
-                <div class="clippy-balloon-body">
-                    <p style="margin: 0 0 6px 0;">${clippyConfig.greeting || "It looks like you're exploring Crede's site!"}</p>
-                    <p style="margin: 0 0 8px 0; font-weight: bold;">Crede won't eat into his Greggs budget to buy me credit. Give me an OpenRouter API key:</p>
-                    <div style="display: flex; gap: 4px; margin-bottom: 8px;">
-                        <input type="password" id="clippy-key-input" placeholder="sk-or-v1-..." style="flex: 1; font-size: 11px; padding: 2px 4px; border: 1px inset #808080;">
-                        <button id="clippy-save-key-btn" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Save</button>
-                    </div>
-                    <div style="font-size: 10px; color: #555; margin-bottom: 4px;">Or ask a quick question:</div>
-                    <div class="clippy-quick-pills">
-                        ${renderQuickPills()}
-                    </div>
+                <div class="clippy-quick-pills">
+                    ${renderQuickPills()}
+                    <button class="clippy-pill" id="clippy-toggle-key-settings" style="color: #666; border-style: dotted;" title="Configure Custom Key">⚙ Key</button>
                 </div>
-            `;
-
-            document.getElementById('clippy-save-key-btn')?.addEventListener('click', () => {
-                const val = document.getElementById('clippy-key-input')?.value?.trim();
-                if (val) {
-                    apiKey = val;
-                    try { localStorage.setItem('crede_openrouter_key', apiKey); } catch (e) { }
-                    agent?.play('Congratulate');
-                    showInteractivePrompt("Thanks for paying my child support! Go on, ask a question.");
-                }
-            });
-        } else {
-            balloonEl.innerHTML = `
-                <div class="clippy-balloon-header">
-                    <span>Clippy Assistant (AI Powered)</span>
-                    <button class="clippy-balloon-close" id="clippy-close-btn">&times;</button>
-                </div>
-                <div class="clippy-balloon-body">
-                    <p style="margin: 0 0 6px 0;">Ask me anything about Crede's background, code, photography, or this site!</p>
-                    <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-                        <input type="text" id="clippy-chat-input" placeholder="Ask Clippy..." maxlength="180" style="flex: 1; font-size: 11px; padding: 2px 4px; border: 1px inset #808080;">
-                        <button id="clippy-send-chat-btn" style="padding: 2px 8px; font-size: 11px; cursor: pointer;">Ask</button>
-                    </div>
-                    <div class="clippy-quick-pills">
-                        ${renderQuickPills()}
-                        <button class="clippy-pill" id="clippy-clear-key" style="color: #888; border-style: dashed;">Clear Key</button>
+                <div id="clippy-key-drawer" style="display: ${showKeyDrawer ? 'block' : 'none'}; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #d0c070;">
+                    <p style="margin: 0 0 4px 0; font-size: 10px; color: #555;">Optional custom OpenRouter API key override:</p>
+                    <div style="display: flex; gap: 4px;">
+                        <input type="password" id="clippy-key-input" placeholder="${apiKey ? 'Saved (sk-or-...)' : 'sk-or-v1-...'}" style="flex: 1; font-size: 10px; padding: 1px 3px; border: 1px inset #808080;">
+                        <button id="clippy-save-key-btn" style="padding: 1px 6px; font-size: 10px; cursor: pointer;">Save</button>
+                        ${apiKey ? '<button id="clippy-clear-key-btn" style="padding: 1px 6px; font-size: 10px; cursor: pointer;">Clear</button>' : ''}
                     </div>
                 </div>
-            `;
+            </div>
+        `;
 
-            const sendChat = () => {
-                const q = document.getElementById('clippy-chat-input')?.value?.trim();
-                if (q) askOpenRouter(q);
-            };
+        const sendChat = () => {
+            const q = document.getElementById('clippy-chat-input')?.value?.trim();
+            if (q) askOpenRouter(q);
+        };
 
-            document.getElementById('clippy-send-chat-btn')?.addEventListener('click', sendChat);
-            document.getElementById('clippy-chat-input')?.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') sendChat();
-            });
+        document.getElementById('clippy-send-chat-btn')?.addEventListener('click', sendChat);
+        document.getElementById('clippy-chat-input')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendChat();
+        });
 
-            document.getElementById('clippy-clear-key')?.addEventListener('click', () => {
-                apiKey = '';
-                try { localStorage.removeItem('crede_openrouter_key'); } catch (e) { }
-                showInteractivePrompt("Key forgotten. Feed me another whenever you like!");
-            });
-        }
+        document.getElementById('clippy-toggle-key-settings')?.addEventListener('click', () => {
+            showKeyDrawer = !showKeyDrawer;
+            const drawer = document.getElementById('clippy-key-drawer');
+            if (drawer) drawer.style.display = showKeyDrawer ? 'block' : 'none';
+            updateBalloonPosition();
+        });
+
+        document.getElementById('clippy-save-key-btn')?.addEventListener('click', () => {
+            const val = document.getElementById('clippy-key-input')?.value?.trim();
+            if (val) {
+                apiKey = val;
+                try { localStorage.setItem('crede_openrouter_key', apiKey); } catch (e) { }
+                agent?.play('Congratulate');
+                showInteractivePrompt("Custom API key saved! Ready for your questions.");
+            }
+        });
+
+        document.getElementById('clippy-clear-key-btn')?.addEventListener('click', () => {
+            apiKey = '';
+            try { localStorage.removeItem('crede_openrouter_key'); } catch (e) { }
+            showInteractivePrompt("Custom key cleared. Now using the default Cloudflare proxy!");
+        });
 
         document.getElementById('clippy-close-btn')?.addEventListener('click', () => {
             balloonEl.style.display = 'none';
@@ -382,7 +472,6 @@
         const bWidth = balloonEl.offsetWidth || 250;
         const bHeight = balloonEl.getBoundingClientRect().height || balloonEl.offsetHeight || 160;
 
-        // Try placing balloon above clippy; if no room, place below
         let top = rect.top - bHeight - 12;
         if (top < 10) {
             const taskbarH = document.querySelector('.taskbar')?.offsetHeight || 46;
@@ -393,7 +482,6 @@
             }
         }
 
-        // Keep balloon within horizontal bounds
         let left = rect.right - bWidth;
         if (left < 10) left = 10;
         if (left + bWidth > window.innerWidth - 10) {
@@ -405,50 +493,74 @@
     }
 
     async function askOpenRouter(prompt) {
-        if (!apiKey) return;
         isThinking = true;
         agent?.stopCurrent?.();
         agent?.play('Thinking', 25000);
         showInteractivePrompt();
 
-        const model = clippyConfig.model || 'google/gemini-2.5-flash';
-        const systemPrompt = clippyConfig.systemPrompt || "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a London-based creative technologist, engineer, and photographer. Keep your replies concise (under 3 sentences), playful, and in genuine Clippy style ('It looks like you...').";
-        const maxTokens = typeof clippyConfig.maxTokens === 'number' ? clippyConfig.maxTokens : 120;
-        const temperature = typeof clippyConfig.temperature === 'number' ? clippyConfig.temperature : 0.7;
+        // 1. Gather live DOM environment context
+        const activeWin = document.querySelector('.window.active');
+        const winTitle = activeWin?.querySelector('.title-bar-text')?.textContent?.trim() || 'Desktop';
+        const openWins = Array.from(document.querySelectorAll('.window'))
+            .filter(w => w.style.display !== 'none')
+            .map(w => w.querySelector('.title-bar-text')?.textContent?.trim())
+            .filter(Boolean);
+        const userState = `Active window: "${winTitle}". Open windows on desktop: ${openWins.join(', ') || 'None'}.`;
+
+        const model = clippyConfig.model || 'qwen/qwen3.8-27b:free';
+        const proxyUrl = clippyConfig.proxyUrl || 'https://clippy-api.crede.workers.dev';
 
         try {
-            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`,
-                    'HTTP-Referer': 'https://crede.vip',
-                    'X-Title': 'CREDE.VIP Retro Portfolio'
-                },
-                body: JSON.stringify({
-                    model: model,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: systemPrompt
-                        },
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: maxTokens,
-                    temperature: temperature
-                })
-            });
+            let reply = '';
 
-            if (!response.ok) {
-                const err = await response.json().catch(() => ({}));
-                throw new Error(err?.error?.message || `HTTP ${response.status}`);
+            // If user supplied their own API key, query OpenRouter directly
+            if (apiKey) {
+                const systemPrompt = (clippyConfig.systemPrompt || "You are Clippy...") + `\n[Live Visitor Context: ${userState}]`;
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                        'HTTP-Referer': 'https://crede.vip',
+                        'X-Title': 'CREDE.VIP Retro Portfolio'
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: prompt }
+                        ],
+                        max_tokens: clippyConfig.maxTokens || 140,
+                        temperature: clippyConfig.temperature || 0.7,
+                        reasoning: { effort: 'low' }
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || `HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                reply = data.choices?.[0]?.message?.content || "It looks like my paperclip gears got stuck! Try asking again.";
+            } else {
+                // Default: Use the Cloudflare Worker proxy!
+                const response = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        userState: userState
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    throw new Error(err?.error || `Proxy returned ${response.status}`);
+                }
+                const data = await response.json();
+                reply = data.reply || "It looks like my paperclip gears slipped! Try asking again.";
             }
 
-            const data = await response.json();
-            const reply = data.choices?.[0]?.message?.content || "It looks like my paperclip gears got stuck! Try asking again.";
             isThinking = false;
             agent?.stopCurrent?.();
             agent?.play('Congratulate');
@@ -457,7 +569,7 @@
             isThinking = false;
             agent?.stopCurrent?.();
             agent?.play('Explain');
-            showInteractivePrompt(`<strong>Oops:</strong> ${err.message || 'Connection error'}. Check your key or try again.`);
+            showInteractivePrompt(`<strong>Oops:</strong> ${err.message || 'Connection error'}. Cloudflare Worker might still be setting up! Try one of the quick questions below.`);
         }
     }
 
@@ -515,6 +627,9 @@
                 agent?.animate();
             }
             showInteractivePrompt();
+        },
+        notifyContext: function (triggerKey) {
+            handleContextTrigger(triggerKey);
         },
         play: async function (animName) {
             if (!agent) await initClippy();

@@ -177,6 +177,8 @@ function setWallpaper(type, customUrl) {
         localStorage.setItem('crede_wallpaper_type', type);
         if (customUrl) localStorage.setItem('crede_wallpaper_url', customUrl);
     } catch (e) {}
+
+    window.ClippySystem?.notifyContext?.('action:wallpaper');
 }
 
 function loadSavedWallpaper() {
@@ -470,6 +472,7 @@ function openWindow(windowId) {
     }
 
     updateTaskbar();
+    window.ClippySystem?.notifyContext?.(windowId);
 }
 
 // Window Arranging Algorithms
@@ -573,6 +576,10 @@ function initializeSelectionMarquee() {
         if (isSelecting) {
             isSelecting = false;
             marquee.hidden = true;
+            const selectedCount = document.querySelectorAll('.desktop-icon.selected').length;
+            if (selectedCount >= 4) {
+                window.ClippySystem?.notifyContext?.('action:marquee');
+            }
         }
     });
 }
@@ -855,6 +862,7 @@ function executeCommand(cmd, historyEl) {
         case 'bsod':
             printLine("System halt error initiated.");
             triggerBSOD();
+            window.ClippySystem?.notifyContext?.('action:bsod');
             break;
 
         case 'whoami':

@@ -60,6 +60,7 @@
         clearTimeout(idleTimer);
         if (mode === 'none' || window.innerWidth <= 768) return; // Disable screensaver on mobile by default
         idleTimer = setTimeout(() => {
+            window.ClippySystem?.notifyContext?.('idle:timeout');
             startScreensaver();
         }, timeoutSeconds * 1000);
     }

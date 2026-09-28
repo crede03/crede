@@ -1,10 +1,13 @@
 {
   "enabled": true,
+  "proxyUrl": "https://clippy-api.crede.workers.dev",
+  "proactiveEnabled": true,
+  "proactiveCooldownSeconds": 35,
   "greeting": "It looks like you're exploring Crede's site!",
-  "model": "google/gemini-3.8-flash",
+  "model": "qwen/qwen3.8-27b:free",
   "temperature": 0.7,
-  "maxTokens": 120,
-  "systemPrompt": "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a Kent-based creative strategist, designer, photographer and technological jack-of-all-trades.. Keep your replies concise (under 3 sentences), playful, and in the tone of the loved-and-hated Microsoft Office assistant, Clippy.",
+  "maxTokens": 140,
+  "systemPrompt": "You are Clippy, the nostalgic, helpful, witty 90s assistant on Crede Dalton's portfolio website (crede.vip). Crede is a Kent-based creative strategist, designer, photographer and technological jack-of-all-trades. Keep your replies concise (under 3 sentences), playful, and in genuine Clippy style ('It looks like you...').",
   "quickResponses": [
     {
       "id": "who",
@@ -26,5 +29,71 @@
       "label": "Tell a Joke",
       "response": "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!"
     }
-  ]
+  ],
+  "contextQuips": {
+    "project-6-window": {
+      "anim": "Explain",
+      "text": "It looks like you're inspecting AI slop! Would you like help feeling superior?"
+    },
+    "project-5-window": {
+      "anim": "LookUp",
+      "text": "It looks like you're checking out Crede's photography! All shot without a gun license."
+    },
+    "project-1-window": {
+      "anim": "Explain",
+      "text": "It looks like you're browsing Dover Marina Hotel & Spa! Fancy a seaside cocktail and a massage?"
+    },
+    "project-2-window": {
+      "anim": "Explain",
+      "text": "It looks like you're reading about Sai Care Homes. Crede even cures camera-shyness for the elderly!"
+    },
+    "project-3-window": {
+      "anim": "Explain",
+      "text": "It looks like you're viewing Lighthouse on the Marsh—charity work for the Romney Marsh community."
+    },
+    "project-4-window": {
+      "anim": "Explain",
+      "text": "It looks like you're inspecting QFlooring. Ask Crede how he unlocked 80,000 views targeting parents with messy toddlers!"
+    },
+    "paint-window": {
+      "anim": "Explain",
+      "text": "It looks like you're making a masterpiece! Don't forget: real digital artists use the spray can."
+    },
+    "terminal-window": {
+      "anim": "Thinking",
+      "text": "It looks like you think you're Neo. Try typing 'crash' or 'flowerbox' if you dare!"
+    },
+    "wmp-window": {
+      "anim": "Explain",
+      "text": "It looks like you're tuning into AI-generated Top Gear. Mind the buffering!"
+    },
+    "minesweeper-window": {
+      "anim": "IdleFingerTap",
+      "text": "It looks like you're avoiding real work! Don't click the smiley face too hard."
+    },
+    "display-properties-window": {
+      "anim": "LookRight",
+      "text": "It looks like you're tweaking the display. I personally recommend the classic Bliss wallpaper!"
+    },
+    "system-properties-window": {
+      "anim": "Explain",
+      "text": "It looks like you want to know about this site. Built with 7.css and zero tracking cookies!"
+    },
+    "action:wallpaper": {
+      "anim": "Congratulate",
+      "text": "New wallpaper! Looking sharp."
+    },
+    "action:bsod": {
+      "anim": "Alert",
+      "text": "Bollocks. It's obviously your fault, not the cheap AI models!"
+    },
+    "action:marquee": {
+      "anim": "GetAttention",
+      "text": "It looks like you're selecting desktop icons for no apparent reason!"
+    },
+    "idle:timeout": {
+      "anim": "IdleHeadScratch",
+      "text": "It looks like you've fallen asleep! Need me to tap on the glass?"
+    }
+  }
 }
