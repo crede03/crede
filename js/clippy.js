@@ -23,7 +23,7 @@
 
     let clippyConfig = {
         enabled: true,
-        proxyUrl: "https://clippy-api.crede.workers.dev",
+        proxyUrl: "https://clippy-api.crede-fa7.workers.dev",
         proactiveEnabled: true,
         proactiveCooldownSeconds: 35,
         greeting: "It looks like you're exploring Crede's site!",
@@ -508,7 +508,7 @@
         const userState = `Active window: "${winTitle}". Open windows on desktop: ${openWins.join(', ') || 'None'}.`;
 
         const model = clippyConfig.model || 'qwen/qwen3.8-27b:free';
-        const proxyUrl = clippyConfig.proxyUrl || 'https://clippy-api.crede.workers.dev';
+        const proxyUrl = clippyConfig.proxyUrl || 'https://clippy-api.crede-fa7.workers.dev';
 
         try {
             let reply = '';

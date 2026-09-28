@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "proxyUrl": "https://clippy-api.crede.workers.dev",
+  "proxyUrl": "https://clippy-api.crede-fa7.workers.dev",
   "proactiveEnabled": true,
   "proactiveCooldownSeconds": 35,
   "greeting": "It looks like you're exploring Crede's site!",
