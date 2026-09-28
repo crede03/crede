@@ -321,25 +321,39 @@ function onResize(e) {
     const minW = Math.max(parseFloat(comp.minWidth) || 0, 260);
     const minH = Math.max(parseFloat(comp.minHeight) || 0, 160);
 
-    let newWidth = resizeStartRect.width;
-    let newHeight = resizeStartRect.height;
+    const taskbar = document.querySelector('.taskbar');
+    const taskbarHeight = taskbar ? taskbar.offsetHeight : 46;
+    const availableHeight = Math.max(0, window.innerHeight - taskbarHeight);
+
+    // Account for window borders and padding when setting style width/height
+    const extraW = Math.max(0, resizingWindow.offsetWidth - (parseFloat(comp.width) || resizingWindow.offsetWidth));
+    const extraH = Math.max(0, resizingWindow.offsetHeight - (parseFloat(comp.height) || resizingWindow.offsetHeight));
+
+    let newWidth = resizeStartRect.width - extraW;
+    let newHeight = resizeStartRect.height - extraH;
     let newLeft = resizeStartRect.left;
     let newTop = resizeStartRect.top;
 
-    if (resizeDirection.includes('e')) newWidth = Math.max(minW, resizeStartRect.width + dx);
-    if (resizeDirection.includes('s')) newHeight = Math.max(minH, resizeStartRect.height + dy);
+    if (resizeDirection.includes('e')) {
+        const maxW = Math.max(minW, window.innerWidth - newLeft - extraW);
+        newWidth = Math.min(Math.max(minW, (resizeStartRect.width - extraW) + dx), maxW);
+    }
+    if (resizeDirection.includes('s')) {
+        const maxH = Math.max(minH, availableHeight - newTop - extraH);
+        newHeight = Math.min(Math.max(minH, (resizeStartRect.height - extraH) + dy), maxH);
+    }
     if (resizeDirection.includes('w')) {
-        const w = resizeStartRect.width - dx;
+        const w = (resizeStartRect.width - extraW) - dx;
         if (w >= minW) {
             newWidth = w;
-            newLeft = resizeStartRect.left + dx;
+            newLeft = Math.max(0, resizeStartRect.left + dx);
         }
     }
     if (resizeDirection.includes('n')) {
-        const h = resizeStartRect.height - dy;
+        const h = (resizeStartRect.height - extraH) - dy;
         if (h >= minH) {
             newHeight = h;
-            newTop = resizeStartRect.top + dy;
+            newTop = Math.max(0, resizeStartRect.top + dy);
         }
     }
 
@@ -358,12 +372,24 @@ function stopResize() {
 }
 
 function centerWindow(win) {
-    const windowRect = win.getBoundingClientRect();
+    const taskbar = document.querySelector('.taskbar');
+    const taskbarHeight = taskbar ? taskbar.offsetHeight : 46;
+    const availableHeight = Math.max(200, window.innerHeight - taskbarHeight);
     const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    let left = Math.max(10, (viewportWidth - windowRect.width) / 2);
-    let top = (viewportHeight - windowRect.height) / 2 - 20;
-    top = Math.max(10, Math.min(top, viewportHeight - windowRect.height - 50));
+
+    if (!win.classList.contains('maximized')) {
+        if (win.offsetHeight > availableHeight) {
+            win.style.height = `${availableHeight - 20}px`;
+        }
+        if (win.offsetWidth > viewportWidth) {
+            win.style.width = `${viewportWidth - 20}px`;
+        }
+    }
+
+    const windowRect = win.getBoundingClientRect();
+    let left = Math.max(10, Math.round((viewportWidth - windowRect.width) / 2));
+    let top = Math.round((availableHeight - windowRect.height) / 2 - 10);
+    top = Math.max(10, Math.min(top, Math.max(10, availableHeight - windowRect.height - 10)));
     win.style.left = `${left}px`;
     win.style.top = `${top}px`;
 }
@@ -381,8 +407,11 @@ function startDrag(win, e) {
 
 function onDrag(e) {
     if (!draggedWindow) return;
-    const maxX = window.innerWidth - draggedWindow.offsetWidth;
-    const maxY = window.innerHeight - 50;
+    const taskbar = document.querySelector('.taskbar');
+    const taskbarHeight = taskbar ? taskbar.offsetHeight : 46;
+    const availableHeight = Math.max(0, window.innerHeight - taskbarHeight);
+    const maxX = Math.max(0, window.innerWidth - draggedWindow.offsetWidth);
+    const maxY = Math.max(0, availableHeight - draggedWindow.offsetHeight);
     let x = e.clientX - dragOffset.x;
     let y = e.clientY - dragOffset.y;
     x = Math.max(0, Math.min(x, maxX));
@@ -400,14 +429,35 @@ function stopDrag() {
 
 function bringToFront(win) {
     if (!win) return;
-    const windows = document.querySelectorAll('.window');
-    let maxZ = 10;
+    if (win.getAttribute('role') === 'dialog') {
+        win.style.zIndex = '10002';
+        win.classList.add('active');
+        win.classList.remove('minimized');
+        win.dataset.isOpen = 'true';
+        return;
+    }
+
+    const windows = document.querySelectorAll('.window:not([role="dialog"])');
+    let maxZ = 100;
     windows.forEach(w => {
         w.classList.remove('active');
-        const z = parseInt(w.style.zIndex) || 10;
-        if (z > maxZ) maxZ = z;
+        const z = parseInt(w.style.zIndex) || 100;
+        if (z >= 9000) {
+            w.style.zIndex = '100';
+        } else if (z > maxZ) {
+            maxZ = z;
+        }
     });
-    win.style.zIndex = maxZ + 1;
+
+    if (maxZ >= 8900) {
+        const sorted = Array.from(windows).sort((a, b) => (parseInt(a.style.zIndex) || 100) - (parseInt(b.style.zIndex) || 100));
+        sorted.forEach((w, idx) => {
+            w.style.zIndex = `${100 + idx}`;
+        });
+        maxZ = 100 + sorted.length;
+    }
+
+    win.style.zIndex = Math.min(8999, maxZ + 1);
     win.classList.add('active');
     win.classList.remove('minimized');
     win.dataset.isOpen = 'true';
@@ -494,7 +544,8 @@ function maximizeWindow(win) {
         win.dataset.preMaxTop = win.style.top || `${win.offsetTop}px`;
         win.classList.add('maximized');
         const margin = isMobileViewport() ? 0 : 8;
-        const taskbarHeight = 44;
+        const taskbar = document.querySelector('.taskbar');
+        const taskbarHeight = taskbar ? taskbar.offsetHeight : 46;
         win.style.left = `${margin}px`;
         win.style.top = `${margin}px`;
         win.style.width = `${window.innerWidth - margin * 2}px`;
@@ -511,6 +562,10 @@ function openWindow(windowId) {
         if (frame && (!frame.src || frame.src === 'about:blank' || !frame.src.includes('wmp/index.html'))) {
             frame.src = frame.getAttribute('data-src') || 'wmp/index.html';
         }
+    }
+    if (windowId === 'aim-window') {
+        window.SoundSystem?.playAIMDoor?.();
+        window.AIMSystem?.loadBuddies?.();
     }
 
     window.SoundSystem?.playClick();
@@ -529,10 +584,12 @@ function openWindow(windowId) {
     updateTaskbar();
     window.ClippySystem?.notifyContext?.(windowId);
 }
+window.openWindow = openWindow;
+window.closeWindow = closeWindow;
 
 // Window Arranging Algorithms
 function cascadeWindows() {
-    const visibleWindows = Array.from(document.querySelectorAll('.window')).filter(w => w.style.display !== 'none');
+    const visibleWindows = Array.from(document.querySelectorAll('.window:not([role="dialog"])')).filter(w => w.style.display !== 'none' && !w.classList.contains('minimized'));
     let offset = 20;
     visibleWindows.forEach((w, idx) => {
         w.classList.remove('maximized');
@@ -545,9 +602,12 @@ function cascadeWindows() {
 }
 
 function tileWindowsHorizontally() {
-    const visibleWindows = Array.from(document.querySelectorAll('.window')).filter(w => w.style.display !== 'none');
+    const visibleWindows = Array.from(document.querySelectorAll('.window:not([role="dialog"])')).filter(w => w.style.display !== 'none' && !w.classList.contains('minimized'));
     if (!visibleWindows.length) return;
-    const height = Math.floor((window.innerHeight - 50) / visibleWindows.length);
+    const taskbar = document.querySelector('.taskbar');
+    const taskbarHeight = taskbar ? taskbar.offsetHeight : 46;
+    const availableHeight = Math.max(0, window.innerHeight - taskbarHeight);
+    const height = Math.floor(availableHeight / visibleWindows.length);
     visibleWindows.forEach((w, idx) => {
         w.classList.remove('maximized');
         w.style.left = '10px';
@@ -558,15 +618,18 @@ function tileWindowsHorizontally() {
 }
 
 function tileWindowsVertically() {
-    const visibleWindows = Array.from(document.querySelectorAll('.window')).filter(w => w.style.display !== 'none');
+    const visibleWindows = Array.from(document.querySelectorAll('.window:not([role="dialog"])')).filter(w => w.style.display !== 'none' && !w.classList.contains('minimized'));
     if (!visibleWindows.length) return;
+    const taskbar = document.querySelector('.taskbar');
+    const taskbarHeight = taskbar ? taskbar.offsetHeight : 46;
+    const availableHeight = Math.max(0, window.innerHeight - taskbarHeight);
     const width = Math.floor((window.innerWidth - 20) / visibleWindows.length);
     visibleWindows.forEach((w, idx) => {
         w.classList.remove('maximized');
         w.style.top = '10px';
         w.style.left = `${10 + idx * width}px`;
         w.style.width = `${width - 10}px`;
-        w.style.height = `${window.innerHeight - 60}px`;
+        w.style.height = `${availableHeight - 20}px`;
     });
 }
 
@@ -1856,7 +1919,15 @@ function activateWindowFromAltTab(windowId) {
     if (windowId === 'webamp') {
         window.openWebamp?.();
         const host = document.getElementById('webamp-host');
-        if (host) host.style.zIndex = '1000';
+        if (host) {
+            const windows = document.querySelectorAll('.window:not([role="dialog"])');
+            let maxZ = 100;
+            windows.forEach(w => {
+                const z = parseInt(w.style.zIndex) || 100;
+                if (z < 9000 && z > maxZ) maxZ = z;
+            });
+            host.style.zIndex = `${Math.min(8999, maxZ + 1)}`;
+        }
         const task = document.getElementById('webamp-task');
         if (task) task.classList.add('active');
         activeWindow = 'webamp';

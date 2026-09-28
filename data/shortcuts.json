@@ -127,6 +127,22 @@
       "enabled": false,
       "type": "window",
       "target": "system-properties-window"
+    },
+    {
+      "id": "aim-alert-dialog",
+      "title": "Aim Alert Dialog",
+      "icon": "img/welcome.png",
+      "enabled": false,
+      "type": "window",
+      "target": "aim-alert-dialog"
+    },
+    {
+      "id": "aim-info-dialog",
+      "title": "Aim Info Dialog",
+      "icon": "img/welcome.png",
+      "enabled": false,
+      "type": "window",
+      "target": "aim-info-dialog"
     }
   ],
   "startMenu": [
@@ -263,6 +279,22 @@
       "enabled": false,
       "type": "window",
       "target": "pinball-window"
+    },
+    {
+      "id": "aim-alert-dialog",
+      "title": "Aim Alert Dialog",
+      "icon": "img/welcome.png",
+      "enabled": false,
+      "type": "window",
+      "target": "aim-alert-dialog"
+    },
+    {
+      "id": "aim-info-dialog",
+      "title": "Aim Info Dialog",
+      "icon": "img/welcome.png",
+      "enabled": false,
+      "type": "window",
+      "target": "aim-info-dialog"
     }
   ]
 }

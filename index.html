@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CREDE.VIP</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css" id="theme-7">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260928b">
 </head>
 
 <body class="has-scrollbar">
@@ -338,7 +338,7 @@
 
         <!-- AIM Instant Messenger Window -->
         <div class="window glass" id="aim-window"
-            style="width: 720px; height: 530px; min-width: 500px; min-height: 400px; display: none;">
+            style="width: 720px; height: 530px; display: none;">
             <div class="title-bar">
                 <div class="title-bar-text" id="aim-title-bar-text">AIM - Instant Messenger (Buddy: Clippy)</div>
                 <div class="title-bar-controls">
@@ -362,7 +362,8 @@
                     Buddies
                     <ul role="menu">
                         <li role="menuitem"><a href="#" id="aim-menu-add-buddy">Add Buddy...</a></li>
-                        <li role="menuitem"><a href="#" id="aim-menu-buddy-info">Clippy's Buddy Info</a></li>
+                        <li role="menuitem"><a href="#" id="aim-menu-buddy-info">Buddy Info</a></li>
+                        <li role="menuitem" class="has-divider"><a href="#" id="aim-menu-toggle-taunts"><span id="aim-menu-taunts-check" style="font-weight: bold; margin-right: 4px;">✓</span> "1 Friend" Reality Checks</a></li>
                     </ul>
                 </li>
                 <li role="menuitem" tabindex="0" aria-haspopup="true">
@@ -376,9 +377,8 @@
             <!-- Mobile responsive tab switch (visible only on small screens) -->
             <div class="aim-mobile-bar">
                 <menu role="tablist" class="aim-mobile-tabs justified" aria-label="AIM Navigation">
-                    <button role="tab" type="button" class="active" aria-selected="true" data-pane="chat">💬 Chat with
-                        Clippy</button>
-                    <button role="tab" type="button" aria-selected="false" data-pane="buddy">👥 Buddy List (1)</button>
+                    <button role="tab" type="button" class="active" aria-selected="true" data-pane="chat" id="aim-mobile-chat-tab">💬 Chat with Clippy</button>
+                    <button role="tab" type="button" aria-selected="false" data-pane="buddy" id="aim-mobile-buddy-tab">👥 Buddy List (1)</button>
                 </menu>
             </div>
 
@@ -412,9 +412,9 @@
                     <!-- 7.css Tree View for Buddies -->
                     <ul class="tree-view has-collapse-button has-connector has-container has-scrollbar aim-tree-list">
                         <li>
-                            <details open>
-                                <summary><strong>Buddies (1/1)</strong></summary>
-                                <ul>
+                            <details open id="aim-buddies-group">
+                                <summary id="aim-buddies-summary"><strong>Buddies (1/1)</strong></summary>
+                                <ul id="aim-buddies-list">
                                     <li class="aim-buddy-item active" id="buddy-clippy" data-buddy="clippy"
                                         tabindex="0">
                                         <span class="aim-status-indicator online"></span>
@@ -482,8 +482,7 @@
 
                     <!-- Typing indicator -->
                     <div class="aim-typing-indicator" id="aim-typing-indicator" style="display: none;">
-                        <span class="aim-pencil-icon">✏️</span> Clippy is typing a response (a.k.a. consulting with
-                        Skynet)
+                        <span class="aim-pencil-icon">✏️</span> <span id="aim-typing-text">Clippy is typing a response...</span>
                     </div>
 
                     <!-- Formatting Toolbar -->
@@ -542,7 +541,7 @@
                     <!-- 7.css Status Bar -->
                     <div class="status-bar">
                         <p class="status-bar-field" id="aim-status-field">Direct Connection Established</p>
-                        <p class="status-bar-field">1 Buddy Online</p>
+                        <p class="status-bar-field" id="aim-status-count">1 Buddy Online</p>
                         <p class="status-bar-field">AIM v5.9</p>
                     </div>
                 </main>
@@ -551,7 +550,7 @@
 
         <!-- AIM Taunt / Social Reality Check Dialog (7.css is-bright) -->
         <div class="window is-bright" id="aim-alert-dialog" role="dialog" aria-labelledby="aim-alert-title"
-            style="display: none; width: 400px; z-index: 10001;">
+            style="display: none; width: 400px; z-index: 10002;">
             <div class="title-bar">
                 <div class="title-bar-text" id="aim-alert-title">Instant Messenger - Social Status</div>
                 <div class="title-bar-controls">
@@ -566,7 +565,7 @@
                             style="margin-top: 0; font-size: 13px; line-height: 1.45;">
                             You have 1 friend, you lonely fucker.
                         </h2>
-                        <p style="margin: 8px 0 0 0; font-size: 11px; color: #555;">
+                        <p id="aim-alert-subtext" style="margin: 8px 0 0 0; font-size: 11px; color: #555;">
                             Clippy has graciously agreed to continue tolerating your messages.
                         </p>
                     </div>
@@ -577,9 +576,9 @@
             </footer>
         </div>
 
-        <!-- Clippy AIM Profile / Info Dialog (7.css is-bright) -->
+        <!-- Buddy AIM Profile / Info Dialog (7.css is-bright) -->
         <div class="window is-bright" id="aim-info-dialog" role="dialog" aria-labelledby="aim-info-title"
-            style="display: none; width: 380px; z-index: 10001;">
+            style="display: none; width: 380px; z-index: 10002;">
             <div class="title-bar">
                 <div class="title-bar-text" id="aim-info-title">Buddy Info: Clippy</div>
                 <div class="title-bar-controls">
@@ -588,21 +587,19 @@
             </div>
             <div class="window-body has-space">
                 <div style="display: flex; gap: 12px; margin-bottom: 10px;">
-                    <img src="img/clippy.png" alt="Clippy" style="width: 48px; height: 48px; object-fit: contain;">
+                    <img src="img/clippy.png" id="aim-info-avatar" alt="Avatar" style="width: 48px; height: 48px; object-fit: contain;">
                     <div>
-                        <div style="font-weight: bold; font-size: 13px;">Clippy (Microsoft Office Assistant)</div>
-                        <div style="font-size: 11px; color: #666;">Screen Name: ClippyTheHelper</div>
-                        <div style="font-size: 11px; color: #666;">Member Since: November 1996</div>
+                        <div id="aim-info-name" style="font-weight: bold; font-size: 13px;">Clippy (Microsoft Office Assistant)</div>
+                        <div id="aim-info-screenname" style="font-size: 11px; color: #666;">Screen Name: ClippyTheHelper</div>
+                        <div id="aim-info-since" style="font-size: 11px; color: #666;">Member Since: November 1996</div>
                     </div>
                 </div>
                 <fieldset>
                     <legend>User Profile</legend>
                     <p style="font-size: 11px; margin: 4px 0; line-height: 1.4;">
-                        <strong>Quote:</strong> "It looks like you're trying to view my profile!"<br>
-                        <strong>Hobbies:</strong> Animating idle cycles, piping Rover the dog, teaching kids how to
-                        install
-                        Linux.<br>
-                        <strong>Status:</strong> Available 24/7 for you, because you're a loser.
+                        <strong>Quote:</strong> <span id="aim-info-quote">"It looks like you're trying to view my profile!"</span><br>
+                        <strong>Hobbies:</strong> <span id="aim-info-hobbies">Animating idle cycles, piping Rover the dog, teaching kids how to install Linux.</span><br>
+                        <strong>Status:</strong> <span id="aim-info-status">Available 24/7 for you, because you're a loser.</span>
                     </p>
                 </fieldset>
             </div>
@@ -612,7 +609,7 @@
         </div>
 
         <!-- Shutdown Error Dialog -->
-        <div class="window is-bright" id="shutdown-dialog" aria-labelledby="shutdown-dialog-title"
+        <div class="window is-bright" id="shutdown-dialog" role="dialog" aria-labelledby="shutdown-dialog-title"
             style="width: 420px;">
             <div class="title-bar">
                 <div class="title-bar-text" id="shutdown-dialog-title">Bollocks.</div>
@@ -815,7 +812,7 @@
     <script src="js/screensaver.js"></script>
     <script type="module" src="js/clippy.js"></script>
     <script src="js/aim.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=20260928b"></script>
 </body>
 
 </html>

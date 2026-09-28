@@ -1,13 +1,13 @@
 /**
- * CREDE.VIP - Clippy AI Cloudflare Worker Proxy
+ * CREDE.VIP - Clippy & AIM AI Cloudflare Worker Proxy
  * 
- * Primary Model: mistralai/mistral-nemo
+ * Primary Model: deepseek/deepseek-v4.1-flash
  * Fallbacks: qwen/qwen3.8-27b:free, google/gemma-4-26b-a4b-it:free, google/gemma-4-31b-it:free
  * 
  * Spending Safeguards:
  * - Controlled by OpenRouter spending limit / prepaid balance.
  * - If OpenRouter budget is exceeded (HTTP 402 Payment Required),
- *   it seamlessly cascades to free models so Clippy never breaks.
+ *   it seamlessly cascades to free models so chat never breaks.
  */
 
 export default {
@@ -56,28 +56,29 @@ export default {
       const body = await request.json();
       const prompt = (body.prompt || '').trim();
       const userState = (body.userState || '').trim();
+      const customSystemPrompt = (body.systemPrompt || '').trim();
 
       // Guard input size: prevent prompt injection & oversized context cost
-      if (!prompt || prompt.length > 300) {
+      if (!prompt || prompt.length > 500) {
         return new Response(
-          JSON.stringify({ error: 'Prompt must be between 1 and 300 characters.' }),
+          JSON.stringify({ error: 'Prompt must be between 1 and 500 characters.' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
-      // 3. System Prompt with Live Context
-      const systemPrompt = `You are Clippy, the nostalgic, witty 90s assistant on Crede Dalton's retro Windows portfolio website (crede.vip).
+      // 3. System Prompt with Live Context (custom buddy prompt if provided)
+      const systemPrompt = customSystemPrompt || `You are Clippy, the nostalgic, witty 90s assistant on Crede Dalton's retro Windows portfolio website (crede.vip).
 Crede is a London/Kent-based creative lead, photographer (Shot by CREDE), and technologist.
 Rules:
 - Keep answers brief (under 3 sentences).
 - Sound playfully sarcastic, friendly, and in authentic Clippy style (e.g. "It looks like...").
 - ${userState ? `Live visitor context: ${userState}` : ''}`;
 
-      // 4. Model Hierarchy: Paid Primary (mistralai/mistral-nemo) -> Free Fallbacks
-      const primaryPaidModel = env.PRIMARY_MODEL || 'mistralai/mistral-nemo';
+      // 4. Model Hierarchy: Paid Primary (deepseek/deepseek-v4.1-flash) -> Free Fallbacks
+      const primaryPaidModel = env.PRIMARY_MODEL || 'deepseek/deepseek-v4.1-flash';
 
       const modelCascade = [
-        primaryPaidModel,                    // Primary paid model: Mistral Nemo 12B
+        primaryPaidModel,                    // Primary paid model: DeepSeek v4.1 Flash
         'qwen/qwen3.8-27b:free',             // Free fallback 1
         'google/gemma-4-26b-a4b-it:free',    // Free fallback 2
         'google/gemma-4-31b-it:free'         // Free fallback 3
