@@ -140,7 +140,7 @@ function loadSavedAppearance() {
 // Helper: Wallpaper Management
 function setWallpaper(type, customUrl) {
     const isMobile = isMobileViewport();
-    if (!type || type === 'default') {
+    if (!type || type === 'default' || type === 'vista') {
         document.body.style.background = '';
         document.body.style.backgroundImage = '';
         document.body.style.backgroundSize = '';
@@ -156,11 +156,8 @@ function setWallpaper(type, customUrl) {
     }
 
     const wallpapers = {
-        'bliss': 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80")',
-        'clouds': 'url("https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=1920&q=80")',
-        'matrix': 'radial-gradient(circle, #001a00 0%, #000000 100%)',
-        'teal': '#008080',
-        'cyber': 'linear-gradient(135deg, #0d001a 0%, #1a0033 50%, #001133 100%)'
+        'bliss': 'url("/img/bliss.jpg")',
+        '/img/bliss.jpg': 'url("/img/bliss.jpg")'
     };
 
     let bgStyle = wallpapers[type];
@@ -1101,11 +1098,9 @@ function initializeDisplayProperties() {
         const customUrl = customInput?.value || '';
         const wallpapers = {
             'default': 'url("img/pape.jpg")',
-            'bliss': 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80")',
-            'clouds': 'url("https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=1920&q=80")',
-            'matrix': 'radial-gradient(circle, #001a00 0%, #000000 100%)',
-            'teal': '#008080',
-            'cyber': 'linear-gradient(135deg, #0d001a 0%, #1a0033 50%, #001133 100%)'
+            'vista': 'url("img/pape.jpg")',
+            'bliss': 'url("/img/bliss.jpg")',
+            '/img/bliss.jpg': 'url("/img/bliss.jpg")'
         };
         let bgStyle = wallpapers[type] || wallpapers['default'];
         if (type === 'custom' && customUrl) {
@@ -1728,7 +1723,7 @@ function initializeCookieNotice() {
 window.addEventListener('resize', () => {
     layoutDesktopIcons();
     const type = localStorage.getItem('crede_wallpaper_type') || 'default';
-    if (type !== 'default') {
+    if (type !== 'default' && type !== 'vista') {
         document.body.style.backgroundAttachment = isMobileViewport() ? 'scroll' : 'fixed';
         document.body.style.backgroundPosition = isMobileViewport() ? '18% center' : 'center center';
     }
