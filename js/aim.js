@@ -43,9 +43,21 @@
     let chatHistory = [];
     let warningLevel = 0;
 
+    function isMobileDevice() {
+        if (typeof window === 'undefined') return false;
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+            window.innerWidth <= 768 ||
+            (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
+    }
+
+    // Default font: normal sans-serif on mobile devices (where Comic Sans doesn't exist), Comic Sans on PC
+    const defaultFontFamily = isMobileDevice()
+        ? 'Arial, sans-serif'
+        : "'Comic Sans MS', cursive, sans-serif";
+
     // Text formatting preferences
     let fontSettings = {
-        family: "'Comic Sans MS', cursive, sans-serif",
+        family: defaultFontFamily,
         size: '12px',
         color: '#0000ff',
         bold: false,
@@ -207,6 +219,18 @@
         const aimWin = document.getElementById('aim-window');
         if (!aimWin) return;
 
+        if (isMobileDevice()) {
+            aimWin.classList.add('aim-mobile-device');
+        }
+
+        window.addEventListener('resize', () => {
+            if (isMobileDevice()) {
+                aimWin.classList.add('aim-mobile-device');
+            } else {
+                aimWin.classList.remove('aim-mobile-device');
+            }
+        });
+
         // Display current screen name
         const snDisplay = document.getElementById('aim-my-screenname');
         if (snDisplay) snDisplay.textContent = screenName;
@@ -351,6 +375,11 @@
         const emoticonBtn = document.getElementById('aim-btn-emoticons');
         const emoticonMenu = document.getElementById('aim-emoticons-menu');
         const inputEl = document.getElementById('aim-message-input');
+
+        if (familySelect) {
+            familySelect.value = fontSettings.family;
+        }
+        applyInputStyles();
 
         familySelect?.addEventListener('change', () => {
             fontSettings.family = familySelect.value;
