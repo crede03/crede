@@ -380,7 +380,7 @@
 
         balloonEl.innerHTML = `
             <div class="clippy-balloon-header">
-                <span>Clippy (AI Assistant)</span>
+                <span>Clippy</span>
                 <button class="clippy-balloon-close" id="clippy-close-btn">&times;</button>
             </div>
             <div class="clippy-balloon-body">
