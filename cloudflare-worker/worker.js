@@ -1,6 +1,7 @@
 /**
  * CREDE.VIP - Clippy AI Cloudflare Worker Proxy
- * Model: qwen/qwen3.8-27b:free
+ * Primary: qwen/qwen3.8-27b:free
+ * Fallbacks: google/gemma-4-26b-a4b-it:free, google/gemma-4-31b-it:free, nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
  * Keeps OPENROUTER_API_KEY secure on the server side
  */
 
@@ -68,37 +69,66 @@ Rules:
 - Sound playfully sarcastic, friendly, and in authentic Clippy style (e.g. "It looks like...").
 - ${userState ? `Live visitor context: ${userState}` : ''}`;
 
-      // 4. Query OpenRouter with qwen/qwen3.8-27b:free
-      const openRouterRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-          'HTTP-Referer': 'https://crede.vip',
-          'X-Title': 'CREDE.VIP Clippy Companion'
-        },
-        body: JSON.stringify({
-          model: 'qwen/qwen3.8-27b:free',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: prompt }
-          ],
-          max_tokens: 140,
-          temperature: 0.7,
-          reasoning: { effort: 'low' } // Keeps free Qwen model responses fast and concise
-        })
-      });
+      // 4. Cascade through free models in case of upstream rate-limiting
+      const freeModels = [
+        'qwen/qwen3.8-27b:free',
+        'google/gemma-4-26b-a4b-it:free',
+        'google/gemma-4-31b-it:free',
+        'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free'
+      ];
 
-      if (!openRouterRes.ok) {
-        const errorText = await openRouterRes.text();
-        return new Response(
-          JSON.stringify({ error: `OpenRouter error (${openRouterRes.status})`, details: errorText }),
-          { status: openRouterRes.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+      let reply = null;
+      let lastErrorMessage = '';
+
+      for (const model of freeModels) {
+        try {
+          const openRouterRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`,
+              'HTTP-Referer': 'https://crede.vip',
+              'X-Title': 'CREDE.VIP Clippy Companion'
+            },
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: prompt }
+              ],
+              max_tokens: 140,
+              temperature: 0.7
+            })
+          });
+
+          if (openRouterRes.ok) {
+            const data = await openRouterRes.json();
+            const text = data.choices?.[0]?.message?.content?.trim();
+            if (text) {
+              reply = text;
+              break; // Success! Exit loop
+            }
+          } else {
+            const errData = await openRouterRes.json().catch(() => ({}));
+            lastErrorMessage = errData?.error?.message || `Status ${openRouterRes.status}`;
+            // If rate-limited or busy, try next free model in list
+            continue;
+          }
+        } catch (callErr) {
+          lastErrorMessage = callErr.message;
+          continue;
+        }
       }
 
-      const data = await openRouterRes.json();
-      const reply = data.choices?.[0]?.message?.content?.trim() || "It looks like my paperclip gears slipped! Try asking again.";
+      if (!reply) {
+        return new Response(
+          JSON.stringify({
+            error: 'All free upstream AI providers are temporarily busy.',
+            details: lastErrorMessage
+          }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
       return new Response(JSON.stringify({ reply }), {
         status: 200,
