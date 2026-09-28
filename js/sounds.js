@@ -5,6 +5,86 @@
     let isMuted = false;
     let masterVolume = 0.5;
 
+    // Audio sample buffers cache (for authentic WAV sound effects like imsend.wav and imrcv.wav)
+    const audioSampleBuffers = {};
+    const rawAudioBuffers = {};
+
+    function preloadSample(url) {
+        if (rawAudioBuffers[url]) return;
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.arrayBuffer();
+            })
+            .then(buf => {
+                rawAudioBuffers[url] = buf;
+                if (audioCtx) {
+                    audioCtx.decodeAudioData(buf.slice(0), decoded => {
+                        audioSampleBuffers[url] = decoded;
+                    }, () => {});
+                }
+            })
+            .catch(err => {
+                console.warn('Sound preload failed for:', url, err);
+            });
+    }
+
+    function playSampleFile(url, fallbackSynthFn) {
+        initAudio();
+        if (isMuted) return;
+
+        // Try playing via Web Audio API buffer through masterGain (respects volume/mute)
+        if (audioCtx && audioSampleBuffers[url]) {
+            try {
+                const source = audioCtx.createBufferSource();
+                source.buffer = audioSampleBuffers[url];
+                source.connect(masterGain);
+                source.start(0);
+                return;
+            } catch (e) {
+                console.warn('Web Audio buffer playback error:', e);
+            }
+        }
+
+        // If raw buffer is fetched and waiting for decode
+        if (audioCtx && rawAudioBuffers[url]) {
+            audioCtx.decodeAudioData(rawAudioBuffers[url].slice(0), decoded => {
+                audioSampleBuffers[url] = decoded;
+                if (!isMuted && audioCtx) {
+                    try {
+                        const source = audioCtx.createBufferSource();
+                        source.buffer = decoded;
+                        source.connect(masterGain);
+                        source.start(0);
+                        return;
+                    } catch (e) {}
+                }
+            }, () => {
+                playHtmlAudio(url, fallbackSynthFn);
+            });
+            return;
+        }
+
+        // Fallback to HTML5 Audio element
+        playHtmlAudio(url, fallbackSynthFn);
+    }
+
+    function playHtmlAudio(url, fallbackSynthFn) {
+        if (isMuted) return;
+        try {
+            const audio = new Audio(url);
+            audio.volume = isMuted ? 0 : masterVolume;
+            const p = audio.play();
+            if (p !== undefined) {
+                p.catch(() => {
+                    if (fallbackSynthFn) fallbackSynthFn();
+                });
+            }
+        } catch (e) {
+            if (fallbackSynthFn) fallbackSynthFn();
+        }
+    }
+
     function initAudio() {
         if (!audioCtx) {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -13,6 +93,15 @@
                 masterGain = audioCtx.createGain();
                 masterGain.connect(audioCtx.destination);
                 applyVolume();
+
+                // Decode preloaded sample buffers
+                for (const [url, rawBuf] of Object.entries(rawAudioBuffers)) {
+                    if (!audioSampleBuffers[url]) {
+                        audioCtx.decodeAudioData(rawBuf.slice(0), decoded => {
+                            audioSampleBuffers[url] = decoded;
+                        }, () => {});
+                    }
+                }
             }
         }
         if (audioCtx && audioCtx.state === 'suspended') {
@@ -24,6 +113,10 @@
         if (!masterGain || !audioCtx) return;
         masterGain.gain.setValueAtTime(isMuted ? 0 : masterVolume, audioCtx.currentTime);
     }
+
+    // Preload AIM audio files immediately
+    preloadSample('img/imsend.wav');
+    preloadSample('img/imrcv.wav');
 
     // Load persisted settings
     try {
@@ -209,52 +302,50 @@
             osc.stop(now + 0.12);
         },
 
-        // AIM Instant Message Receive Chime (classic two-tone G5 -> C6 chime)
+        // AIM Instant Message Receive Sound (imrcv.wav)
         playAIMReceive: function() {
-            initAudio();
-            if (isMuted || !audioCtx) return;
-            const now = audioCtx.currentTime;
-            const notes = [
-                { freq: 783.99, start: 0, dur: 0.09 },
-                { freq: 1046.50, start: 0.085, dur: 0.22 }
-            ];
-            notes.forEach(n => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(n.freq, now + n.start);
-
-                gain.gain.setValueAtTime(0, now + n.start);
-                gain.gain.linearRampToValueAtTime(0.14, now + n.start + 0.015);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
-
-                osc.connect(gain);
-                gain.connect(masterGain);
-
-                osc.start(now + n.start);
-                osc.stop(now + n.start + n.dur + 0.05);
+            playSampleFile('img/imrcv.wav', () => {
+                initAudio();
+                if (isMuted || !audioCtx) return;
+                const now = audioCtx.currentTime;
+                const notes = [
+                    { freq: 783.99, start: 0, dur: 0.09 },
+                    { freq: 1046.50, start: 0.085, dur: 0.22 }
+                ];
+                notes.forEach(n => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(n.freq, now + n.start);
+                    gain.gain.setValueAtTime(0, now + n.start);
+                    gain.gain.linearRampToValueAtTime(0.14, now + n.start + 0.015);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
+                    osc.connect(gain);
+                    gain.connect(masterGain);
+                    osc.start(now + n.start);
+                    osc.stop(now + n.start + n.dur + 0.05);
+                });
             });
         },
 
-        // AIM Instant Message Sent Blip
+        // AIM Instant Message Sent Sound (imsend.wav)
         playAIMSend: function() {
-            initAudio();
-            if (isMuted || !audioCtx) return;
-            const now = audioCtx.currentTime;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(650, now);
-            osc.frequency.exponentialRampToValueAtTime(350, now + 0.05);
-
-            gain.gain.setValueAtTime(0.1, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-            osc.connect(gain);
-            gain.connect(masterGain);
-
-            osc.start(now);
-            osc.stop(now + 0.06);
+            playSampleFile('img/imsend.wav', () => {
+                initAudio();
+                if (isMuted || !audioCtx) return;
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(650, now);
+                osc.frequency.exponentialRampToValueAtTime(350, now + 0.05);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.connect(gain);
+                gain.connect(masterGain);
+                osc.start(now);
+                osc.stop(now + 0.06);
+            });
         },
 
         // AIM Door Sign-on Sound
