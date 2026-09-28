@@ -45,7 +45,8 @@
             <div class="icon-label">Email Me</div>
         </div>
 
-        <div class="desktop-icon" id="linkedin-icon" data-type="url" data-target="https://www.linkedin.com/in/crede-dalton-818334202">
+        <div class="desktop-icon" id="linkedin-icon" data-type="url"
+            data-target="https://www.linkedin.com/in/crede-dalton-818334202">
             <div class="icon-image"><img src="img/linkedin.png" alt="LinkedIn"></div>
             <div class="icon-label">LinkedIn</div>
         </div>
@@ -58,6 +59,11 @@
         <div class="desktop-icon" id="clippy-icon" data-type="action" data-target="clippy">
             <div class="icon-image"><img src="img/clippy.png" alt="Clippy"></div>
             <div class="icon-label">Clippy</div>
+        </div>
+
+        <div class="desktop-icon" id="aim-icon" data-type="window" data-target="aim-window">
+            <div class="icon-image"><img src="img/aim.png" alt="AIM"></div>
+            <div class="icon-label">AIM</div>
         </div>
         <!-- /Desktop Icons -->
 
@@ -99,6 +105,8 @@
                                 data-action="minesweeper-window">Minesweeper</a></li>
                         <li role="menuitem"><a href="#" class="start-menu-item"
                                 data-action="display-properties-window">Display Properties</a></li>
+                        <li role="menuitem"><a href="#" class="start-menu-item" data-action="aim-window">AIM
+                                Messenger</a></li>
                     </ul>
                 </li>
                 <li role="menuitem" tabindex="0" aria-haspopup="true">
@@ -132,7 +140,8 @@
         </div>
 
         <!-- Project Detail Windows -->
-        <div class="window glass project-window" id="project-5-window" data-page="pages/project-5.html" style="width: 700px">
+        <div class="window glass project-window" id="project-5-window" data-page="pages/project-5.html"
+            style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Shot by CREDE</div>
                 <div class="title-bar-controls">
@@ -144,7 +153,8 @@
             </div>
         </div>
 
-        <div class="window glass project-window" id="project-1-window" data-page="pages/project-1.html" style="width: 700px">
+        <div class="window glass project-window" id="project-1-window" data-page="pages/project-1.html"
+            style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Dover Marina Hotel &amp; Spa</div>
                 <div class="title-bar-controls">
@@ -156,7 +166,8 @@
             </div>
         </div>
 
-        <div class="window glass project-window" id="project-2-window" data-page="pages/project-2.html" style="width: 700px">
+        <div class="window glass project-window" id="project-2-window" data-page="pages/project-2.html"
+            style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Sai Care Homes</div>
                 <div class="title-bar-controls">
@@ -168,7 +179,8 @@
             </div>
         </div>
 
-        <div class="window glass project-window" id="project-3-window" data-page="pages/project-3.html" style="width: 700px">
+        <div class="window glass project-window" id="project-3-window" data-page="pages/project-3.html"
+            style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">Lighthouse on the Marsh</div>
                 <div class="title-bar-controls">
@@ -180,7 +192,8 @@
             </div>
         </div>
 
-        <div class="window glass project-window" id="project-4-window" data-page="pages/project-4.html" style="width: 700px">
+        <div class="window glass project-window" id="project-4-window" data-page="pages/project-4.html"
+            style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">QFlooring</div>
                 <div class="title-bar-controls">
@@ -192,7 +205,8 @@
             </div>
         </div>
 
-        <div class="window glass project-window" id="project-6-window" data-page="pages/project-6.html" style="width: 700px">
+        <div class="window glass project-window" id="project-6-window" data-page="pages/project-6.html"
+            style="width: 700px">
             <div class="title-bar">
                 <div class="title-bar-text">AI Bollocks</div>
                 <div class="title-bar-controls">
@@ -309,7 +323,8 @@
         </div>
 
         <!-- Windows 7 Aero Alt-Tab Window Switcher -->
-        <div id="alt-tab-overlay" class="alt-tab-overlay" hidden aria-hidden="true" role="dialog" aria-label="Task Switcher">
+        <div id="alt-tab-overlay" class="alt-tab-overlay" hidden aria-hidden="true" role="dialog"
+            aria-label="Task Switcher">
             <div class="alt-tab-box">
                 <div class="alt-tab-header">
                     <img class="alt-tab-active-icon" id="alt-tab-header-icon" src="img/welcome.png" alt="" />
@@ -319,6 +334,281 @@
                     <!-- Window tiles generated dynamically by AltTabManager -->
                 </div>
             </div>
+        </div>
+
+        <!-- AIM Instant Messenger Window -->
+        <div class="window glass" id="aim-window"
+            style="width: 720px; height: 530px; min-width: 500px; min-height: 400px; display: none;">
+            <div class="title-bar">
+                <div class="title-bar-text" id="aim-title-bar-text">AIM - Instant Messenger (Buddy: Clippy)</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+
+            <!-- 7.css Menubar -->
+            <ul role="menubar" class="can-hover">
+                <li role="menuitem" tabindex="0" aria-haspopup="true">
+                    File
+                    <ul role="menu">
+                        <li role="menuitem"><a href="#" id="aim-menu-new-im">New Instant Message</a></li>
+                        <li role="menuitem"><a href="#" id="aim-menu-clear">Clear Transcript</a></li>
+                        <li role="menuitem" class="has-divider"><a href="#" id="aim-menu-exit">Exit AIM</a></li>
+                    </ul>
+                </li>
+                <li role="menuitem" tabindex="0" aria-haspopup="true">
+                    Buddies
+                    <ul role="menu">
+                        <li role="menuitem"><a href="#" id="aim-menu-add-buddy">Add Buddy...</a></li>
+                        <li role="menuitem"><a href="#" id="aim-menu-buddy-info">Clippy's Buddy Info</a></li>
+                    </ul>
+                </li>
+                <li role="menuitem" tabindex="0" aria-haspopup="true">
+                    Help
+                    <ul role="menu">
+                        <li role="menuitem"><a href="#" id="aim-menu-about">About AIM</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Mobile responsive tab switch (visible only on small screens) -->
+            <div class="aim-mobile-bar">
+                <menu role="tablist" class="aim-mobile-tabs justified" aria-label="AIM Navigation">
+                    <button role="tab" type="button" class="active" aria-selected="true" data-pane="chat">💬 Chat with
+                        Clippy</button>
+                    <button role="tab" type="button" aria-selected="false" data-pane="buddy">👥 Buddy List (1)</button>
+                </menu>
+            </div>
+
+            <div class="window-body aim-window-body"
+                style="padding: 0; display: flex; flex: 1; min-height: 0; overflow: hidden;">
+                <!-- Left: Buddy List Pane -->
+                <aside class="aim-buddy-pane" id="aim-buddy-pane">
+                    <!-- My Profile Header -->
+                    <div class="aim-my-profile">
+                        <img src="img/aim.png" alt="AIM" class="aim-my-avatar">
+                        <div class="aim-my-info">
+                            <div class="aim-my-name-row">
+                                <span id="aim-my-screenname" class="aim-screenname">Guest</span>
+                                <a href="#" id="aim-change-sn-link" class="aim-sublink">(edit)</a>
+                            </div>
+                            <select id="aim-my-status" class="aim-status-select" aria-label="My Online Status">
+                                <option value="online">🟢 Online</option>
+                                <option value="away">🟡 Away</option>
+                                <option value="busy">🔴 Do Not Disturb</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Taunt Callout Banner -->
+                    <div class="aim-taunt-banner" id="aim-taunt-banner" role="status">
+                        <div class="aim-taunt-badge">⚠️ Buddy Status</div>
+                        <p class="aim-taunt-msg">You have 1 friend, rendering this buddy list completely useless, and
+                            your social life in tatters.</p>
+                    </div>
+
+                    <!-- 7.css Tree View for Buddies -->
+                    <ul class="tree-view has-collapse-button has-connector has-container has-scrollbar aim-tree-list">
+                        <li>
+                            <details open>
+                                <summary><strong>Buddies (1/1)</strong></summary>
+                                <ul>
+                                    <li class="aim-buddy-item active" id="buddy-clippy" data-buddy="clippy"
+                                        tabindex="0">
+                                        <span class="aim-status-indicator online"></span>
+                                        <img src="img/clippy.png" alt="Clippy" class="aim-buddy-pic">
+                                        <div class="aim-buddy-text">
+                                            <span class="aim-buddy-title"><strong>Clippy</strong></span>
+                                            <span class="aim-buddy-subtitle">Online • Your only friend</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li>
+                            <details>
+                                <summary><strong>Co-Workers (0/0)</strong></summary>
+                                <ul>
+                                    <li class="aim-buddy-item empty" data-buddy="empty-coworkers" tabindex="0">
+                                        <span class="aim-empty-text"><em>(No co-workers online)</em></span>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li>
+                            <details>
+                                <summary><strong>Real-Life Friends (0/0)</strong></summary>
+                                <ul>
+                                    <li class="aim-buddy-item empty" data-buddy="empty-irl" tabindex="0">
+                                        <span class="aim-empty-text"><em>(404: Not Found)</em></span>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                    </ul>
+
+                    <!-- Buddy List Bottom Actions -->
+                    <div class="aim-buddy-actions">
+                        <button type="button" id="aim-action-im">💬 IM</button>
+                        <button type="button" id="aim-action-info">ℹ️ Info</button>
+                        <button type="button" id="aim-action-add">➕ Add</button>
+                    </div>
+                </aside>
+
+                <!-- Right: Instant Message Conversation Pane -->
+                <main class="aim-chat-pane mobile-show" id="aim-chat-pane">
+                    <!-- Buddy Header -->
+                    <div class="aim-chat-header">
+                        <div class="aim-current-buddy-info">
+                            <img src="img/clippy.png" id="aim-current-buddy-avatar" alt="Avatar"
+                                class="aim-header-avatar">
+                            <div>
+                                <div id="aim-current-buddy-name" class="aim-header-name">Clippy</div>
+                                <div id="aim-current-buddy-status" class="aim-header-status">📎 Paperclip Assistant •
+                                    Ready to help</div>
+                            </div>
+                        </div>
+                        <div class="aim-chat-header-actions">
+                            <button type="button" id="aim-btn-warn" title="Increase Clippy's warning level">Warn (<span
+                                    id="aim-warn-pct">0</span>%)</button>
+                            <button type="button" id="aim-btn-block">Block</button>
+                        </div>
+                    </div>
+
+                    <!-- Transcript -->
+                    <div class="aim-transcript has-scrollbar" id="aim-transcript" role="log" aria-live="polite"></div>
+
+                    <!-- Typing indicator -->
+                    <div class="aim-typing-indicator" id="aim-typing-indicator" style="display: none;">
+                        <span class="aim-pencil-icon">✏️</span> Clippy is typing a response (a.k.a. consulting with
+                        Skynet)
+                    </div>
+
+                    <!-- Formatting Toolbar -->
+                    <div class="aim-format-toolbar">
+                        <select id="aim-font-family" aria-label="Font Family">
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Comic Sans MS', cursive, sans-serif" selected>Comic Sans</option>
+                            <option value="'Times New Roman', serif">Times</option>
+                            <option value="'Courier New', monospace">Courier</option>
+                            <option value="'Verdana', sans-serif">Verdana</option>
+                        </select>
+                        <select id="aim-font-size" aria-label="Font Size">
+                            <option value="11px">Small</option>
+                            <option value="12px" selected>Normal</option>
+                            <option value="14px">Large</option>
+                        </select>
+                        <button type="button" class="aim-style-btn" id="aim-btn-bold"
+                            title="Bold"><strong>B</strong></button>
+                        <button type="button" class="aim-style-btn" id="aim-btn-italic"
+                            title="Italic"><em>I</em></button>
+                        <button type="button" class="aim-style-btn" id="aim-btn-underline"
+                            title="Underline"><u>U</u></button>
+                        <select id="aim-text-color" aria-label="Text Color">
+                            <option value="#0000ff" selected>Blue</option>
+                            <option value="#cc0000">Red</option>
+                            <option value="#800080">Purple</option>
+                            <option value="#006600">Green</option>
+                            <option value="#000000">Black</option>
+                        </select>
+                        <button type="button" id="aim-btn-emoticons" title="Emoticons">:-)</button>
+
+                        <!-- Emoticon Popover Grid -->
+                        <div class="aim-emoticons-menu" id="aim-emoticons-menu" hidden>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-)">:-)</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-P">:-P</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=";-)">;-)</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-D">:-D</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-(">:-(</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-O">:-O</button>
+                            <button type="button" class="aim-emoticon-item" data-emo="8-)">8-)</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=">:-(">>:-(</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-*">:-*</button>
+                            <button type="button" class="aim-emoticon-item" data-emo="O:-)">O:-)</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":'(">:'(</button>
+                            <button type="button" class="aim-emoticon-item" data-emo=":-/">:-/</button>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="aim-input-area">
+                        <textarea id="aim-message-input" placeholder="Type a message to Clippy..."
+                            aria-label="Instant Message"></textarea>
+                        <button type="button" class="default" id="aim-send-btn">Send</button>
+                    </div>
+
+                    <!-- 7.css Status Bar -->
+                    <div class="status-bar">
+                        <p class="status-bar-field" id="aim-status-field">Direct Connection Established</p>
+                        <p class="status-bar-field">1 Buddy Online</p>
+                        <p class="status-bar-field">AIM v5.9</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- AIM Taunt / Social Reality Check Dialog (7.css is-bright) -->
+        <div class="window is-bright" id="aim-alert-dialog" role="dialog" aria-labelledby="aim-alert-title"
+            style="display: none; width: 400px; z-index: 10001;">
+            <div class="title-bar">
+                <div class="title-bar-text" id="aim-alert-title">Instant Messenger - Social Status</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close" id="aim-alert-close-x"></button>
+                </div>
+            </div>
+            <div class="window-body has-space">
+                <div style="display: flex; gap: 14px; align-items: flex-start;">
+                    <img src="img/aim.png" alt="AIM" style="width: 44px; height: 44px; flex-shrink: 0;">
+                    <div>
+                        <h2 class="instruction instruction-primary" id="aim-alert-text"
+                            style="margin-top: 0; font-size: 13px; line-height: 1.45;">
+                            You have 1 friend, you lonely fucker.
+                        </h2>
+                        <p style="margin: 8px 0 0 0; font-size: 11px; color: #555;">
+                            Clippy has graciously agreed to continue tolerating your messages.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <footer style="display: flex; justify-content: flex-end; gap: 6px; padding: 8px">
+                <button type="button" class="default" id="aim-alert-ok-btn">Accept Reality</button>
+            </footer>
+        </div>
+
+        <!-- Clippy AIM Profile / Info Dialog (7.css is-bright) -->
+        <div class="window is-bright" id="aim-info-dialog" role="dialog" aria-labelledby="aim-info-title"
+            style="display: none; width: 380px; z-index: 10001;">
+            <div class="title-bar">
+                <div class="title-bar-text" id="aim-info-title">Buddy Info: Clippy</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close" id="aim-info-close-x"></button>
+                </div>
+            </div>
+            <div class="window-body has-space">
+                <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+                    <img src="img/clippy.png" alt="Clippy" style="width: 48px; height: 48px; object-fit: contain;">
+                    <div>
+                        <div style="font-weight: bold; font-size: 13px;">Clippy (Microsoft Office Assistant)</div>
+                        <div style="font-size: 11px; color: #666;">Screen Name: ClippyTheHelper</div>
+                        <div style="font-size: 11px; color: #666;">Member Since: November 1996</div>
+                    </div>
+                </div>
+                <fieldset>
+                    <legend>User Profile</legend>
+                    <p style="font-size: 11px; margin: 4px 0; line-height: 1.4;">
+                        <strong>Quote:</strong> "It looks like you're trying to view my profile!"<br>
+                        <strong>Hobbies:</strong> Animating idle cycles, piping Rover the dog, teaching kids how to
+                        install
+                        Linux.<br>
+                        <strong>Status:</strong> Available 24/7 for you, because you're a loser.
+                    </p>
+                </fieldset>
+            </div>
+            <footer style="display: flex; justify-content: flex-end; gap: 6px; padding: 8px">
+                <button type="button" class="default" id="aim-info-ok-btn">Close</button>
+            </footer>
         </div>
 
         <!-- Shutdown Error Dialog -->
@@ -407,6 +697,10 @@
                     <span class="task-icon"><img src="img/wmp.png" alt="Windows Media Player"></span>
                     <span class="task-text">Windows Media Player</span>
                 </button>
+                <button class="taskbar-task" data-window="aim-window" style="display: none;">
+                    <span class="task-icon"><img src="img/aim.png" alt="AIM"></span>
+                    <span class="task-text">AIM - Instant Messenger</span>
+                </button>
             </div>
             <div class="system-tray">
                 <div class="tray-time" id="clock"></div>
@@ -445,7 +739,8 @@
                     </a>
                 </li>
                 <li role="menuitem" class="has-divider">
-                    <a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank" class="start-menu-item">
+                    <a href="https://www.linkedin.com/in/crede-dalton-818334202" target="_blank"
+                        class="start-menu-item">
                         <span class="menu-icon"><img src="img/linkedin.png" alt="LinkedIn"></span>
                         <span class="menu-text">LinkedIn</span>
                     </a>
@@ -478,6 +773,12 @@
                     <a href="#" class="start-menu-item" data-action="clippy">
                         <span class="menu-icon"><img src="img/clippy.png" alt="Clippy"></span>
                         <span class="menu-text">Clippy</span>
+                    </a>
+                </li>
+                <li role="menuitem">
+                    <a href="#" class="start-menu-item" data-action="aim-window">
+                        <span class="menu-icon"><img src="img/aim.png" alt="AIM"></span>
+                        <span class="menu-text">AIM Messenger</span>
                     </a>
                 </li>
                 <li role="menuitem" class="has-divider">
@@ -513,6 +814,7 @@
     <script src="js/flowerbox.js"></script>
     <script src="js/screensaver.js"></script>
     <script type="module" src="js/clippy.js"></script>
+    <script src="js/aim.js"></script>
     <script src="script.js"></script>
 </body>
 

@@ -207,6 +207,97 @@
 
             osc.start(now);
             osc.stop(now + 0.12);
+        },
+
+        // AIM Instant Message Receive Chime (classic two-tone G5 -> C6 chime)
+        playAIMReceive: function() {
+            initAudio();
+            if (isMuted || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            const notes = [
+                { freq: 783.99, start: 0, dur: 0.09 },
+                { freq: 1046.50, start: 0.085, dur: 0.22 }
+            ];
+            notes.forEach(n => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(n.freq, now + n.start);
+
+                gain.gain.setValueAtTime(0, now + n.start);
+                gain.gain.linearRampToValueAtTime(0.14, now + n.start + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + n.start + n.dur);
+
+                osc.connect(gain);
+                gain.connect(masterGain);
+
+                osc.start(now + n.start);
+                osc.stop(now + n.start + n.dur + 0.05);
+            });
+        },
+
+        // AIM Instant Message Sent Blip
+        playAIMSend: function() {
+            initAudio();
+            if (isMuted || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(650, now);
+            osc.frequency.exponentialRampToValueAtTime(350, now + 0.05);
+
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+
+            osc.start(now);
+            osc.stop(now + 0.06);
+        },
+
+        // AIM Door Sign-on Sound
+        playAIMDoor: function() {
+            initAudio();
+            if (isMuted || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.linearRampToValueAtTime(220, now + 0.12);
+            osc.frequency.linearRampToValueAtTime(120, now + 0.25);
+
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+
+            osc.start(now);
+            osc.stop(now + 0.3);
+        },
+
+        // AIM Buddy Alert Sound (used for taunt and buddy notifications)
+        playAIMBuddyAlert: function() {
+            initAudio();
+            if (isMuted || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.setValueAtTime(880, now + 0.08);
+
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            osc.connect(gain);
+            gain.connect(masterGain);
+
+            osc.start(now);
+            osc.stop(now + 0.3);
         }
     };
 

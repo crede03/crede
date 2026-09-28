@@ -73,6 +73,14 @@
       "target": "clippy"
     },
     {
+      "id": "aim",
+      "title": "AIM",
+      "icon": "img/aim.png",
+      "enabled": true,
+      "type": "window",
+      "target": "aim-window"
+    },
+    {
       "id": "cmd",
       "title": "Command Prompt",
       "icon": "img/cmd-win7.png",
@@ -204,6 +212,15 @@
       "enabled": true,
       "type": "action",
       "target": "clippy"
+    },
+    {
+      "id": "aim",
+      "title": "AIM Messenger",
+      "icon": "img/aim.png",
+      "enabled": true,
+      "type": "window",
+      "target": "aim-window",
+      "divider": false
     },
     {
       "id": "cmd",

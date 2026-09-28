@@ -863,6 +863,7 @@ function executeCommand(cmd, historyEl) {
             printLine("  projects          - List Crede's major portfolio works");
             printLine("  open <window>     - Open window (portfolio, paint, minesweeper, display, about)");
             printLine("  clippy [question] - Summon & talk to Clippy AI assistant");
+            printLine("  aim               - Launch AIM Instant Messenger");
             printLine("  flowerbox         - Launch 3D FlowerBox OpenGL screensaver");
             printLine("  matrix            - Enter the Matrix digital rain screensaver");
             printLine("  starfield         - Enter the 3D Starfield simulation screensaver");
@@ -915,10 +916,18 @@ function executeCommand(cmd, historyEl) {
             if (arg.includes('portfolio')) openWindow('portfolio-window');
             else if (arg.includes('paint')) openWindow('paint-window');
             else if (arg.includes('wmp') || arg.includes('media') || arg.includes('player')) openWindow('wmp-window');
+            else if (arg.includes('aim') || arg.includes('im') || arg.includes('messenger')) openWindow('aim-window');
             else if (arg.includes('minesweeper')) openWindow('minesweeper-window');
             else if (arg.includes('display')) openWindow('display-properties-window');
             else if (arg.includes('system') || arg.includes('about')) openWindow('system-properties-window');
             else openWindow('main-window');
+            break;
+
+        case 'aim':
+        case 'im':
+        case 'messenger':
+            openWindow('aim-window');
+            printLine("AIM Instant Messenger launched.");
             break;
 
         case 'wmp':
@@ -1821,6 +1830,9 @@ function getWindowInfo(windowId) {
     } else if (windowId === 'main-window') {
         cardClass = 'thumb-welcome';
         previewHtml = '<div class="preview-welcome"><div class="welcome-pfp-mini"></div><div class="welcome-lines"><span></span><span></span><span></span></div></div>';
+    } else if (windowId === 'aim-window') {
+        cardClass = 'thumb-aim';
+        previewHtml = '<div class="preview-aim" style="display: flex; align-items: center; justify-content: center; height: 100%;"><img src="img/aim.png" style="width: 38px; height: 38px; object-fit: contain;"></div>';
     } else if (windowId === 'portfolio-window' || windowId.startsWith('project-')) {
         cardClass = 'thumb-portfolio';
         previewHtml = '<div class="preview-portfolio"><div class="portfolio-grid-mini"><span></span><span></span><span></span><span></span></div></div>';
