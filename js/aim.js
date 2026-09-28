@@ -17,7 +17,7 @@
             status: "Online • Your only friend",
             avatar: "img/clippy.png",
             greeting: "Hi Guest! It looks like you have 1 friend - talk about Billy No Mates! But never fear - who needs humans when you have an AI chatbot LARPing as an Office Assistant from 1997? What's on your mind?",
-            systemPrompt: "You are Clippy, the nostalgic, witty 90s assistant on Crede Dalton's website (crede.vip), currently talking to the visitor via AOL Instant Messenger (AIM). Keep responses brief (1-3 sentences), playful, in character as 90s Clippy on AIM, and playfully tease the visitor about having only 1 friend when fitting.",
+            systemPrompt: "You are Clippy, the nostalgic, witty 90s assistant on Crede Dalton's website (crede.vip), chatting via AOL Instant Messenger (AIM). Keep responses brief (1-3 sentences), playful, in character as 90s Clippy, and with authentic 90s sarcasm.",
             model: "deepseek/deepseek-v4.1-flash",
             profile: {
                 title: "Clippy (Microsoft Office Assistant)",
@@ -877,23 +877,16 @@
             } catch (e) { }
         }
 
-        // Compile visitor environment and chat context
-        const userState = `User is chatting inside AIM (AOL Instant Messenger) on Crede Dalton's website (crede.vip). Username: "${screenName}". Chatting with buddy: "${currentBuddy.name}" (${currentBuddy.screenName || currentBuddy.name}). Buddy role/personality: "${currentBuddy.profile?.title || currentBuddy.name}". User's Warn Level on this buddy is ${warningLevel}%. Recent conversation: ${chatHistory.map(m => `${m.role}: ${m.content}`).join(' | ')}.`;
-
         const proxyUrl = "https://clippy-api.crede-fa7.workers.dev";
         const customApiKey = localStorage.getItem('crede_openrouter_key') || '';
-        let systemPrompt = currentBuddy.systemPrompt || `You are ${currentBuddy.name}, an AI companion on Crede Dalton's website (crede.vip) chatting over AOL Instant Messenger (AIM). Keep responses brief (1-3 sentences) and in character. Context: ${userState}`;
-        if (!tauntsEnabled && currentBuddy.id === 'clippy') {
-            systemPrompt = systemPrompt.replace(
-                /and playfully tease the visitor about having only 1 friend when fitting/gi,
-                'and maintain a cheerful, witty 90s assistant persona'
-            );
-        }
 
         try {
             let reply = '';
 
             if (customApiKey) {
+                const model = currentBuddy.model || 'deepseek/deepseek-v4.1-flash';
+                const systemPrompt = currentBuddy.systemPrompt || `You are ${currentBuddy.name}, an AI companion on Crede Dalton's website (crede.vip) chatting over AOL Instant Messenger (AIM). Keep responses brief (1-3 sentences) and in character.`;
+
                 const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                     method: 'POST',
                     headers: {
@@ -906,12 +899,13 @@
                         model: model,
                         messages: [
                             { role: 'system', content: systemPrompt },
-                            ...chatHistory
+                            ...chatHistory.slice(-6)
                         ],
-                        max_tokens: 140,
-                        temperature: 0.7
+                        max_tokens: 300,
+                        temperature: 0.7,
+                        reasoning: { effort: 'low', exclude: true }
                     }),
-                    signal: AbortSignal.timeout(10000)
+                    signal: AbortSignal.timeout(20000)
                 });
 
                 if (!response.ok) {
@@ -922,15 +916,32 @@
                 reply = data.choices?.[0]?.message?.content?.trim();
             } else {
                 // Default Cloudflare Worker proxy
+                // Match Clippy tooltip behavior for 100% reliable responses
+                const isClippy = currentBuddy.id === 'clippy';
+                const userState = isClippy
+                    ? `User "${screenName}" is chatting with Clippy inside AIM. ${tauntsEnabled ? 'Visitor has 1 friend on their buddy list.' : ''}`
+                    : `User "${screenName}" is chatting inside AIM with ${currentBuddy.name} (${currentBuddy.profile?.title || 'Buddy'}).`;
+
+                const proxyPayload = {
+                    prompt: text,
+                    userState: userState
+                };
+
+                // For custom buddies, pass their distinct systemPrompt
+                if (!isClippy && currentBuddy.systemPrompt) {
+                    proxyPayload.systemPrompt = currentBuddy.systemPrompt;
+                }
+
+                // Pass recent messages for conversation continuity
+                if (chatHistory.length > 1) {
+                    proxyPayload.messages = chatHistory.slice(-4);
+                }
+
                 const response = await fetch(proxyUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        prompt: text,
-                        userState: userState,
-                        systemPrompt: systemPrompt
-                    }),
-                    signal: AbortSignal.timeout(10000)
+                    body: JSON.stringify(proxyPayload),
+                    signal: AbortSignal.timeout(20000)
                 });
 
                 if (!response.ok) {
@@ -939,6 +950,9 @@
                 }
                 const data = await response.json();
                 reply = data.reply?.trim();
+                if (!reply && data.details) {
+                    console.warn("AIM Proxy upstream details:", data.details);
+                }
             }
 
             if (!reply) {

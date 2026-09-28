@@ -9,3 +9,5 @@ CMS_GUIDE.md
 
 # Logs & temp files
 *.log
+.wrangler/
+worker-configuration.d.ts

@@ -67,21 +67,34 @@ export default {
       }
 
       // 3. System Prompt with Live Context (custom buddy prompt if provided)
-      const systemPrompt = customSystemPrompt || `You are Clippy, the nostalgic, witty 90s assistant on Crede Dalton's retro Windows portfolio website (crede.vip).
+      const basePrompt = customSystemPrompt || `You are Clippy, the nostalgic, witty 90s assistant on Crede Dalton's retro Windows portfolio website (crede.vip).
 Crede is a London/Kent-based creative lead, photographer (Shot by CREDE), and technologist.
 Rules:
 - Keep answers brief (under 3 sentences).
-- Sound playfully sarcastic, friendly, and in authentic Clippy style (e.g. "It looks like...").
-- ${userState ? `Live visitor context: ${userState}` : ''}`;
+- Sound playfully sarcastic, friendly, and in authentic Clippy style (e.g. "It looks like...").`;
 
-      // 4. Model Hierarchy: Paid Primary (deepseek/deepseek-v4.1-flash) -> Free Fallbacks
+      const systemPrompt = `${basePrompt}${userState ? `\n[Context: ${userState}]` : ''}`;
+
+      // 4. Model Hierarchy: Paid Primary (deepseek/deepseek-v4.1-flash) -> Fallbacks
       const primaryPaidModel = env.PRIMARY_MODEL || 'deepseek/deepseek-v4.1-flash';
 
       const modelCascade = [
-        primaryPaidModel,                    // Primary paid model: DeepSeek v4.1 Flash
-        'qwen/qwen3.8-27b:free',             // Free fallback 1
-        'google/gemma-4-26b-a4b-it:free',    // Free fallback 2
-        'google/gemma-4-31b-it:free'         // Free fallback 3
+        primaryPaidModel,                                      // Primary paid model: DeepSeek v4.1 Flash
+        'deepseek/deepseek-chat',                              // Secondary paid fallback (DeepSeek V3)
+        'qwen/qwen3.8-27b:free',                               // Free fallback 1
+        'google/gemma-4-26b-a4b-it:free',                      // Free fallback 2
+        'google/gemma-4-31b-it:free',                         // Free fallback 3
+        'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free'  // Free fallback 4
+      ];
+
+      // Build conversation messages
+      const clientMessages = Array.isArray(body.messages) && body.messages.length > 0
+        ? body.messages
+        : [{ role: 'user', content: prompt }];
+
+      const fullMessages = [
+        { role: 'system', content: systemPrompt },
+        ...clientMessages
       ];
 
       let reply = null;
@@ -99,16 +112,14 @@ Rules:
             },
             body: JSON.stringify({
               model: model,
-              messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: prompt }
-              ],
-              max_tokens: 120,
-              temperature: 0.7
+              messages: fullMessages,
+              max_tokens: 350,
+              temperature: 0.7,
+              reasoning: { effort: 'low', exclude: true }
             })
           });
 
-          // If credit limit reached (402 Payment Required) or rate limited (429), fall back to free models
+          // If credit limit reached (402 Payment Required) or rate limited (429), fall back to next model
           if (res.status === 402 || res.status === 429) {
             console.warn(`Model ${model} returned ${res.status}. Falling back to next model in cascade...`);
             continue;
@@ -116,7 +127,13 @@ Rules:
 
           if (res.ok) {
             const data = await res.json();
-            const text = data.choices?.[0]?.message?.content?.trim();
+            let text = data.choices?.[0]?.message?.content?.trim() || '';
+            // Strip think tags if model outputs them
+            text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+            if (!text && data.choices?.[0]?.message?.reasoning) {
+              text = data.choices[0].message.reasoning.trim();
+            }
+
             if (text) {
               reply = text;
               break; // Success!
@@ -135,7 +152,8 @@ Rules:
       if (!reply) {
         return new Response(
           JSON.stringify({
-            reply: "It looks like my paperclip gears slipped! All upstream AI connections are momentarily occupied. Try asking again in a moment."
+            reply: "It looks like my paperclip gears slipped! All upstream AI connections are momentarily occupied. Try asking again in a moment.",
+            details: lastError
           }),
           { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
