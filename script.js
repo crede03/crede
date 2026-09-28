@@ -1,6 +1,7 @@
 // CREDE.VIP - Retro OS Desktop Environment (Inspired by 98.js)
 
 let activeWindow = 'main-window';
+let windowHistory = ['main-window'];
 let draggedWindow = null;
 let dragOffset = { x: 0, y: 0 };
 let resizingWindow = null;
@@ -23,11 +24,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     // 4. Ensure only welcome window is open initially
     document.querySelectorAll('.window').forEach(win => {
         win.classList.remove('active');
+        win.classList.remove('minimized');
+        win.dataset.isOpen = 'false';
         win.style.display = 'none';
     });
     const mainWindow = document.getElementById('main-window');
     if (mainWindow) {
         mainWindow.classList.add('active');
+        mainWindow.dataset.isOpen = 'true';
         mainWindow.style.display = 'flex';
     }
 
@@ -46,6 +50,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     initializeDisplayProperties();
     initializeMinesweeper();
     initializeBSOD();
+    AltTabManager.init();
+    initializeKeyboardShortcuts();
 
     layoutDesktopIcons();
     updateTaskbar();
@@ -396,6 +402,7 @@ function stopDrag() {
 }
 
 function bringToFront(win) {
+    if (!win) return;
     const windows = document.querySelectorAll('.window');
     let maxZ = 10;
     windows.forEach(w => {
@@ -405,25 +412,74 @@ function bringToFront(win) {
     });
     win.style.zIndex = maxZ + 1;
     win.classList.add('active');
+    win.classList.remove('minimized');
+    win.dataset.isOpen = 'true';
     activeWindow = win.id;
+
+    // Track most recently used window
+    windowHistory = [win.id, ...windowHistory.filter(id => id !== win.id)];
+
+    const webampTask = document.getElementById('webamp-task');
+    if (webampTask && win.id !== 'webamp') {
+        webampTask.classList.remove('active');
+    }
+
     updateTaskbar();
 }
 
 function closeWindow(win) {
+    if (!win) return;
     win.classList.remove('active');
+    win.classList.remove('minimized');
+    win.dataset.isOpen = 'false';
     win.style.display = 'none';
+
     if (win.id === 'wmp-window') {
         const frame = document.getElementById('wmp-frame');
         if (frame && frame.contentWindow && typeof frame.contentWindow.pauseTrack === 'function') {
             frame.contentWindow.pauseTrack();
         }
     }
+
+    windowHistory = windowHistory.filter(id => id !== win.id);
+
+    // If closing active window, activate the next visible window in the stack
+    if (activeWindow === win.id) {
+        const nextId = windowHistory.find(id => {
+            const nextWin = document.getElementById(id);
+            return nextWin && nextWin.style.display !== 'none' && !nextWin.classList.contains('minimized');
+        });
+        if (nextId) {
+            const nextWin = document.getElementById(nextId);
+            if (nextWin) bringToFront(nextWin);
+        } else {
+            activeWindow = null;
+        }
+    }
+
     updateTaskbar();
 }
 
 function minimizeWindow(win) {
+    if (!win) return;
     win.classList.remove('active');
+    win.classList.add('minimized');
     win.style.display = 'none';
+
+    // If minimizing active window, activate the next visible window in the stack
+    if (activeWindow === win.id) {
+        const nextId = windowHistory.find(id => {
+            const nextWin = document.getElementById(id);
+            return nextWin && nextWin.id !== win.id && nextWin.style.display !== 'none' && !nextWin.classList.contains('minimized');
+        });
+        if (nextId) {
+            const nextWin = document.getElementById(nextId);
+            if (nextWin) bringToFront(nextWin);
+        } else {
+            activeWindow = null;
+        }
+    }
+
     updateTaskbar();
 }
 
@@ -461,6 +517,8 @@ function openWindow(windowId) {
     }
 
     window.SoundSystem?.playClick();
+    win.dataset.isOpen = 'true';
+    win.classList.remove('minimized');
     win.classList.add('active');
     win.style.display = 'flex';
     bringToFront(win);
@@ -515,12 +573,54 @@ function tileWindowsVertically() {
     });
 }
 
+let preShowDesktopState = null;
+
 function minimizeAllWindows() {
     document.querySelectorAll('.window').forEach(w => {
-        w.classList.remove('active');
-        w.style.display = 'none';
+        if (w.id === 'shutdown-dialog') return;
+        const isOpen = w.dataset.isOpen === 'true' || (w.style.display !== 'none' && !w.classList.contains('minimized'));
+        if (isOpen) {
+            w.dataset.isOpen = 'true';
+            w.classList.add('minimized');
+            w.classList.remove('active');
+            w.style.display = 'none';
+        }
     });
+    activeWindow = null;
     updateTaskbar();
+}
+
+function toggleShowDesktop() {
+    const openVisibleWindows = Array.from(document.querySelectorAll('.window')).filter(w => {
+        if (w.id === 'shutdown-dialog') return false;
+        return (w.dataset.isOpen === 'true' || w.style.display !== 'none') && !w.classList.contains('minimized') && w.style.display !== 'none';
+    });
+
+    if (openVisibleWindows.length > 0) {
+        preShowDesktopState = openVisibleWindows.map(w => w.id);
+        openVisibleWindows.forEach(w => {
+            w.dataset.isOpen = 'true';
+            w.classList.add('minimized');
+            w.classList.remove('active');
+            w.style.display = 'none';
+        });
+        activeWindow = null;
+        updateTaskbar();
+        window.SoundSystem?.playMinimize();
+    } else if (preShowDesktopState && preShowDesktopState.length > 0) {
+        preShowDesktopState.forEach(id => {
+            const win = document.getElementById(id);
+            if (win) {
+                win.classList.remove('minimized');
+                win.style.display = 'flex';
+            }
+        });
+        const topWin = document.getElementById(preShowDesktopState[0]);
+        if (topWin) bringToFront(topWin);
+        preShowDesktopState = null;
+        updateTaskbar();
+        window.SoundSystem?.playRestore();
+    }
 }
 
 // Desktop Selection Marquee (Rubber-Band Box)
@@ -1306,6 +1406,15 @@ function dismissBSOD() {
     }
 }
 
+function toggleStartMenu() {
+    const startBtn = document.getElementById('start-btn');
+    const startMenu = document.getElementById('start-menu');
+    if (!startBtn || !startMenu) return;
+    const isOpen = startMenu.classList.toggle('active');
+    startBtn.setAttribute('aria-expanded', String(isOpen));
+    window.SoundSystem?.playClick();
+}
+
 // Start Menu Functions
 function initializeStartMenu() {
     const startBtn = document.getElementById('start-btn');
@@ -1314,9 +1423,7 @@ function initializeStartMenu() {
 
     startBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isOpen = startMenu.classList.toggle('active');
-        startBtn.setAttribute('aria-expanded', String(isOpen));
-        window.SoundSystem?.playClick();
+        toggleStartMenu();
     });
 
     document.addEventListener('click', (e) => {
@@ -1399,13 +1506,21 @@ function initializeTaskbar() {
     tasks.forEach(task => {
         task.addEventListener('click', () => {
             const windowId = task.getAttribute('data-window');
-            const win = document.getElementById(windowId);
-            if (win && win.style.display === 'none') {
-                openWindow(windowId);
-            } else if (win && win.classList.contains('active')) {
-                minimizeWindow(win);
-            } else if (win) {
-                bringToFront(win);
+            if (windowId) {
+                const win = document.getElementById(windowId);
+                if (!win) return;
+
+                if (win.classList.contains('minimized') || win.style.display === 'none') {
+                    win.classList.remove('minimized');
+                    win.style.display = 'flex';
+                    bringToFront(win);
+                    window.SoundSystem?.playRestore();
+                } else if (win.classList.contains('active')) {
+                    window.SoundSystem?.playMinimize();
+                    minimizeWindow(win);
+                } else {
+                    bringToFront(win);
+                }
             }
         });
     });
@@ -1418,12 +1533,17 @@ function updateTaskbar() {
         const task = document.querySelector(`.taskbar-task[data-window="${windowId}"]`);
         if (!task) return;
 
-        if (win.style.display !== 'none' && win.classList.contains('active')) {
+        const isOpen = win.dataset.isOpen === 'true' || (win.style.display !== 'none' && !win.classList.contains('minimized'));
+        const isMinimized = win.classList.contains('minimized');
+        const isActive = win.classList.contains('active') && !isMinimized && win.style.display !== 'none';
+
+        if (isOpen) {
             task.style.display = 'flex';
-            task.classList.add('active');
-        } else if (win.style.display !== 'none') {
-            task.style.display = 'flex';
-            task.classList.remove('active');
+            if (isActive) {
+                task.classList.add('active');
+            } else {
+                task.classList.remove('active');
+            }
         } else {
             task.classList.remove('active');
             task.style.display = 'none';
@@ -1453,7 +1573,14 @@ function initializeDesktopIcons() {
             }
         };
 
+        icon.setAttribute('tabindex', '0');
         icon.addEventListener('dblclick', openItem);
+        icon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                openItem();
+            }
+        });
         icon.addEventListener('click', () => {
             icons.forEach(i => i.classList.remove('selected'));
             icon.classList.add('selected');
@@ -1526,11 +1653,26 @@ function initializeWebamp() {
         host.hidden = false;
         task.style.display = 'flex';
         task.classList.add('active');
+        activeWindow = 'webamp';
+        windowHistory = ['webamp', ...windowHistory.filter(id => id !== 'webamp')];
     };
 
     const hideWebamp = () => {
         host.hidden = true;
         task.classList.remove('active');
+        windowHistory = windowHistory.filter(id => id !== 'webamp');
+        if (activeWindow === 'webamp') {
+            const nextId = windowHistory.find(id => {
+                const nextWin = document.getElementById(id);
+                return nextWin && nextWin.style.display !== 'none' && !nextWin.classList.contains('minimized');
+            });
+            if (nextId) {
+                const nextWin = document.getElementById(nextId);
+                if (nextWin) bringToFront(nextWin);
+            } else {
+                activeWindow = null;
+            }
+        }
     };
 
     task.addEventListener('click', () => {
@@ -1539,6 +1681,7 @@ function initializeWebamp() {
     });
 
     window.openWebamp = showWebamp;
+    window.closeWebamp = hideWebamp;
 }
 
 // Clock
@@ -1590,3 +1733,475 @@ window.addEventListener('resize', () => {
         document.body.style.backgroundPosition = isMobileViewport() ? '18% center' : 'center center';
     }
 });
+
+// ========================================================
+// WINDOWS 7 AERO ALT-TAB SWITCHER & KEYBOARD INTEGRATION
+// ========================================================
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function getOpenWindowsMRU() {
+    const openSet = new Set();
+    document.querySelectorAll('.window').forEach(win => {
+        if (win.id === 'shutdown-dialog') return;
+        const isOpen = win.dataset.isOpen === 'true' || (win.style.display !== 'none' && !win.classList.contains('minimized'));
+        if (isOpen) {
+            openSet.add(win.id);
+        }
+    });
+
+    const webampHost = document.getElementById('webamp-host');
+    if (webampHost && !webampHost.hidden) {
+        openSet.add('webamp');
+    }
+
+    const ordered = [];
+    windowHistory.forEach(id => {
+        if (openSet.has(id)) {
+            ordered.push(id);
+            openSet.delete(id);
+        }
+    });
+
+    openSet.forEach(id => {
+        ordered.push(id);
+    });
+
+    return ordered;
+}
+
+function getWindowInfo(windowId) {
+    if (windowId === 'webamp') {
+        return {
+            id: 'webamp',
+            title: 'Winamp',
+            icon: 'img/winamp.png',
+            cardClass: 'thumb-webamp',
+            isMinimized: false,
+            previewHtml: '<div class="preview-webamp"><div class="webamp-eq-bar bar1"></div><div class="webamp-eq-bar bar2"></div><div class="webamp-eq-bar bar3"></div><div class="webamp-eq-bar bar4"></div><div class="webamp-eq-bar bar5"></div></div>'
+        };
+    }
+
+    const win = document.getElementById(windowId);
+    const task = document.querySelector(`.taskbar-task[data-window="${windowId}"]`);
+
+    const title = task?.querySelector('.task-text')?.textContent?.trim() ||
+                  win?.querySelector('.title-bar-text')?.textContent?.trim() ||
+                  'Window';
+
+    const icon = task?.querySelector('.task-icon img')?.getAttribute('src') ||
+                 'img/welcome.png';
+
+    const isMinimized = win ? (win.classList.contains('minimized') || win.style.display === 'none') : false;
+
+    let cardClass = 'thumb-generic';
+    let previewHtml = '';
+
+    if (windowId === 'terminal-window') {
+        cardClass = 'thumb-terminal';
+        previewHtml = '<div class="preview-terminal"><span class="cmd-prompt">C:\\CREDE&gt;</span><span class="cmd-cursor">_</span></div>';
+    } else if (windowId === 'paint-window') {
+        cardClass = 'thumb-paint';
+        previewHtml = '<div class="preview-paint"><div class="paint-swatch-row"><span class="swatch s1"></span><span class="swatch s2"></span><span class="swatch s3"></span></div><div class="paint-brush-stroke"></div></div>';
+    } else if (windowId === 'wmp-window') {
+        cardClass = 'thumb-wmp';
+        previewHtml = '<div class="preview-wmp"><div class="wmp-screen"><div class="wmp-vis-wave"></div></div><div class="wmp-controls-mini"><span></span><span></span><span></span></div></div>';
+    } else if (windowId === 'minesweeper-window') {
+        cardClass = 'thumb-minesweeper';
+        previewHtml = '<div class="preview-mines"><div class="mines-face">:)</div><div class="mines-grid-mini"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>';
+    } else if (windowId === 'display-properties-window') {
+        cardClass = 'thumb-display';
+        previewHtml = '<div class="preview-display"><div class="display-monitor"><div class="display-screen-mini"></div></div></div>';
+    } else if (windowId === 'system-properties-window') {
+        cardClass = 'thumb-system';
+        previewHtml = '<div class="preview-system"><div class="sys-lines"><span></span><span></span><span></span></div></div>';
+    } else if (windowId === 'main-window') {
+        cardClass = 'thumb-welcome';
+        previewHtml = '<div class="preview-welcome"><div class="welcome-pfp-mini"></div><div class="welcome-lines"><span></span><span></span><span></span></div></div>';
+    } else if (windowId === 'portfolio-window' || windowId.startsWith('project-')) {
+        cardClass = 'thumb-portfolio';
+        previewHtml = '<div class="preview-portfolio"><div class="portfolio-grid-mini"><span></span><span></span><span></span><span></span></div></div>';
+    } else {
+        previewHtml = '<div class="preview-generic"><div class="generic-lines"><span></span><span></span><span></span></div></div>';
+    }
+
+    return {
+        id: windowId,
+        title,
+        icon,
+        cardClass,
+        isMinimized,
+        previewHtml
+    };
+}
+
+function activateWindowFromAltTab(windowId) {
+    if (!windowId) return;
+
+    if (windowId === 'webamp') {
+        window.openWebamp?.();
+        const host = document.getElementById('webamp-host');
+        if (host) host.style.zIndex = '1000';
+        const task = document.getElementById('webamp-task');
+        if (task) task.classList.add('active');
+        activeWindow = 'webamp';
+        windowHistory = ['webamp', ...windowHistory.filter(id => id !== 'webamp')];
+        window.SoundSystem?.playClick();
+        return;
+    }
+
+    const win = document.getElementById(windowId);
+    if (!win) return;
+
+    const wasMinimized = win.classList.contains('minimized') || win.style.display === 'none';
+    win.classList.remove('minimized');
+    win.style.display = 'flex';
+    bringToFront(win);
+
+    if (wasMinimized) {
+        window.SoundSystem?.playRestore();
+    } else {
+        window.SoundSystem?.playClick();
+    }
+
+    if (windowId === 'terminal-window') {
+        setTimeout(() => {
+            document.getElementById('terminal-input')?.focus();
+        }, 50);
+    }
+}
+
+const AltTabManager = {
+    isOpen: false,
+    selectedIndex: 0,
+    windowList: [],
+    overlayEl: null,
+    listEl: null,
+    titleEl: null,
+    iconEl: null,
+
+    init() {
+        this.overlayEl = document.getElementById('alt-tab-overlay');
+        this.listEl = document.getElementById('alt-tab-list');
+        this.titleEl = document.getElementById('alt-tab-header-title');
+        this.iconEl = document.getElementById('alt-tab-header-icon');
+
+        if (!this.overlayEl || !this.listEl) return;
+
+        this.overlayEl.addEventListener('mousedown', (e) => {
+            if (e.target === this.overlayEl) {
+                this.close(false);
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (this.isOpen) {
+                this.close(false);
+            }
+        });
+    },
+
+    open(direction = 1) {
+        const openWindows = getOpenWindowsMRU();
+        if (!openWindows || openWindows.length === 0) return;
+
+        this.windowList = openWindows;
+        this.isOpen = true;
+
+        if (this.windowList.length > 1) {
+            this.selectedIndex = direction > 0 ? 1 : this.windowList.length - 1;
+        } else {
+            this.selectedIndex = 0;
+        }
+
+        this.render();
+        this.overlayEl.hidden = false;
+        this.overlayEl.classList.add('active');
+        this.overlayEl.setAttribute('aria-hidden', 'false');
+
+        window.SoundSystem?.playClick();
+    },
+
+    cycle(direction = 1) {
+        if (!this.isOpen || this.windowList.length === 0) return;
+        const len = this.windowList.length;
+        this.selectedIndex = (this.selectedIndex + direction + len) % len;
+        this.updateSelectionVisuals();
+        window.SoundSystem?.playClick();
+    },
+
+    selectIndex(index) {
+        if (!this.isOpen || index < 0 || index >= this.windowList.length) return;
+        this.selectedIndex = index;
+        this.updateSelectionVisuals();
+        window.SoundSystem?.playClick();
+    },
+
+    commit() {
+        if (!this.isOpen) return;
+        const targetId = this.windowList[this.selectedIndex];
+        this.close(false);
+        if (targetId) {
+            activateWindowFromAltTab(targetId);
+        }
+    },
+
+    close(commit = false) {
+        if (!this.isOpen) return;
+        if (commit) {
+            this.commit();
+            return;
+        }
+        this.isOpen = false;
+        if (this.overlayEl) {
+            this.overlayEl.hidden = true;
+            this.overlayEl.classList.remove('active');
+            this.overlayEl.setAttribute('aria-hidden', 'true');
+        }
+    },
+
+    updateSelectionVisuals() {
+        const items = this.listEl.querySelectorAll('.alt-tab-item');
+        items.forEach((item, idx) => {
+            if (idx === this.selectedIndex) {
+                item.classList.add('selected');
+                item.setAttribute('aria-selected', 'true');
+                item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            } else {
+                item.classList.remove('selected');
+                item.setAttribute('aria-selected', 'false');
+            }
+        });
+
+        const selectedId = this.windowList[this.selectedIndex];
+        if (selectedId) {
+            const info = getWindowInfo(selectedId);
+            if (this.titleEl) this.titleEl.textContent = info.title;
+            if (this.iconEl) {
+                this.iconEl.src = info.icon;
+                this.iconEl.alt = info.title;
+            }
+        }
+    },
+
+    render() {
+        this.listEl.innerHTML = '';
+
+        this.windowList.forEach((winId, index) => {
+            const info = getWindowInfo(winId);
+            const isSelected = index === this.selectedIndex;
+
+            const item = document.createElement('div');
+            item.className = `alt-tab-item${isSelected ? ' selected' : ''}`;
+            item.setAttribute('role', 'option');
+            item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+            item.dataset.windowId = winId;
+            item.dataset.index = index;
+
+            item.innerHTML = `
+                <div class="alt-tab-thumb-wrapper">
+                    <div class="alt-tab-thumb-card ${info.cardClass}">
+                        <div class="alt-tab-thumb-top">
+                            <span class="alt-tab-thumb-title">${escapeHtml(info.title)}</span>
+                        </div>
+                        <div class="alt-tab-thumb-content">
+                            ${info.previewHtml}
+                        </div>
+                    </div>
+                    <img class="alt-tab-thumb-badge" src="${escapeHtml(info.icon)}" alt="" />
+                    ${info.isMinimized ? '<span class="alt-tab-min-tag">Minimized</span>' : ''}
+                </div>
+                <div class="alt-tab-item-title">${escapeHtml(info.title)}</div>
+            `;
+
+            item.addEventListener('mouseenter', () => {
+                this.selectIndex(index);
+            });
+
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.selectedIndex = index;
+                this.commit();
+            });
+
+            this.listEl.appendChild(item);
+        });
+
+        const selectedId = this.windowList[this.selectedIndex];
+        if (selectedId) {
+            const info = getWindowInfo(selectedId);
+            if (this.titleEl) this.titleEl.textContent = info.title;
+            if (this.iconEl) {
+                this.iconEl.src = info.icon;
+                this.iconEl.alt = info.title;
+            }
+        }
+    }
+};
+
+function initializeKeyboardShortcuts() {
+    let altPressed = false;
+    let metaPressed = false;
+    let otherKeyPressedWhileMeta = false;
+
+    document.addEventListener('keydown', (e) => {
+        if (window.ScreensaverEngine?.isActive?.()) return;
+        const bsod = document.getElementById('bsod-overlay');
+        if (bsod && !bsod.hidden && bsod.classList.contains('active')) return;
+
+        if (e.key === 'Alt') {
+            altPressed = true;
+        }
+
+        if (e.key === 'Meta') {
+            metaPressed = true;
+            otherKeyPressedWhileMeta = false;
+        } else if (metaPressed) {
+            otherKeyPressedWhileMeta = true;
+        }
+
+        // 1. ALT + TAB or ALT + SHIFT + TAB
+        if (e.altKey && (e.key === 'Tab' || e.code === 'Tab' || e.keyCode === 9)) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!AltTabManager.isOpen) {
+                AltTabManager.open(e.shiftKey ? -1 : 1);
+            } else {
+                AltTabManager.cycle(e.shiftKey ? -1 : 1);
+            }
+            return;
+        }
+
+        // 2. Navigation keys while Alt-Tab switcher is open
+        if (AltTabManager.isOpen) {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                e.stopPropagation();
+                AltTabManager.cycle(1);
+                return;
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                e.stopPropagation();
+                AltTabManager.cycle(-1);
+                return;
+            }
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                AltTabManager.commit();
+                return;
+            }
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                AltTabManager.close(false);
+                return;
+            }
+        }
+
+        // 3. ALT + F4: Close active window (or open shutdown dialog)
+        if (e.altKey && (e.key === 'F4' || e.code === 'F4')) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (activeWindow && activeWindow !== 'webamp') {
+                const win = document.getElementById(activeWindow);
+                if (win && win.style.display !== 'none' && !win.classList.contains('minimized')) {
+                    window.SoundSystem?.playClick();
+                    closeWindow(win);
+                    return;
+                }
+            } else if (activeWindow === 'webamp') {
+                window.closeWebamp?.();
+                return;
+            }
+
+            const shutdownDialog = document.getElementById('shutdown-dialog');
+            if (shutdownDialog) {
+                shutdownDialog.style.display = 'block';
+                shutdownDialog.classList.add('active');
+                centerWindow(shutdownDialog);
+                window.SoundSystem?.playError();
+            }
+            return;
+        }
+
+        // 4. CTRL + ESCAPE: Toggle Start Menu
+        if (e.ctrlKey && e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleStartMenu();
+            return;
+        }
+
+        // 5. WIN + D or CTRL + ALT + D: Show Desktop toggle
+        if ((e.ctrlKey && e.altKey && (e.key === 'd' || e.key === 'D')) ||
+            (e.metaKey && (e.key === 'd' || e.key === 'D'))) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleShowDesktop();
+            return;
+        }
+    }, { capture: true });
+
+    document.addEventListener('keyup', (e) => {
+        // When Alt key is released, commit Alt-Tab selection
+        if (e.key === 'Alt' || !e.altKey) {
+            altPressed = false;
+            if (AltTabManager.isOpen) {
+                AltTabManager.commit();
+            }
+        }
+
+        // Handle solitary Windows / Meta key press to toggle Start Menu
+        if (e.key === 'Meta') {
+            if (metaPressed && !otherKeyPressedWhileMeta) {
+                toggleStartMenu();
+            }
+            metaPressed = false;
+            otherKeyPressedWhileMeta = false;
+        }
+    }, { capture: true });
+
+    // Iframe key forwarding
+    const bindIframe = (iframe) => {
+        try {
+            const iWin = iframe.contentWindow;
+            if (!iWin) return;
+            const forward = (e) => {
+                if (e.altKey && (e.key === 'Tab' || e.code === 'Tab' || e.keyCode === 9)) {
+                    e.preventDefault();
+                }
+                const synthetic = new KeyboardEvent(e.type, {
+                    key: e.key,
+                    code: e.code,
+                    keyCode: e.keyCode,
+                    altKey: e.altKey,
+                    ctrlKey: e.ctrlKey,
+                    shiftKey: e.shiftKey,
+                    metaKey: e.metaKey,
+                    bubbles: true,
+                    cancelable: true
+                });
+                document.dispatchEvent(synthetic);
+            };
+            iWin.addEventListener('keydown', forward, { capture: true });
+            iWin.addEventListener('keyup', forward, { capture: true });
+        } catch (err) {}
+    };
+
+    document.querySelectorAll('iframe').forEach(iframe => {
+        iframe.addEventListener('load', () => bindIframe(iframe));
+        bindIframe(iframe);
+    });
+}
+

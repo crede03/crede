@@ -308,6 +308,19 @@
             <canvas id="screensaver-canvas"></canvas>
         </div>
 
+        <!-- Windows 7 Aero Alt-Tab Window Switcher -->
+        <div id="alt-tab-overlay" class="alt-tab-overlay" hidden aria-hidden="true" role="dialog" aria-label="Task Switcher">
+            <div class="alt-tab-box">
+                <div class="alt-tab-header">
+                    <img class="alt-tab-active-icon" id="alt-tab-header-icon" src="img/welcome.png" alt="" />
+                    <div class="alt-tab-active-title" id="alt-tab-header-title">Welcome</div>
+                </div>
+                <div class="alt-tab-list" id="alt-tab-list" role="listbox" aria-label="Open Windows">
+                    <!-- Window tiles generated dynamically by AltTabManager -->
+                </div>
+            </div>
+        </div>
+
         <!-- Shutdown Error Dialog -->
         <div class="window is-bright" id="shutdown-dialog" aria-labelledby="shutdown-dialog-title"
             style="width: 420px;">
