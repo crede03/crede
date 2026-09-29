@@ -2321,10 +2321,14 @@ section.tabs {
     cursor: pointer;
 }
 
+select:not([multiple]).aim-status-select,
 .aim-status-select {
-    height: 20px;
+    width: auto;
+    max-width: 140px;
+    align-self: flex-start;
+    height: 22px;
     font-size: 11px;
-    padding: 1px 2px;
+    padding: 2px 26px 2px 5px;
 }
 
 /* The Taunt Banner */

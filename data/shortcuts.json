@@ -3,7 +3,7 @@
     {
       "id": "welcome",
       "title": "Welcome",
-      "icon": "img/welcome.png",
+      "icon": "/img/briefcase.png",
       "enabled": true,
       "type": "window",
       "target": "main-window"
@@ -149,7 +149,7 @@
     {
       "id": "welcome",
       "title": "Welcome",
-      "icon": "img/welcome.png",
+      "icon": "/img/briefcase.png",
       "enabled": true,
       "type": "window",
       "target": "main-window"

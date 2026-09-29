@@ -269,10 +269,7 @@
             });
         });
 
-        // "+ Add Buddy" button & menu
-        document.getElementById('aim-action-add')?.addEventListener('click', () => {
-            handleAddBuddyClick();
-        });
+        // "Add Buddy..." menu item
         document.getElementById('aim-menu-add-buddy')?.addEventListener('click', (e) => {
             e.preventDefault();
             handleAddBuddyClick();
