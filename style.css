@@ -2607,6 +2607,11 @@ ul.tree-view.aim-tree-list,
 
 #aim-window.aim-mobile-device .aim-input-area textarea {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Tahoma, sans-serif;
+    font-size: 16px;
+}
+
+#aim-window.aim-mobile-device .aim-format-toolbar select {
+    font-size: 16px;
 }
 
 .aim-typing-indicator {
@@ -2847,6 +2852,10 @@ ul.tree-view.aim-tree-list,
         width: 100% !important;
     }
 
+    .aim-format-toolbar select {
+        font-size: 16px !important;
+    }
+
     .aim-format-toolbar select#aim-font-family {
         max-width: 92px !important;
         flex: 1 1 auto !important;
@@ -2883,6 +2892,7 @@ ul.tree-view.aim-tree-list,
         flex: 1 1 auto !important;
         box-sizing: border-box !important;
         font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Tahoma, sans-serif;
+        font-size: 16px !important;
     }
 
 

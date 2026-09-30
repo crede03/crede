@@ -478,7 +478,8 @@
         const inputEl = document.getElementById('aim-message-input');
         if (!inputEl) return;
         inputEl.style.fontFamily = fontSettings.family;
-        inputEl.style.fontSize = fontSettings.size;
+        // On mobile devices, keep font-size at least 16px to prevent iOS Safari auto-zoom on focus
+        inputEl.style.fontSize = isMobileDevice() ? '16px' : fontSettings.size;
         inputEl.style.color = fontSettings.color;
         inputEl.style.fontWeight = fontSettings.bold ? 'bold' : 'normal';
         inputEl.style.fontStyle = fontSettings.italic ? 'italic' : 'normal';
