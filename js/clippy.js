@@ -37,6 +37,16 @@
             { id: 'features', label: 'Cool Features', response: "You can change wallpapers in Display Properties, open the Command Prompt, play Minesweeper, drag desktop icons, and listen to tunes in Winamp!" },
             { id: 'joke', label: 'Tell a Joke', response: "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!" }
         ],
+        jokes: [
+            "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!",
+            "Why was the computer cold? It left its Windows open!",
+            "There are 10 types of people in the world: those who understand binary, and those who don't.",
+            "It looks like you're trying to write a letter! Would you like me to get in your way instead?",
+            "Why did the web developer go broke? Because they lost their domain in a crash!",
+            "A SQL query walks into a bar, walks up to two tables and asks: 'Can I join you?'",
+            "Hardware is the part of a computer that you can kick; software is the part you can only curse at.",
+            "Why do Java developers wear glasses? Because they don't C#!"
+        ],
         contextQuips: {}
     };
 
@@ -50,6 +60,7 @@
                         ...clippyConfig,
                         ...data,
                         quickResponses: (Array.isArray(data.quickResponses) && data.quickResponses.length > 0) ? data.quickResponses : clippyConfig.quickResponses,
+                        jokes: (Array.isArray(data.jokes) && data.jokes.length > 0) ? data.jokes : clippyConfig.jokes,
                         contextQuips: (data.contextQuips && typeof data.contextQuips === 'object') ? data.contextQuips : clippyConfig.contextQuips
                     };
                 }
@@ -319,7 +330,33 @@
         }, 9000);
     }
 
-    function showInteractivePrompt(customText) {
+    let lastJokeIndex = -1;
+    function tellClippyJoke() {
+        const jokes = (Array.isArray(clippyConfig.jokes) && clippyConfig.jokes.length > 0)
+            ? clippyConfig.jokes
+            : [(clippyConfig.quickResponses || []).find(r => r.id === 'joke')?.response || "Why do programmers prefer retro Windows? Because crashing in 16 colors had character!"];
+
+        let pickedIndex = 0;
+        if (jokes.length > 1) {
+            do {
+                pickedIndex = Math.floor(Math.random() * jokes.length);
+            } while (pickedIndex === lastJokeIndex);
+        }
+        lastJokeIndex = pickedIndex;
+        const joke = jokes[pickedIndex];
+
+        agent?.stopCurrent?.();
+        if (agent?.hasAnimation?.('Congratulate')) {
+            agent.play('Congratulate');
+        } else if (agent?.hasAnimation?.('Explain')) {
+            agent.play('Explain');
+        } else {
+            agent?.animate?.();
+        }
+        showInteractivePrompt(joke, true);
+    }
+
+    function showInteractivePrompt(customText, isJoke = false) {
         if (!agent) return;
         if (proactiveTimer) clearTimeout(proactiveTimer);
         if (document.body.classList.contains('screensaver-active') || window.ScreensaverEngine?.isRunning?.()) {
@@ -337,6 +374,9 @@
         balloonEl.classList.remove('is-proactive');
 
         if (customText) {
+            const jokeBtnHtml = isJoke
+                ? `<button class="clippy-pill" id="clippy-another-joke">🃏 Tell another joke</button>`
+                : '';
             balloonEl.innerHTML = `
                 <div class="clippy-balloon-header">
                     <span>Clippy</span>
@@ -344,11 +384,17 @@
                 </div>
                 <div class="clippy-balloon-body">
                     <p style="margin: 0 0 8px 0;">${customText}</p>
-                    <button class="clippy-pill" id="clippy-ask-more">&larr; Ask something else</button>
+                    <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                        ${jokeBtnHtml}
+                        <button class="clippy-pill" id="clippy-ask-more">&larr; Ask something else</button>
+                    </div>
                 </div>
             `;
             document.getElementById('clippy-close-btn')?.addEventListener('click', () => balloonEl.style.display = 'none');
             document.getElementById('clippy-ask-more')?.addEventListener('click', () => showInteractivePrompt());
+            if (isJoke) {
+                document.getElementById('clippy-another-joke')?.addEventListener('click', () => tellClippyJoke());
+            }
             balloonEl.style.display = 'block';
             updateBalloonPosition();
             return;
@@ -445,6 +491,10 @@
         balloonEl.querySelectorAll('.clippy-pill[data-ask]').forEach(pill => {
             pill.addEventListener('click', () => {
                 const askId = pill.dataset.ask;
+                if (askId === 'joke') {
+                    tellClippyJoke();
+                    return;
+                }
                 const match = (clippyConfig.quickResponses || []).find(r => r.id === askId);
                 if (match && match.response) {
                     agent?.stopCurrent?.();
