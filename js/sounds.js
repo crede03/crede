@@ -126,8 +126,164 @@
         if (storedMute !== null) isMuted = storedMute === 'true';
     } catch(e) {}
 
+    // Sound Configuration (dynamically loaded from data/sound.json)
+    let soundConfig = {
+        enabled: true,
+        startupSound: 'win7',
+        customSoundUrl: '',
+        volume: 0.5
+    };
+
+    function loadSoundConfig() {
+        fetch(`data/sound.json?t=${Date.now()}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                if (data && typeof data === 'object') {
+                    soundConfig = Object.assign(soundConfig, data);
+                    if (soundConfig.customSoundUrl) {
+                        preloadSample(soundConfig.customSoundUrl);
+                    }
+                }
+            })
+            .catch(() => {});
+    }
+
+    // Auto-load sound configuration
+    loadSoundConfig();
+
+    // Retro Startup Sound Synthesizers
+    function playWin7Startup() {
+        initAudio();
+        if (isMuted || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const chords = [
+            { freq: 261.63, start: 0, dur: 1.8 },    // C4
+            { freq: 392.00, start: 0.1, dur: 1.7 },  // G4
+            { freq: 523.25, start: 0.25, dur: 1.6 }, // C5
+            { freq: 659.25, start: 0.45, dur: 1.8 }, // E5
+            { freq: 783.99, start: 0.65, dur: 2.0 }, // G5
+            { freq: 1046.50, start: 0.85, dur: 2.2 } // C6
+        ];
+        chords.forEach(c => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(c.freq, now + c.start);
+            gain.gain.setValueAtTime(0, now + c.start);
+            gain.gain.linearRampToValueAtTime(0.12, now + c.start + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + c.start + c.dur);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now + c.start);
+            osc.stop(now + c.start + c.dur + 0.1);
+        });
+    }
+
+    function playWinXPStartup() {
+        initAudio();
+        if (isMuted || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const notes = [
+            { freq: 311.13, start: 0, dur: 1.0 },    // Eb4
+            { freq: 466.16, start: 0.18, dur: 0.9 }, // Bb4
+            { freq: 622.25, start: 0.35, dur: 1.1 }, // Eb5
+            { freq: 783.99, start: 0.52, dur: 1.3 }, // G5
+            { freq: 932.33, start: 0.70, dur: 1.8 }  // Bb5
+        ];
+        notes.forEach(n => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(n.freq, now + n.start);
+            gain.gain.setValueAtTime(0, now + n.start);
+            gain.gain.linearRampToValueAtTime(0.13, now + n.start + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.start + n.dur);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now + n.start);
+            osc.stop(now + n.start + n.dur + 0.1);
+        });
+    }
+
+    function playWin98Startup() {
+        initAudio();
+        if (isMuted || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const notes = [
+            { freq: 349.23, start: 0, dur: 1.4 },    // F4
+            { freq: 523.25, start: 0.15, dur: 1.4 }, // C5
+            { freq: 698.46, start: 0.30, dur: 1.5 }, // F5
+            { freq: 880.00, start: 0.45, dur: 1.7 }, // A5
+            { freq: 1046.50, start: 0.60, dur: 2.0 } // C6
+        ];
+        notes.forEach(n => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(n.freq, now + n.start);
+            gain.gain.setValueAtTime(0, now + n.start);
+            gain.gain.linearRampToValueAtTime(0.14, now + n.start + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.start + n.dur);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now + n.start);
+            osc.stop(now + n.start + n.dur + 0.1);
+        });
+    }
+
+    function playWin95Startup() {
+        initAudio();
+        if (isMuted || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const freqs = [277.18, 415.30, 554.37, 698.46, 830.61]; // Db major 9
+        freqs.forEach((f, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now);
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.09, now + 0.4 + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + 3.3);
+        });
+    }
+
+    function playWin2000Startup() {
+        initAudio();
+        if (isMuted || !audioCtx) return;
+        const now = audioCtx.currentTime;
+        const notes = [
+            { freq: 392.00, start: 0, dur: 0.9 },     // G4
+            { freq: 587.33, start: 0.12, dur: 1.0 },  // D5
+            { freq: 987.77, start: 0.25, dur: 1.2 },  // B5
+            { freq: 1174.66, start: 0.38, dur: 1.6 }  // D6
+        ];
+        notes.forEach(n => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(n.freq, now + n.start);
+            gain.gain.setValueAtTime(0, now + n.start);
+            gain.gain.linearRampToValueAtTime(0.12, now + n.start + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.start + n.dur);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now + n.start);
+            osc.stop(now + n.start + n.dur + 0.1);
+        });
+    }
+
     window.SoundSystem = {
         init: initAudio,
+        loadConfig: loadSoundConfig,
+        getConfig: function() { return { ...soundConfig }; },
+        setConfig: function(cfg) { soundConfig = Object.assign(soundConfig, cfg); },
 
         setVolume: function(val) {
             masterVolume = Math.max(0, Math.min(1, val));
@@ -149,37 +305,50 @@
             return isMuted;
         },
 
-        // Startup Chime: Classic ethereal retro chord (Win 98/XP style harmonic swell)
-        playStartup: function() {
+        // Startup Chime: Plays chosen preset or custom audio file
+        playStartup: function(forcedPreset) {
             initAudio();
             if (isMuted || !audioCtx) return;
 
-            const now = audioCtx.currentTime;
-            const chords = [
-                { freq: 261.63, start: 0, dur: 1.8 },    // C4
-                { freq: 392.00, start: 0.1, dur: 1.7 },  // G4
-                { freq: 523.25, start: 0.25, dur: 1.6 }, // C5
-                { freq: 659.25, start: 0.45, dur: 1.8 }, // E5
-                { freq: 783.99, start: 0.65, dur: 2.0 }, // G5
-                { freq: 1046.50, start: 0.85, dur: 2.2 } // C6
-            ];
+            const preset = forcedPreset || soundConfig.startupSound || 'win7';
+            if (preset === 'silent' || soundConfig.enabled === false) return;
 
-            chords.forEach(c => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(c.freq, now + c.start);
+            if (preset === 'custom' || (!['win7', 'winxp', 'win98', 'win95', 'win2000', 'silent'].includes(preset) && soundConfig.customSoundUrl)) {
+                const customUrl = soundConfig.customSoundUrl;
+                if (customUrl) {
+                    playSampleFile(customUrl, () => playWin7Startup());
+                    return;
+                }
+            }
 
-                gain.gain.setValueAtTime(0, now + c.start);
-                gain.gain.linearRampToValueAtTime(0.12, now + c.start + 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + c.start + c.dur);
+            if (preset === 'winxp') {
+                playWinXPStartup();
+            } else if (preset === 'win98') {
+                playWin98Startup();
+            } else if (preset === 'win95') {
+                playWin95Startup();
+            } else if (preset === 'win2000') {
+                playWin2000Startup();
+            } else {
+                playWin7Startup();
+            }
+        },
 
-                osc.connect(gain);
-                gain.connect(masterGain);
+        // Audition helper for CMS or settings
+        previewStartup: function(preset, customUrl) {
+            initAudio();
+            if (isMuted || !audioCtx) return;
 
-                osc.start(now + c.start);
-                osc.stop(now + c.start + c.dur + 0.1);
-            });
+            if (preset === 'custom' && customUrl) {
+                playSampleFile(customUrl, () => playWin7Startup());
+                return;
+            }
+
+            if (preset === 'winxp') playWinXPStartup();
+            else if (preset === 'win98') playWin98Startup();
+            else if (preset === 'win95') playWin95Startup();
+            else if (preset === 'win2000') playWin2000Startup();
+            else if (preset !== 'silent') playWin7Startup();
         },
 
         // Shutdown Chime: Gentle descending retro melody

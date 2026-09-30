@@ -50,9 +50,9 @@
             (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
     }
 
-    // Default font: normal sans-serif on mobile devices (where Comic Sans doesn't exist), Comic Sans on PC
+    // Default font: Windows 7 Segoe UI on mobile devices, Comic Sans on PC
     const defaultFontFamily = isMobileDevice()
-        ? 'Arial, sans-serif'
+        ? "'Segoe UI', Tahoma, sans-serif"
         : "'Comic Sans MS', cursive, sans-serif";
 
     // Text formatting preferences
@@ -104,8 +104,12 @@
 
     function updateTauntsCheckmark() {
         const checkEl = document.getElementById('aim-menu-taunts-check');
+        const menuItem = document.getElementById('aim-menu-toggle-taunts');
         if (checkEl) {
             checkEl.style.visibility = tauntsEnabled ? 'visible' : 'hidden';
+        }
+        if (menuItem) {
+            menuItem.setAttribute('aria-checked', String(tauntsEnabled));
         }
     }
 
@@ -172,6 +176,13 @@
             li.addEventListener('click', (e) => {
                 e.preventDefault();
                 selectBuddy(buddy.id);
+            });
+
+            li.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectBuddy(buddy.id);
+                }
             });
 
             buddiesListEl.appendChild(li);
@@ -260,12 +271,18 @@
             }
         });
 
-        // Click listeners on empty categories (Co-Workers, Real-Life Friends)
+        // Click and keyboard listeners on empty categories (Co-Workers, Real-Life Friends)
         document.querySelectorAll('.aim-buddy-item.empty').forEach(item => {
-            item.addEventListener('click', (e) => {
+            const trigger = (e) => {
                 e.preventDefault();
                 const buddyId = item.dataset.buddy;
                 selectBuddy(buddyId);
+            };
+            item.addEventListener('click', trigger);
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    trigger(e);
+                }
             });
         });
 
@@ -396,28 +413,40 @@
         boldBtn?.addEventListener('click', () => {
             fontSettings.bold = !fontSettings.bold;
             boldBtn.classList.toggle('active', fontSettings.bold);
+            boldBtn.setAttribute('aria-pressed', String(fontSettings.bold));
             applyInputStyles();
         });
 
         italicBtn?.addEventListener('click', () => {
             fontSettings.italic = !fontSettings.italic;
             italicBtn.classList.toggle('active', fontSettings.italic);
+            italicBtn.setAttribute('aria-pressed', String(fontSettings.italic));
             applyInputStyles();
         });
 
         underlineBtn?.addEventListener('click', () => {
             fontSettings.underline = !fontSettings.underline;
             underlineBtn.classList.toggle('active', fontSettings.underline);
+            underlineBtn.setAttribute('aria-pressed', String(fontSettings.underline));
             applyInputStyles();
         });
 
         // Emoticon dropdown toggle
+        const closeEmoticonMenu = () => {
+            if (emoticonMenu) {
+                emoticonMenu.hidden = true;
+                emoticonMenu.style.display = 'none';
+            }
+            emoticonBtn?.setAttribute('aria-expanded', 'false');
+        };
+
         emoticonBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!emoticonMenu) return;
             const isHidden = emoticonMenu.hidden || emoticonMenu.style.display === 'none';
             emoticonMenu.hidden = !isHidden;
             emoticonMenu.style.display = isHidden ? 'grid' : 'none';
+            emoticonBtn.setAttribute('aria-expanded', String(isHidden));
         });
 
         document.querySelectorAll('.aim-emoticon-item').forEach(btn => {
@@ -427,17 +456,20 @@
                     inputEl.value += ` ${emo} `;
                     inputEl.focus();
                 }
-                if (emoticonMenu) {
-                    emoticonMenu.hidden = true;
-                    emoticonMenu.style.display = 'none';
-                }
+                closeEmoticonMenu();
             });
         });
 
         document.addEventListener('click', (e) => {
             if (emoticonMenu && !emoticonMenu.contains(e.target) && e.target !== emoticonBtn) {
-                emoticonMenu.hidden = true;
-                emoticonMenu.style.display = 'none';
+                closeEmoticonMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && emoticonMenu && !emoticonMenu.hidden && emoticonMenu.style.display !== 'none') {
+                closeEmoticonMenu();
+                emoticonBtn?.focus();
             }
         });
     }
@@ -457,8 +489,22 @@
         const tabList = document.querySelector('.aim-mobile-tabs');
         if (!tabList) return;
 
-        const tabs = tabList.querySelectorAll('[role="tab"]');
-        tabs.forEach(tab => {
+        const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+        tabs.forEach((tab, idx) => {
+            tab.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    const next = tabs[(idx + 1) % tabs.length];
+                    next.focus();
+                    next.click();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const prev = tabs[(idx - 1 + tabs.length) % tabs.length];
+                    prev.focus();
+                    prev.click();
+                }
+            });
+
             tab.addEventListener('click', () => {
                 tabs.forEach(t => {
                     t.setAttribute('aria-selected', 'false');
@@ -563,7 +609,7 @@
                 }
 
                 setTimeout(() => {
-                    appendBuddyMessage(buddy.name, greetingText);
+                    appendBuddyMessage(buddy.name, greetingText, false);
                     // Cache the initial greeting into the session
                     if (transcriptEl) {
                         buddySessions[buddy.id] = {
@@ -605,6 +651,30 @@
         if (titleEl) titleEl.textContent = `AIM - Instant Messenger (Buddy: ${name})`;
     }
 
+    let lastFocusedElement = null;
+
+    function trapDialogFocus(dialog, e) {
+        if (!dialog || dialog.style.display === 'none') return;
+        const focusable = dialog.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.key === 'Tab') {
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
+    }
+
     // Taunt Alert Dialog
     function showTauntAlert(customHeading, customSubtext, customTitle, customBtnText) {
         window.SoundSystem?.playAIMBuddyAlert?.();
@@ -628,10 +698,12 @@
         }
 
         if (dialog) {
+            lastFocusedElement = document.activeElement;
             dialog.style.display = 'flex';
             dialog.classList.add('active');
             if (window.bringToFront) window.bringToFront(dialog);
             centerDialog(dialog);
+            setTimeout(() => btnEl?.focus(), 50);
         }
     }
 
@@ -640,6 +712,10 @@
         if (dialog) {
             dialog.style.display = 'none';
             dialog.classList.remove('active');
+        }
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
         }
     }
 
@@ -677,10 +753,13 @@
         if (statusEl) statusEl.textContent = buddy.profile?.status || buddy.status || 'Online';
 
         if (dialog) {
+            lastFocusedElement = document.activeElement;
             dialog.style.display = 'flex';
             dialog.classList.add('active');
             if (window.bringToFront) window.bringToFront(dialog);
             centerDialog(dialog);
+            const closeBtn = document.getElementById('aim-info-ok-btn');
+            setTimeout(() => closeBtn?.focus(), 50);
         }
     }
 
@@ -690,7 +769,32 @@
             dialog.style.display = 'none';
             dialog.classList.remove('active');
         }
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+            lastFocusedElement = null;
+        }
     }
+
+    // Modal dialog global keyboard handling (Escape to close, Tab trapping)
+    document.addEventListener('keydown', (e) => {
+        const alertDialog = document.getElementById('aim-alert-dialog');
+        const infoDialog = document.getElementById('aim-info-dialog');
+        if (alertDialog && alertDialog.style.display !== 'none') {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeTauntAlert();
+            } else {
+                trapDialogFocus(alertDialog, e);
+            }
+        } else if (infoDialog && infoDialog.style.display !== 'none') {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeBuddyInfo();
+            } else {
+                trapDialogFocus(infoDialog, e);
+            }
+        }
+    });
 
     function showAboutAIM() {
         showTauntAlert("AOL Instant Messenger for crede.vip");
@@ -849,7 +953,7 @@
         ].filter(Boolean).join('; ');
 
         msgDiv.innerHTML = `
-            <span class="aim-msg-timestamp">[${getNowTime()}]</span>
+            <time class="aim-msg-timestamp" datetime="${new Date().toISOString()}">[${getNowTime()}]</time>
             <span class="aim-msg-sender user-name">${escapeHtml(name)}:</span>
             <span class="aim-msg-content" style="${styleAttrs}">${escapeHtml(text)}</span>
         `;
@@ -857,7 +961,7 @@
         transcript.scrollTop = transcript.scrollHeight;
     }
 
-    function appendBuddyMessage(name, text) {
+    function appendBuddyMessage(name, text, playSound = true) {
         const transcript = document.getElementById('aim-transcript');
         if (!transcript) return;
 
@@ -865,14 +969,16 @@
         msgDiv.className = 'aim-msg-line aim-msg-buddy';
 
         msgDiv.innerHTML = `
-            <span class="aim-msg-timestamp">[${getNowTime()}]</span>
+            <time class="aim-msg-timestamp" datetime="${new Date().toISOString()}">[${getNowTime()}]</time>
             <span class="aim-msg-sender buddy-name">${escapeHtml(name)}:</span>
             <span class="aim-msg-content clippy-text">${escapeHtml(text)}</span>
         `;
         transcript.appendChild(msgDiv);
         transcript.scrollTop = transcript.scrollHeight;
 
-        window.SoundSystem?.playAIMReceive?.();
+        if (playSound) {
+            window.SoundSystem?.playAIMReceive?.();
+        }
     }
 
     // Send message to Backend
