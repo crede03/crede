@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CREDE.VIP</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css" id="theme-7">
-    <link rel="stylesheet" href="style.css?v=20260930b">
+    <link rel="stylesheet" href="style.css?v=20261001c">
 </head>
 
 <body class="has-scrollbar">
@@ -306,9 +306,128 @@
 
 
         <!-- Webamp runs directly on the desktop, without an outer faux window. -->
-        <div class="webamp-host" id="webamp-host" hidden>
-            <iframe src="webamp.html" title="Personal Webamp instance" allow="autoplay"></iframe>
-        </div>
+        <div class="webamp-host" id="webamp-host" hidden aria-label="Personal Webamp instance"></div>
+        <script>
+            // Ensure window.__initWebamp is always available as a promise-returning function immediately
+            window.__webampQueue = [];
+            window.__initWebamp = function() {
+                return new Promise((resolve, reject) => {
+                    window.__webampQueue.push({ resolve, reject });
+                });
+            };
+        </script>
+        <script type="module">
+            import Webamp from "https://unpkg.com/webamp@^2";
+
+            const root = document.getElementById("webamp-host");
+
+            let webampInstance = null;
+            let initPromise = null;
+
+            async function doInit() {
+                if (!Webamp.browserIsSupported()) {
+                    root.textContent = "Webamp is not supported by this browser.";
+                    return null;
+                }
+
+                const initialTracks = await getInitialTracks();
+                const webamp = new Webamp({
+                    initialTracks: initialTracks,
+                    enableHotkeys: false,
+                    enableMediaSession: true,
+                    windowLayout: {
+                        main: { position: { x: 140, y: 120 } },
+                        equalizer: { position: { x: 140, y: 236 } },
+                        playlist: { position: { x: 140, y: 352 }, size: [0, 4] },
+                    },
+                });
+
+                webamp.onClose(() => {
+                    if (typeof window.closeWebamp === "function") {
+                        window.closeWebamp();
+                    }
+                });
+
+                webamp.onMinimize(() => {
+                    if (typeof window.closeWebamp === "function") {
+                        window.closeWebamp();
+                    }
+                });
+
+                // Ensure root is unhidden prior to renderInto so geometry calculations are non-zero
+                root.hidden = false;
+                await webamp.renderInto(root);
+                webampInstance = webamp;
+                window.__webampInstance = webamp;
+                return webamp;
+            }
+
+            const realInit = function() {
+                if (webampInstance) {
+                    if (typeof webampInstance.reopen === "function") {
+                        webampInstance.reopen();
+                    }
+                    return Promise.resolve(webampInstance);
+                }
+                if (!initPromise) {
+                    initPromise = doInit().catch((error) => {
+                        console.error("Unable to initialize Webamp", error);
+                        initPromise = null;
+                        throw error;
+                    });
+                }
+                return initPromise;
+            };
+
+            // Process any calls that came in before the module finished loading
+            const pendingQueue = window.__webampQueue || [];
+            window.__initWebamp = realInit;
+            pendingQueue.forEach(item => {
+                realInit().then(item.resolve).catch(item.reject);
+            });
+
+            async function getInitialTracks() {
+                const defaultTracks = [
+                    {
+                        metaData: {
+                            artist: "DJ Mike Llama",
+                            title: "Llama Whippin' Intro"
+                        },
+                        url: "https://cdn.jsdelivr.net/gh/captbaritone/webamp@43434d82acad98e9e63030c1940a0670b657c0a6/packages/webamp/demo/mp3/llama-2.29.mp3",
+                        duration: 5.322286
+                    }
+                ];
+
+                try {
+                    const res = await fetch("music/playlist.json", { cache: "no-cache" });
+                    if (res.ok) {
+                        const list = await res.json();
+                        if (Array.isArray(list) && list.length > 0) {
+                            return list.map(item => {
+                                if (typeof item === "string") {
+                                    const cleanName = item.split("/").pop().replace(/\.[^/.]+$/, "");
+                                    return {
+                                        metaData: { artist: "Music", title: cleanName },
+                                        url: item.startsWith("http") || item.startsWith("/") ? item : `music/${item}`
+                                    };
+                                }
+                                return {
+                                    metaData: {
+                                        artist: item.artist || item.metaData?.artist || "Unknown Artist",
+                                        title: item.title || item.metaData?.title || (item.url ? item.url.split("/").pop().replace(/\.[^/.]+$/, "") : "Track")
+                                    },
+                                    url: item.url || (item.filename ? `music/${item.filename}` : item),
+                                    duration: item.duration || item.metaData?.duration
+                                };
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Could not load music/playlist.json, using fallback", e);
+                }
+                return defaultTracks;
+            }
+        </script>
 
         <!-- Screensaver Elements -->
         <div id="screensaver-overlay" class="screensaver-overlay">
@@ -805,7 +924,7 @@
     <script src="js/screensaver.js"></script>
     <script type="module" src="js/clippy.js?v=20260928e"></script>
     <script src="js/aim.js?v=20260928e"></script>
-    <script src="script.js?v=20260928e"></script>
+    <script src="script.js?v=20261001a"></script>
 </body>
 
 </html>

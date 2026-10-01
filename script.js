@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadSavedWallpaper();
 
     // 4. Ensure only welcome window is open initially
-    document.querySelectorAll('.window').forEach(win => {
+    document.querySelectorAll('.window:not(#webamp-host .window):not(#webamp .window)').forEach(win => {
         win.classList.remove('active');
         win.classList.remove('minimized');
         win.dataset.isOpen = 'false';
@@ -217,7 +217,7 @@ async function loadModularPages() {
 
 // Window Management
 function initializeWindows() {
-    const windows = document.querySelectorAll('.window');
+    const windows = document.querySelectorAll('.window:not(#webamp-host .window):not(#webamp .window)');
     windows.forEach(win => {
         const titlebar = win.querySelector('.title-bar');
         const controls = win.querySelectorAll('.title-bar-controls button');
@@ -437,7 +437,7 @@ function bringToFront(win) {
         return;
     }
 
-    const windows = document.querySelectorAll('.window:not([role="dialog"])');
+    const windows = document.querySelectorAll('.window:not([role="dialog"]):not(#webamp-host .window):not(#webamp .window)');
     let maxZ = 100;
     windows.forEach(w => {
         w.classList.remove('active');
@@ -1716,12 +1716,41 @@ function initializeWebamp() {
     const task = document.getElementById('webamp-task');
     if (!host || !task) return;
 
-    const showWebamp = () => {
+    const bringWebampToFront = () => {
+        const windows = document.querySelectorAll('.window:not([role="dialog"])');
+        let maxZ = 100;
+        windows.forEach(w => {
+            const z = parseInt(w.style.zIndex) || 100;
+            if (z < 9000 && z > maxZ) maxZ = z;
+        });
+        host.style.zIndex = `${Math.min(8999, maxZ + 1)}`;
+    };
+
+    const showWebamp = async () => {
         host.hidden = false;
         task.style.display = 'flex';
         task.classList.add('active');
         activeWindow = 'webamp';
         windowHistory = ['webamp', ...windowHistory.filter(id => id !== 'webamp')];
+
+        // Deactivate other windows and taskbar tasks
+        document.querySelectorAll('.window.active').forEach(w => w.classList.remove('active'));
+        document.querySelectorAll('.taskbar-task.active').forEach(t => {
+            if (t !== task) t.classList.remove('active');
+        });
+
+        bringWebampToFront();
+
+        if (typeof window.__initWebamp === 'function') {
+            try {
+                const webamp = await window.__initWebamp();
+                if (webamp && typeof webamp.reopen === 'function') {
+                    webamp.reopen();
+                }
+            } catch (err) {
+                console.error('Unable to start Webamp:', err);
+            }
+        }
     };
 
     const hideWebamp = () => {
@@ -1742,13 +1771,33 @@ function initializeWebamp() {
         }
     };
 
+    // When clicking inside Webamp windows, bring Webamp to front and update active window tracking
+    host.addEventListener('pointerdown', (e) => {
+        if (e.target.closest && e.target.closest('.window')) {
+            bringWebampToFront();
+            task.classList.add('active');
+            activeWindow = 'webamp';
+            windowHistory = ['webamp', ...windowHistory.filter(id => id !== 'webamp')];
+            document.querySelectorAll('.window.active').forEach(w => w.classList.remove('active'));
+            document.querySelectorAll('.taskbar-task.active').forEach(t => {
+                if (t !== task) t.classList.remove('active');
+            });
+        }
+    });
+
     task.addEventListener('click', () => {
-        if (host.hidden) showWebamp();
-        else hideWebamp();
+        if (host.hidden) {
+            showWebamp();
+        } else if (activeWindow === 'webamp') {
+            hideWebamp();
+        } else {
+            showWebamp();
+        }
     });
 
     window.openWebamp = showWebamp;
     window.closeWebamp = hideWebamp;
+    window.bringWebampToFront = bringWebampToFront;
 }
 
 // Clock
